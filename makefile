@@ -1,4 +1,4 @@
-INCLUDE  = -I./tools -I/usr/include/gmm -I/usr/include/eigen3/
+INCLUDE  = -I/usr/include/eigen3/
 LIBS     = -lgsl -lblas
 CXXFLAGS = -g
 

@@ -8,10 +8,6 @@
 #include "matrix.hpp"
 
 
-//%%%%%%%%%%%%%%%%
-// Igor Windisch
-// igorwindi@hotmail.com
-
 //================================//
 //   CLASSE MATRICE RANG FAIBLE   //
 //================================//

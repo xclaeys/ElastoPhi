@@ -5,8 +5,9 @@
 #include <complex>
 #include <vector>
 #include <cassert>
-#include <gmm.h>
+#include <Eigen/Dense>
 #include "point.hpp"
+
 
 //================================//
 //      DECLARATIONS DE TYPE      //
@@ -54,9 +55,13 @@ int argmax(const vectCplx& u){
 //         CLASSE MATRICE         //
 //================================//
 class Matrix{
-  
+
 private:
-  gmm::dense_matrix<Cplx>  mat;
+
+  static const int Dynamic = Eigen::Dynamic;
+  typedef Eigen::Matrix<Cplx, Dynamic, Dynamic>  DenseMatrix;
+
+  DenseMatrix  mat;
   const int nr;
   const int nc;  
   
@@ -82,27 +87,31 @@ public:
       for(int k=0; k<nc; k++){
 	mat(j,k)=z;}}
   }
-
+  
   vectCplx operator*(const vectCplx& u){
-    vectCplx v(u.size());
-    gmm::mult(mat,u,v);
+    vectCplx v(nr,0.);
+    for(int j=0; j<nr; j++){
+      for(int k=0; k<nc; k++){
+	v[j]+= mat(j,k)*u[k];
+      }
+    }
     return v;}
-    
+  
   friend ostream& operator<<(ostream& os, const Matrix& m){
     return os << m.mat;} 
   
   friend const int& nb_rows(const Matrix& A){ return A.nr;} 
   
   friend const int& nb_cols(const Matrix& A){ return A.nc;} 
-
+  
   friend vectCplx col(const Matrix& A, const int& k){    
-    vectCplx u(nb_rows(A),0.);
-    for(int j=0; j<nb_rows(A); j++){u[j]=A(j,k);}
+    vectCplx u(A.nr,0.);
+    for(int j=0; j<A.nr; j++){u[j]=A(j,k);}
     return u;}
   
   friend vectCplx row(const Matrix& A, const int& j){    
-    vectCplx u(nb_cols(A),0.);
-    for(int k=0; k<nb_cols(A); k++){u[k]=A(j,k);}
+    vectCplx u(A.nc,0.);
+    for(int k=0; k<A.nc; k++){u[k]=A(j,k);}
     return u;}
   
   friend Int2 argmax(const Matrix& A){
