@@ -175,32 +175,32 @@ public:
 };
 
 
-void BlockTree::Build(const Cluster& s, const Cluster& t){
+void BlockTree::Build(const Cluster& t, const Cluster& s){
   Block B(t,s);
   if( B.IsAdmissible() ){FarField.push_back(B);}
-  else if( t.IsLeaf() ){
-    if( s.IsLeaf() ){NearField.push_back(B);}    
+  else if( s.IsLeaf() ){
+    if( t.IsLeaf() ){NearField.push_back(B);}    
     else{
-      Build(son_(s,0),t);
-      Build(son_(s,1),t);
+      Build(son_(t,0),s);
+      Build(son_(t,1),s);
     }
   }
   else{
-    if( s.IsLeaf() ){
-      Build(s,son_(t,0));
-      Build(s,son_(t,1));
+    if( t.IsLeaf() ){
+      Build(t,son_(s,0));
+      Build(t,son_(s,1));
     }
     else{
-      Build(son_(s,0),son_(t,0));
-      Build(son_(s,0),son_(t,1));
-      Build(son_(s,1),son_(t,0));
-      Build(son_(s,1),son_(t,1));    
+      Build(son_(t,0),son_(s,0));
+      Build(son_(t,0),son_(s,1));
+      Build(son_(t,1),son_(s,0));
+      Build(son_(t,1),son_(s,1));    
     }
   }
   
 }
-  
-  
+
+
 
 
 

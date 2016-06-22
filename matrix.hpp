@@ -15,6 +15,7 @@
 using namespace std;
 typedef pair<int,int>            Int2;
 
+
 //================================//
 //      VECTEUR DE COMPLEXES      //
 //================================//
@@ -128,7 +129,53 @@ public:
   
 };
 
+//================================//
+//      CLASSE SOUS-MATRICE       //
+//================================//
+class SubMatrix{
+  
+  const Matrix&  mat;
+  const vectInt& ir;
+  const vectInt& ic;  
+  const int nr;
+  const int nc;  
+  
+public:
+  SubMatrix(const Matrix& mat0, const vectInt& ir0, const vectInt& ic0):
+    mat(mat0), ir(ir0), ic(ic0), nr(ir0.size()), nc(ic0.size()) {}
+  
+  const Cplx& operator()(const int& j, const int& k) const {
+    return mat(ir[j],ic[k]);}
 
+  vectCplx operator*(const vectCplx& u){
+    vectCplx v(nr,0.);
+    for(int j=0; j<nr; j++){
+      for(int k=0; k<nc; k++){
+	v[j]+= mat(ir[j],ic[k])*u[k];
+      }
+    }
+    return v;}
+  
+  friend ostream& operator<<(ostream& os, const SubMatrix& m){
+    for(int j=0; j<m.nr; j++){ for(int k=0; k<m.nc; k++){ 
+	os << m(j,k) << "\t";} os << "\n";}
+    return os;} 
+  
+  friend const int& nb_rows(const SubMatrix& A){ return A.nr;} 
+  
+  friend const int& nb_cols(const SubMatrix& A){ return A.nc;} 
+  
+  friend vectCplx col(const SubMatrix& A, const int& k){    
+    vectCplx u(A.nr,0.);
+    for(int j=0; j<A.nr; j++){u[j]=A(j,k);}
+    return u;}
+  
+  friend vectCplx row(const SubMatrix& A, const int& j){    
+    vectCplx u(A.nc,0.);
+    for(int k=0; k<A.nc; k++){u[k]=A(j,k);}
+    return u;}
+  
+};
 
 
 

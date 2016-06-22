@@ -104,7 +104,7 @@ LowRankMatrix::LowRankMatrix(const int& rk, const mat& A){
   nc = nb_cols(A);  
   vector<bool> visited_row(nr,false); 
   vector<bool> visited_col(nc,false);   
-
+  
   int I=0, J=0;
   for(int q=0; q<rank; q++){
     
