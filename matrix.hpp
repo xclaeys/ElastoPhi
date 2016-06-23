@@ -8,13 +8,11 @@
 #include <Eigen/Dense>
 #include "point.hpp"
 
-
 //================================//
 //      DECLARATIONS DE TYPE      //
 //================================//
 using namespace std;
 typedef pair<int,int>            Int2;
-
 
 //================================//
 //      VECTEUR DE COMPLEXES      //
@@ -51,20 +49,19 @@ int argmax(const vectCplx& u){
     if( abs(u[j]) > abs(u[k]) ){k=j;}}
   return k;}
 
-
 //================================//
 //         CLASSE MATRICE         //
 //================================//
 class Matrix{
 
 private:
-
+  
   static const int Dynamic = Eigen::Dynamic;
   typedef Eigen::Matrix<Cplx, Dynamic, Dynamic>  DenseMatrix;
-
+  
   DenseMatrix  mat;
-  const int nr;
-  const int nc;  
+  const int    nr;
+  const int    nc;  
   
 public:
   Matrix(const int& nbr, const int& nbc):

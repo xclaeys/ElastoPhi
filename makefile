@@ -2,7 +2,7 @@ INCLUDE  = -I/usr/include/eigen3/
 LIBS     = -lgsl -lblas
 CXXFLAGS = -g
 
-all: prog clean
+all: refresh prog clean
 
 #################################################
 
@@ -15,3 +15,5 @@ prog.o: prog.cpp
 clean:
 	rm  *.o
 
+refresh:
+	clear

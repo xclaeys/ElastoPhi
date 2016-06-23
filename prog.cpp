@@ -9,27 +9,40 @@ using namespace std;
 
 int main(){
 
-  
-  const int N = 50;
+  const int N = 100;
   Matrix A(N,N);
   for(int j=0; j<N; j++){
     for(int k=0; k<N; k++){
       A(j,k) = 1./(1+abs(j-k));
     }
   }
-  
 
-  
-  vectInt I(3),J(3); J[1] = 1;
+  int N2 = 6;
+  vectInt I(N2),J(N2);
+  for(int j=0; j<N2; j++){I[j]=j;J[j]=j;}
   SubMatrix B(A,I,J);
   cout << "B:\n" << B << endl;
+    
+  LowRankMatrix D(N2,B);
   
+  cout << endl << endl;
+  cout << "B*u:\t " << endl;
+  for(int j=0; j<N2; j++){
+    vectCplx u(N2,0.);    
+    u[j] = 1;
+    cout << B*u << endl;}
+  
+  cout << endl;
+  
+  cout << "D*u:\t " << endl;
+  for(int j=0; j<N2; j++){
+    vectCplx u(N2,0.);    
+    u[j] = 1;
+    cout << D*u << endl;}
   
 
-  
-  
 
-  
+
   
   
   /* =================================

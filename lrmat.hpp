@@ -62,7 +62,7 @@ public:
   vectCplx operator*(const vectCplx& w){
     assert(w.size()==nc);
     vectCplx res(nr,0.);
-    for(int k=0; k<rank; k++){
+    for(int k=0; k<v.size(); k++){
       Cplx pk = (v[k],w);
       for(int j=0; j<nr; j++){
 	res[j] += pk*u[k][j];
@@ -99,22 +99,22 @@ public:
 //=========================//
 template <typename mat>
 LowRankMatrix::LowRankMatrix(const int& rk, const mat& A){
-  rank = rk;
+  
   nr = nb_rows(A);
   nc = nb_cols(A);  
   vector<bool> visited_row(nr,false); 
   vector<bool> visited_col(nc,false);   
   
   int I=0, J=0;
-  for(int q=0; q<rank; q++){
-    
+  for(int q=0; q<rk; q++){
+
     //==================//
     // Recherche colonne
     Real rmax = 0.;
-    vectCplx r(nc);// =  row(A,I);
+    vectCplx r(nc);
     for(int k=0; k<nc; k++){
       r[k] = A(I,k);
-      for(int j=0; j<q; j++){
+      for(int j=0; j<u.size(); j++){
 	r[k] += -u[j][I]*v[j][k];}
       if( abs(r[k])>rmax && !visited_col[k] ){
 	J=k; rmax=abs(r[k]);}
@@ -126,10 +126,10 @@ LowRankMatrix::LowRankMatrix(const int& rk, const mat& A){
     if( abs(r[J]) ){
       Cplx gamma = Cplx(1.)/r[J];
       Real cmax = 0.;
-      vectCplx c(nr);// =  col(A,J);
+      vectCplx c(nr);
       for(int j=0; j<nr; j++){
 	c[j] = A(j,J);
-	for(int k=0; k<q; k++){
+	for(int k=0; k<u.size(); k++){
 	  c[j] += -u[k][j]*v[k][J];}
 	c[j] = gamma*c[j];
 	if( abs(c[j])>cmax && !visited_row[j] ){
@@ -143,6 +143,8 @@ LowRankMatrix::LowRankMatrix(const int& rk, const mat& A){
       v.push_back(r);
     }
   }
+
+  rank = u.size();
   
 }
 
