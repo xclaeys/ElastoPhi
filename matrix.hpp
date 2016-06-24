@@ -21,6 +21,17 @@ typedef vector<Cplx>    vectCplx;
 typedef vector<int>     vectInt;
 typedef vector<R3>      vectR3;
 
+void operator+=(vectInt& J, const int& inc){
+  for(int k=0; k<J.size(); k++){J[k]+=inc;} }
+
+vectInt operator+(const int& inc, vectInt& J){
+  vectInt I(J); for(int k=0; k<I.size(); k++){I[k]+=inc;}
+  return I;}
+
+vectInt operator+(vectInt& J, const int& inc){
+  vectInt I(J); for(int k=0; k<I.size(); k++){I[k]+=inc;}
+  return I;}
+
 int size(const vectCplx& u){return u.size();}
 
 vectCplx operator*(const Cplx& z, const vectCplx& u){
@@ -39,7 +50,8 @@ Cplx dprod(const vectCplx& u, const vectCplx& v){
   for(int j=0; j<u.size(); j++){dot_prod += u[j]*conj(v[j]);}
   return dot_prod;}
 
-ostream& operator<<(ostream& os, const vectCplx& u){
+template <typename T>
+ostream& operator<<(ostream& os, const vector<T>& u){
   for(int j=0; j<u.size(); j++){ os << u[j] << "\t";}
   return os;}
 

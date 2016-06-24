@@ -21,23 +21,48 @@ private:
   Cluster*        son[2];  // Paquets enfants
   R3              ctr;     // Centre du paquet
   Real            rad;     // Rayon du champ proche
+
+  void Build();
   
 public:
-  Cluster(const vectR3& x0): x(x0), ctr(0.), rad(0.) {son[0]=0;son[1]=0;}
+  Cluster(const vectR3& x0): x(x0), ctr(0.), rad(0.) {
+    son[0]=0;son[1]=0;
+    for(int j=0; j<x.size(); j++){num.push_back(j);}
+    Build();
+
+    //=============== TEST ===============//
+    Real h = 1./500.;
+    //=============== TEST ===============//
+    
+    NearFieldBall(h);
+  }
+  
+  Cluster(const vectR3& x0, const int& j0): x(x0), ctr(0.), rad(0.) {
+    son[0]=0;son[1]=0; num.push_back(j0);}
+  
   Cluster(const Cluster& ); // Pas de recopie 
+  
   void NearFieldBall(const Real&);
-  void Build();
   bool IsLeaf() const { if(son[0]==0){return true;} return false; }
   void push_back(const int& j){num.push_back(j);}
   void push_back(const vectInt& init){num = init;}  
+  
   friend const Real&    rad_(const Cluster& t){return t.rad;}
   friend const R3&      ctr_(const Cluster& t){return t.ctr;}
   friend Cluster&       son_(const Cluster& t,const int& j){return *(t.son[j]);}
   friend const vectInt& num_(const Cluster& t){return t.num;}
   friend ostream& operator<<(ostream& os, const Cluster& cl){
     for(int j=0; j<(cl.num).size(); j++){os<<cl.num[j]<< "\t";} return os;}
-
+  friend void DisplayTree(const Cluster&);
+  
 };
+
+void DisplayTree(const Cluster& cl){
+  cout << cl << endl;
+  if(!cl.IsLeaf()){
+    DisplayTree(son_(cl,0));
+    DisplayTree(son_(cl,1));}
+}
 
 
 void Cluster::Build(){
@@ -77,12 +102,12 @@ void Cluster::Build(){
     for(int j=0; j<nb_pt; j++){
       R3 dx = x[num[j]] - xc;
       if( (w,dx)>0 ){
-	if(son[0]==0){son[0] = new Cluster(x);}
-	son[0]->push_back(num[j]);
+	if(son[0]==0){son[0] = new Cluster(x,num[j]);}
+	else{son[0]->push_back(num[j]);}
       }
       else{
-	if(son[1]==0){son[1] = new Cluster(x);}
-	son[1]->push_back(num[j]);
+	if(son[1]==0){son[1] = new Cluster(x,num[j]);}
+	else{son[1]->push_back(num[j]);}
       }
     }
   }
@@ -113,8 +138,8 @@ void Cluster::NearFieldBall(const Real& h){
   // Centre et rayon champ proche
   const Real& r0 = son[0]->rad;
   const Real& r1 = son[1]->rad;  
-  const R3& c0 = son[0]->ctr;
-  const R3& c1 = son[1]->ctr;  
+  const R3& c0   = son[0]->ctr;
+  const R3& c1   = son[1]->ctr;  
   
   Real l = 0.5*( 1 + (r1-r0)/norm(c1-c0) );
   ctr = (1-l)*c0 + l*c1;
@@ -139,6 +164,14 @@ public:
   friend const Cluster& tgt_(const Block& b){return *(b.t);}
   friend const Cluster& src_(const Block& b){return *(b.s);}
   bool IsAdmissible() const{
+    
+
+    //================= TEST =====================//
+    /*cout << "rad_(*t):\t" << rad_(*t) << endl;
+    cout << "rad_(*s):\t" << rad_(*s) << endl;
+    cout << "norm(ctr_(*t)-ctr_(*s)):\t" << norm(ctr_(*t)-ctr_(*s)) << endl;*/
+    //================= TEST =====================//
+    
     return max(rad_(*t),rad_(*s)) < 2*eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
   friend ostream& operator<<(ostream& os, const Block& b){
     os << "src:\t" << src_(b) << endl; os << "tgt:\t" << tgt_(b); return os;}
