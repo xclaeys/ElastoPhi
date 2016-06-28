@@ -3,6 +3,8 @@
 
 #include <cassert>
 #include <fstream>
+#include "matrix.hpp"
+
 
 //===============================//
 //     MATRICE HIERARCHIQUE      // 
@@ -28,6 +30,7 @@ public:
   
   HMatrix(const Matrix&, const vectR3&, const vectR3&); 
   friend void DisplayPartition(const HMatrix&, char const* const name);
+  friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
   
 };
 
@@ -36,10 +39,19 @@ public:
 void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
   Block B(t,s);
   if( B.IsAdmissible() ){
-    FarField.push_back(B);}
+    FarField.push_back(B);
+    const vectInt& I = num_(t);
+    const vectInt& J = num_(s);
+    SubMatrix submat = SubMatrix(mat,I,J);
+    FarFieldMat.push_back(LowRankMatrix(submat));
+  }
   else if( s.IsLeaf() ){
     if( t.IsLeaf() ){
-      NearField.push_back(B);}    
+      NearField.push_back(B);
+      const vectInt& I = num_(t);
+      const vectInt& J = num_(s);
+      NearFieldMat.push_back(SubMatrix(mat,I,J));      
+    }    
     else{
       BuildBlockTree(son_(t,0),s);
       BuildBlockTree(son_(t,1),s);
@@ -107,8 +119,41 @@ void DisplayPartition(const HMatrix& hmat, char const * const name){
     
   }
   file.close();
-  
+ 
+}
 
+void MvProd(vectCplx& f, const HMatrix& A, const vectCplx& x){
+  assert(size(f)==size(x)); fill(f,0.);
+  
+  const vector<Block>&         FarField     = A.FarField;
+  const vector<Block>&         NearField    = A.NearField;
+  const vector<LowRankMatrix>& FarFieldMat  = A.FarFieldMat;
+  const vector<Matrix>&        NearFieldMat = A.NearFieldMat;
+
+  // Contribution champ lointain
+  for(int b=0; b<FarField.size(); b++){
+    const Block&          B  = FarField[b];
+    const LowRankMatrix&  M  = FarFieldMat[b];
+    const vectInt&        It = num_(tgt_(B));
+    const vectInt&        Is = num_(src_(B));      
+    
+    ConstSubVectCplx xx(x,Is); 
+    SubVectCplx ff(f,It); 
+    MvProd(ff,M,xx);
+  }
+  
+  // Contribution champ proche
+  for(int b=0; b<NearField.size(); b++){
+    const Block&   B  = NearField[b];
+    const Matrix&  M  = NearFieldMat[b];
+    const vectInt& It = num_(tgt_(B));
+    const vectInt& Is = num_(src_(B));      
+    
+    ConstSubVectCplx xx(x,Is); 
+    SubVectCplx ff(f,It); 
+    MvProd(ff,M,xx);
+  }
+  
 }
 
 

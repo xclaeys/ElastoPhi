@@ -33,7 +33,11 @@ vectInt operator+(vectInt& J, const int& inc){
   vectInt I(J); for(int k=0; k<I.size(); k++){I[k]+=inc;}
   return I;}
 
-int size(const vectCplx& u){return u.size();}
+template <typename T>
+int size(const vector<T>& u){return u.size();}
+
+void fill(vectCplx& u, const Cplx& v){
+  for(int j=0; j<u.size(); j++){u[j]=v;}}
 
 vectCplx operator*(const Cplx& z, const vectCplx& u){
   vectCplx v=u; for(int j=0; j<v.size(); j++){v[j] = z*v[j];}
@@ -48,7 +52,6 @@ vectCplx operator-(const vectCplx& u, const vectCplx& v){
   assert(u.size()==v.size());
   vectCplx w=u; for(int j=0; j<v.size(); j++){w[j] = w[j]-v[j];}
   return w;}
-
 Cplx operator,(const vectCplx& u, const vectCplx& v){
   assert(u.size()==v.size());
   Cplx dot_prod = 0.;
@@ -74,6 +77,55 @@ int argmax(const vectCplx& u){
     if( abs(u[j]) > abs(u[k]) ){k=j;}}
   return k;}
 
+
+//================================//
+//      CLASSE SUBVECTOR          //
+//================================//
+
+template <typename VecType>
+class SubVec{
+
+private:
+  VecType&       U;
+  const vectInt& I;
+  const int      size;
+  
+  typedef typename VecType::value_type ValType;
+  
+public:
+  
+  SubVec(VecType& U0, const vectInt& I0): U(U0), I(I0), size(I0.size()) {}
+  SubVec(const SubVec&); // Pas de constructeur par recopie
+  
+  Cplx& operator[](const int& k) {return U[I[k]];}
+  const Cplx& operator[](const int& k) const {return U[I[k]];}
+  
+  void operator=(const ValType& v){
+    for(int k=0; k<size; k++){ U[I[k]]=v;}}
+  
+  template <typename RhsType>
+  ValType operator,(const RhsType& rhs) const {
+    ValType lhs = 0.;
+    for(int k=0; k<size; k++){lhs += U[I[k]]*rhs[k];}
+    return lhs;
+  }
+
+  friend int size(const SubVec& sv){ return sv.size;}
+
+  friend ostream& operator<<(ostream& os, const SubVec& u){
+    for(int j=0; j<u.size; j++){ os << u[j] << "\t";} 
+    return os;}
+  
+};
+
+typedef SubVec<vectCplx> SubVectCplx;
+typedef SubVec<const vectCplx> ConstSubVectCplx;
+
+
+void fill(SubVectCplx& u, const Cplx& v){
+  for(int j=0; j<size(u); j++){u[j]=v;}}
+
+
 //================================//
 //         CLASSE MATRICE         //
 //================================//
@@ -85,8 +137,6 @@ private:
   typedef Eigen::Matrix<Cplx, Dynamic, Dynamic>  DenseMatrix;
   typedef Eigen::JacobiSVD<DenseMatrix>          SVDType;
   typedef SVDType::SingularValuesType            SgValType;
-
-  
   
   DenseMatrix  mat;
   const int    nr;
@@ -95,10 +145,20 @@ private:
 public:
   Matrix(const int& nbr, const int& nbc):
     mat(nbr,nbc), nr(nbr), nc(nbc){}
-  
+
   Matrix(const Matrix& A):
     nr(A.nr), nc(A.nc), mat(A.mat){}
-    
+  
+  template <typename MatType>
+  Matrix(const MatType& A):
+    nr(nb_rows(A)), nc(nb_cols(A)), mat(nb_rows(A),nb_cols(A)){
+    for(int j=0; j<nr; j++){
+      for(int k=0; k<nc; k++){
+	mat(j,k) = A(j,k);
+      }
+    }
+  }
+  
   Cplx& operator()(const int& j, const int& k){
     return mat(j,k);}
   
@@ -123,6 +183,15 @@ public:
       }
     }
     return v;}
+  
+  template <typename LhsType, typename RhsType>
+  friend void MvProd(LhsType& lhs, const Matrix& m, const RhsType& rhs){
+    for(int j=0; j<m.nr; j++){
+      for(int k=0; k<m.nc; k++){
+	lhs[j]+= m.mat(j,k)*rhs[k];
+      }
+    }
+  }
   
   friend ostream& operator<<(ostream& os, const Matrix& m){
     return os << m.mat;} 
@@ -154,16 +223,13 @@ public:
   }
   
   friend vectReal SVD(const Matrix& A){
-  // friend void SVD(const Matrix& A){
     SVDType svd(A.mat);
     const SgValType& sv = svd.singularValues();
     vectReal s(sv.size());
     for(int j=0; j<sv.size(); j++){s[j]=sv[j];}
     return s;
-    
-//    cout << "sv.size():\t" << sv.size() << endl;
   }
-
+  
   
 };
 
@@ -184,13 +250,12 @@ public:
   
   SubMatrix(const Matrix& mat0, const vectInt& ir0, const vectInt& ic0):
     mat(mat0), ir(ir0), ic(ic0), nr(ir0.size()), nc(ic0.size()) {}
-
-  SubMatrix(const SubMatrix& submat):
-    mat(submat.mat), ir(submat.ir), ic(submat.ic), nr(submat.nr), nc(submat.nc) {}
+  
+  SubMatrix(const SubMatrix&); // Pas de constructeur par recopie...
   
   const Cplx& operator()(const int& j, const int& k) const {
     return mat(ir[j],ic[k]);}
-
+  
   vectCplx operator*(const vectCplx& u){
     vectCplx v(nr,0.);
     for(int j=0; j<nr; j++){

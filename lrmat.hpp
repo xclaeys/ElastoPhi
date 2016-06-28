@@ -42,7 +42,7 @@ public:
     
     int I=0, J=0;
     int q = 0;
-    while( (aux/frob)>epsilon && q < min(nr,nc)/10 ){
+    while( (aux/frob)>epsilon && q < min(nr,nc) ){
       
       q++;
       //======= Historique estimateur ==============//
@@ -135,16 +135,28 @@ public:
     return sqrt(abs(frob));
   }
   
-  vectCplx operator*(const vectCplx& w){
-    assert(w.size()==nc);
-    vectCplx res(nr,0.);
+  vectCplx operator*(const vectCplx& rhs){
+    assert(rhs.size()==nc);
+    vectCplx lhs(nr,0.);
     for(int k=0; k<v.size(); k++){
-      Cplx pk = (v[k],w);
+      Cplx pk = (v[k],rhs);
       for(int j=0; j<nr; j++){
-	res[j] += pk*u[k][j];
+	lhs[j] += pk*u[k][j];
       }
     }
-    return res;
+    return lhs;
+  }
+  
+  template <typename LhsType, typename RhsType>
+  friend void MvProd(LhsType& lhs, const LowRankMatrix& m, const RhsType& rhs){
+    const vector<vectCplx>& u = m.u;   
+    const vector<vectCplx>& v = m.v;
+    for(int k=0; k<v.size(); k++){
+      Cplx pk = (rhs,v[k]); 
+      for(int j=0; j<m.nr; j++){
+	lhs[j] += pk*u[k][j];
+      }
+    }
   }
   
   friend ostream& operator<<(ostream& os, const LowRankMatrix& m){    
