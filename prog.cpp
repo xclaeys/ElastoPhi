@@ -5,56 +5,102 @@
 #include "point.hpp"
 #include "lrmat.hpp"
 #include "cluster.hpp"
-#include "Hmatrix.hpp"
+#include "hmatrix.hpp"
+
+#include <stdlib.h> 
+#include <time.h>   
+
+
 using namespace std;
 
 int main(){
+
+  const int N = 100;
+  Matrix A(N,N);
+  for(int j=0; j<N; j++){
+    for(int k=0; k<N; k++){
+      A(j,k) = 1./(1+abs(j+k));      
+      
+    }
+  }
+
+  // vectReal SgVal = SVD(A);
+  // cout << "SgVal:\t" << SgVal << endl;
+  
+  LowRankMatrix B(A,1e-4);
+  
+  srand (time(NULL));
+  //int I = rand()%N;
+  vectCplx u(N);
+  //u[I] = 1.;
+  for(int j=0; j<N;j++){
+    int I = rand()%N;
+    Real val = Real(I)/Real(N);
+    u[j] = val;
+  }
+  
+  vectCplx ua=A*u, ub=B*u;
+  cout << "rang de B:\t" << rank_of(B) << endl;
+  cout << "norm(ua-ub)/norm(ua):\t" << norm(ua-ub)/norm(ua) << endl;
+  
+  
+
+  
+  
+  
+  
   
   // Cluster cl(x);
   // cout << "cl:\t" << cl << endl;
   // DisplayTree(cl);
+
+  /*
+  const int N = 50; const int N2 = N*N;
+  const Real dx = 1./Real(N2-1);
+  vectR3 x(N2);
+  for(int j=0; j<N2; j++){
+    x[j][0] = j*dx;}
   
-  const int N = 10000;
-  const Real dx = 1./Real(N-1);
-  vectR3 x(N); for(int j=0; j<N; j++){ x[j] = j*dx;}
-  
-  Matrix A(N,N);
-  for(int j=0; j<N; j++){
-    for(int k=0; k<N; k++){
-      A(j,k) = 1./(1+abs(j-k));
+  Matrix A(N2,N2);
+  for(int j=0; j<N2; j++){
+    for(int k=0; k<N2; k++){
+      //      A(j,k) = 1./(1+abs(j-k));
+      A(j,k) = 1./(1+norm(x[j]-x[k]));
     }
   }
   
   HMatrix B(A,x,x);
   DisplayPartition(B,"PlotPartition.txt");
+  */  
+
+
+
   
-  
-  
-     /* =======================
-	int N2 = 6;
-	vectInt I(N2),J(N2);
-	for(int j=0; j<N2; j++){I[j]=j;J[j]=j;}
-	SubMatrix B(A,I,J);
-	cout << "B:\n" << B << endl;
-	
-	LowRankMatrix D(N2,B);
-	
-	cout << endl << endl;
-	cout << "B*u:\t " << endl;
-	for(int j=0; j<N2; j++){
-	vectCplx u(N2,0.);    
-	u[j] = 1;
-	cout << B*u << endl;}
-	
-	cout << endl;
-	
-	cout << "D*u:\t " << endl;
-	for(int j=0; j<N2; j++){
-	vectCplx u(N2,0.);    
-	u[j] = 1;
-	cout << D*u << endl;}
-	
-	======================= */
+  /* =======================
+     int N2 = 6;
+     vectInt I(N2),J(N2);
+     for(int j=0; j<N2; j++){I[j]=j;J[j]=j;}
+     SubMatrix B(A,I,J);
+     cout << "B:\n" << B << endl;
+     
+     LowRankMatrix D(N2,B);
+     
+     cout << endl << endl;
+     cout << "B*u:\t " << endl;
+     for(int j=0; j<N2; j++){
+     vectCplx u(N2,0.);    
+     u[j] = 1;
+     cout << B*u << endl;}
+     
+     cout << endl;
+     
+     cout << "D*u:\t " << endl;
+     for(int j=0; j<N2; j++){
+     vectCplx u(N2,0.);    
+     u[j] = 1;
+     cout << D*u << endl;}
+     
+     ======================= */
   
 
   

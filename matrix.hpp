@@ -18,6 +18,7 @@ typedef pair<int,int>            Int2;
 //      VECTEUR DE COMPLEXES      //
 //================================//
 typedef vector<Cplx>    vectCplx;
+typedef vector<Real>    vectReal;
 typedef vector<int>     vectInt;
 typedef vector<R3>      vectR3;
 
@@ -38,6 +39,16 @@ vectCplx operator*(const Cplx& z, const vectCplx& u){
   vectCplx v=u; for(int j=0; j<v.size(); j++){v[j] = z*v[j];}
   return v;}
 
+vectCplx operator+(const vectCplx& u, const vectCplx& v){
+  assert(u.size()==v.size());
+  vectCplx w=u; for(int j=0; j<v.size(); j++){w[j] = w[j]+v[j];}
+  return w;}
+
+vectCplx operator-(const vectCplx& u, const vectCplx& v){
+  assert(u.size()==v.size());
+  vectCplx w=u; for(int j=0; j<v.size(); j++){w[j] = w[j]-v[j];}
+  return w;}
+
 Cplx operator,(const vectCplx& u, const vectCplx& v){
   assert(u.size()==v.size());
   Cplx dot_prod = 0.;
@@ -49,6 +60,8 @@ Cplx dprod(const vectCplx& u, const vectCplx& v){
   Cplx dot_prod = 0.;
   for(int j=0; j<u.size(); j++){dot_prod += u[j]*conj(v[j]);}
   return dot_prod;}
+
+Real norm(const vectCplx& u){return abs(dprod(u,u));}
 
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& u){
@@ -70,6 +83,10 @@ private:
   
   static const int Dynamic = Eigen::Dynamic;
   typedef Eigen::Matrix<Cplx, Dynamic, Dynamic>  DenseMatrix;
+  typedef Eigen::JacobiSVD<DenseMatrix>          SVDType;
+  typedef SVDType::SingularValuesType            SgValType;
+
+  
   
   DenseMatrix  mat;
   const int    nr;
@@ -136,11 +153,25 @@ public:
     return Int2(jj,kk);
   }
   
+  friend vectReal SVD(const Matrix& A){
+  // friend void SVD(const Matrix& A){
+    SVDType svd(A.mat);
+    const SgValType& sv = svd.singularValues();
+    vectReal s(sv.size());
+    for(int j=0; j<sv.size(); j++){s[j]=sv[j];}
+    return s;
+    
+//    cout << "sv.size():\t" << sv.size() << endl;
+  }
+
+  
 };
+
 
 //================================//
 //      CLASSE SOUS-MATRICE       //
 //================================//
+
 class SubMatrix{
   
   const Matrix&  mat;
@@ -150,8 +181,12 @@ class SubMatrix{
   const int nc;  
   
 public:
+  
   SubMatrix(const Matrix& mat0, const vectInt& ir0, const vectInt& ic0):
     mat(mat0), ir(ir0), ic(ic0), nr(ir0.size()), nc(ic0.size()) {}
+
+  SubMatrix(const SubMatrix& submat):
+    mat(submat.mat), ir(submat.ir), ic(submat.ic), nr(submat.nr), nc(submat.nc) {}
   
   const Cplx& operator()(const int& j, const int& k) const {
     return mat(ir[j],ic[k]);}

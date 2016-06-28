@@ -27,7 +27,7 @@ private:
 public:
   
   HMatrix(const Matrix&, const vectR3&, const vectR3&); 
-  friend void DisplayPartition(const HMatrix&, char const * const name);
+  friend void DisplayPartition(const HMatrix&, char const* const name);
   
 };
 

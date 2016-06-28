@@ -14,24 +14,100 @@
 class LowRankMatrix{
 
 private:  
+
+  Real epsilon;
   int rank, nr, nc;
   vector<vectCplx> u, v;
-
+  
 public:
   
   LowRankMatrix(const int& nbr, const int& nbc){
-    nr=nbr; nc=nbc; rank=0;}
+    nr=nbr; nc=nbc; rank=0; epsilon = 1e-6;}
+  
+  //=========================//
+  //    PARTIAL PIVOT ACA    //
+  //=========================//
+  template <typename mat>
+  LowRankMatrix(const mat& A, const Real& eps = 1e-6){
+    
+    epsilon = eps;
+    nr = nb_rows(A);
+    nc = nb_cols(A);  
+    vector<bool> visited_row(nr,false); 
+    vector<bool> visited_col(nc,false);   
+    
+    Real frob = 0.;
+    Real aux;
+    Cplx frob_aux;
+    
+    int I=0, J=0;
+    int q = 0;
+    while( (aux/frob)>epsilon && q < min(nr,nc)/10 ){
+      
+      q++;
+      //======= Historique estimateur ==============//
+      //cout << "___________________________" << endl;
+      //cout << "Iteration:\t"  << q++ << endl; 
+      //cout << "Estimateur:\t" << aux/frob << endl;
+      //============================================//
+
+      //==================//
+      // Recherche colonne
+      Real rmax = 0.;
+      vectCplx r(nc);
+      for(int k=0; k<nc; k++){
+	r[k] = A(I,k);
+	for(int j=0; j<u.size(); j++){
+	  r[k] += -u[j][I]*v[j][k];}
+	if( abs(r[k])>rmax && !visited_col[k] ){
+	  J=k; rmax=abs(r[k]);}
+      }
+      visited_row[I] = true;
+      
+      //==================//
+      // Recherche ligne
+      if( abs(r[J]) ){
+	Cplx gamma = Cplx(1.)/r[J];
+	Real cmax = 0.;
+	vectCplx c(nr);
+	for(int j=0; j<nr; j++){
+	  c[j] = A(j,J);
+	  for(int k=0; k<u.size(); k++){
+	    c[j] += -u[k][j]*v[k][J];}
+	  c[j] = gamma*c[j];
+	  if( abs(c[j])>cmax && !visited_row[j] ){
+	    I=j; cmax=abs(c[j]);}
+	}
+	visited_col[J] = true;
+	
+	//====================//
+	// Estimateur d'erreur
+	frob_aux = 0.;
+	aux = abs(dprod(c,c)*dprod(r,r));      
+	for(int j=0; j<u.size(); j++){
+	  frob_aux += dprod(v[j],r)*dprod(c,u[j]);}
+	frob += aux + 2*frob_aux.real();
+	
+	//==================//
+	// Nouvelle croix
+	u.push_back(c);
+	v.push_back(r);
+      }
+      else{ break; }
+    }
+    
+    rank = u.size();
+    
+  }
+
   
   LowRankMatrix(const LowRankMatrix& m){
-    nr=m.nr; nc=m.nc; rank = m.rank;
+    nr=m.nr; nc=m.nc; rank = m.rank; epsilon = m.epsilon;
     u.resize(rank); v.resize(rank);
     for(int j=0; j<rank; j++){
       u[j] = m.u[j]; v[j] = m.v[j];}
   }
-  
-  template <typename mat>
-  LowRankMatrix(const int&, const mat&);
-  
+    
   void operator=(const LowRankMatrix& m){
     nr=m.nr; nc=m.nc; rank = m.rank;
     u.resize(rank); v.resize(rank);
@@ -90,63 +166,13 @@ public:
     
     return os;
   }
-  
+
+  friend const int& rank_of(const LowRankMatrix& m){
+    return m.rank;}
+    
 };
 
 
-//=========================//
-//    PARTIAL PIVOT ACA    //
-//=========================//
-template <typename mat>
-LowRankMatrix::LowRankMatrix(const int& rk, const mat& A){
-  
-  nr = nb_rows(A);
-  nc = nb_cols(A);  
-  vector<bool> visited_row(nr,false); 
-  vector<bool> visited_col(nc,false);   
-  
-  int I=0, J=0;
-  for(int q=0; q<rk; q++){
-
-    //==================//
-    // Recherche colonne
-    Real rmax = 0.;
-    vectCplx r(nc);
-    for(int k=0; k<nc; k++){
-      r[k] = A(I,k);
-      for(int j=0; j<u.size(); j++){
-	r[k] += -u[j][I]*v[j][k];}
-      if( abs(r[k])>rmax && !visited_col[k] ){
-	J=k; rmax=abs(r[k]);}
-    }
-    visited_row[I] = true;
-    
-    //==================//
-    // Recherche ligne
-    if( abs(r[J]) ){
-      Cplx gamma = Cplx(1.)/r[J];
-      Real cmax = 0.;
-      vectCplx c(nr);
-      for(int j=0; j<nr; j++){
-	c[j] = A(j,J);
-	for(int k=0; k<u.size(); k++){
-	  c[j] += -u[k][j]*v[k][J];}
-	c[j] = gamma*c[j];
-	if( abs(c[j])>cmax && !visited_row[j] ){
-	  I=j; cmax=abs(c[j]);}
-      }
-      visited_col[J] = true;
-      
-      //==================//
-      // Nouvelle croix
-      u.push_back(c);
-      v.push_back(r);
-    }
-  }
-
-  rank = u.size();
-  
-}
 
 
 //======================//
