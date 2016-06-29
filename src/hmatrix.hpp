@@ -29,12 +29,12 @@ private:
 public:
   
   HMatrix(const Matrix&, const vectR3&, const vectR3&); 
-  friend void DisplayPartition(const HMatrix&, char const* const name);
+  friend void DisplayPartition(const HMatrix&, char const* const);
   friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
+  friend Real CompressionRate(const HMatrix&);
+  
   
 };
-
-
 
 void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
   Block B(t,s);
@@ -83,6 +83,29 @@ HMatrix::HMatrix(const Matrix& mat0, const vectR3& xt0, const vectR3& xs0):
   BuildBlockTree(t,s);  
   
 }
+
+Real CompressionRate(const HMatrix& hmat){
+
+  Real comp = 0.;
+  Real size = ( (hmat.xt).size() )*( (hmat.xs).size() );
+  const vector<LowRankMatrix>& FarFieldMat  = hmat.FarFieldMat;
+  const vector<Matrix>&        NearFieldMat = hmat.NearFieldMat;
+  for(int j=0; j<FarFieldMat.size(); j++){
+    Real nr   = nb_rows(FarFieldMat[j]);
+    Real nc   = nb_cols(FarFieldMat[j]);
+    Real rank = rank_of(FarFieldMat[j]);
+    comp += rank*(nr + nc)/size;
+  }
+
+  for(int j=0; j<FarFieldMat.size(); j++){
+    Real nr   = nb_rows(FarFieldMat[j]);
+    Real nc   = nb_cols(FarFieldMat[j]);
+    comp += nr*nc/size;
+  }
+  return comp;
+  
+}
+
 
 // Representation graphique de la partition en bloc
 void DisplayPartition(const HMatrix& hmat, char const * const name){

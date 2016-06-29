@@ -131,38 +131,32 @@ int main(){
   // DisplayTree(cl);
 
   
-  const int N = 4; const int N2 = N*N;
+  const int N = 70; const int N2 = N*N;
   const Real dx = 1./Real(N2-1);
   vectR3 x(N2);
   for(int j=0; j<N2; j++){
     x[j][0] = j*dx;}
   
+  R3 x0; x0[1] = 4.;
+  
   Matrix A(N2,N2);
   for(int j=0; j<N2; j++){
     for(int k=0; k<N2; k++){
       //      A(j,k) = 1./(1+abs(j-k));
-      A(j,k) = 1./(1+norm(x[j]-x[k]));
+      A(j,k) = 1./(1+norm(x0+x[j]-x[k]));
     }
   }
   
   HMatrix B(A,x,x);
   DisplayPartition(B,"PlotPartition.txt");
-  
-  for(int j=0; j<N2; j++){
-    vectCplx u(N2,0.), f(N2,0.);
-    u[j] = 1.;
-    MvProd(f,B,u);
-    cout << f << endl;
-  }
-  
-  cout << endl << endl;
-  for(int j=0; j<N2; j++){
-    vectCplx u(N2,0.), f(N2,0.);
-    u[j] = 1.;
-    f = A*u;
-    cout << f << endl;
-  }
-  
+
+
+
+  cout << CompressionRate(B) << endl;
+
+
+
+    
 
   
   /* =======================

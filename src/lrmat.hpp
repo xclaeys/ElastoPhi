@@ -28,7 +28,7 @@ public:
   //    PARTIAL PIVOT ACA    //
   //=========================//
   template <typename mat>
-  LowRankMatrix(const mat& A, const Real& eps = 1e-6){
+  LowRankMatrix(const mat& A, const Real& eps = 1e-4){
     
     epsilon = eps;
     nr = nb_rows(A);
@@ -43,6 +43,7 @@ public:
     int I=0, J=0;
     int q = 0;
     while( (aux/frob)>epsilon && q < min(nr,nc) ){
+      
       
       q++;
       //======= Historique estimateur ==============//
@@ -97,22 +98,24 @@ public:
     }
     
     rank = u.size();
-    
   }
-
-  
+    
   LowRankMatrix(const LowRankMatrix& m){
     nr=m.nr; nc=m.nc; rank = m.rank; epsilon = m.epsilon;
     u.resize(rank); v.resize(rank);
     for(int j=0; j<rank; j++){
       u[j] = m.u[j]; v[j] = m.v[j];}
   }
-    
+  
   void operator=(const LowRankMatrix& m){
     nr=m.nr; nc=m.nc; rank = m.rank;
     u.resize(rank); v.resize(rank);
     for(int j=0; j<rank; j++){
       u[j] = m.u[j]; v[j] = m.v[j];}
+  }
+  
+  friend Real CompressionRate(const LowRankMatrix& m){
+    return m.rank*( 1./Real(m.nr) + 1./Real(m.nc) );
   }
   
   void Append(const vectCplx& new_u, const vectCplx& new_v){    
@@ -178,10 +181,11 @@ public:
     
     return os;
   }
-
-  friend const int& rank_of(const LowRankMatrix& m){
-    return m.rank;}
-    
+  
+  friend const int& rank_of(const LowRankMatrix& m){ return m.rank;}
+  friend const int& nb_rows(const LowRankMatrix& m){ return m.nr;}   
+  friend const int& nb_cols(const LowRankMatrix& m){ return m.nc;}     
+  
 };
 
 

@@ -29,9 +29,9 @@ public:
     son[0]=0;son[1]=0;
     for(int j=0; j<x.size(); j++){num.push_back(j);}
     Build();
-
+    
     //=============== TEST ===============//
-    Real h = 1./500.;
+    Real h = 1./5000.;
     //=============== TEST ===============//
     
     NearFieldBall(h);
