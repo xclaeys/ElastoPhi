@@ -129,35 +129,32 @@ int main(){
   // Cluster cl(x);
   // cout << "cl:\t" << cl << endl;
   // DisplayTree(cl);
+  
+  const int N = 150; const int N2 = N*N;
+  const Real dx = 1./Real(N-1);
+  vectR3 x(N2), y(N2);
+  for(int j=0; j<N; j++){
+    for(int k=0; k<N; k++){
+      x[j+k*N][0] = j*dx;
+      x[j+k*N][1] = k*dx;
 
-  
-  const int N = 70; const int N2 = N*N;
-  const Real dx = 1./Real(N2-1);
-  vectR3 x(N2);
-  for(int j=0; j<N2; j++){
-    x[j][0] = j*dx;}
-  
-  R3 x0; x0[1] = 4.;
+      y[j+k*N][0] = j*dx;
+      y[j+k*N][1] = k*dx;
+    }
+  }
   
   Matrix A(N2,N2);
   for(int j=0; j<N2; j++){
     for(int k=0; k<N2; k++){
-      //      A(j,k) = 1./(1+abs(j-k));
-      A(j,k) = 1./(1+norm(x0+x[j]-x[k]));
+      Real r = norm(y[j]-x[k]);
+      A(j,k) = 1./r;
     }
   }
   
-  HMatrix B(A,x,x);
-  DisplayPartition(B,"PlotPartition.txt");
-
-
-
+  HMatrix B(A,y,x);
+  //  DisplayPartition(B,"PlotPartition.txt");
   cout << CompressionRate(B) << endl;
-
-
-
-    
-
+  
   
   /* =======================
      int N2 = 6;

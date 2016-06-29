@@ -1,3 +1,4 @@
+
 #ifndef CLUSTER_HPP
 #define CLUSTER_HPP
 #include <cassert>
@@ -31,7 +32,7 @@ public:
     Build();
     
     //=============== TEST ===============//
-    Real h = 1./5000.;
+    Real h = 1./100.;
     //=============== TEST ===============//
     
     NearFieldBall(h);

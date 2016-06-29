@@ -85,21 +85,22 @@ HMatrix::HMatrix(const Matrix& mat0, const vectR3& xt0, const vectR3& xs0):
 }
 
 Real CompressionRate(const HMatrix& hmat){
-
+  
   Real comp = 0.;
   Real size = ( (hmat.xt).size() )*( (hmat.xs).size() );
   const vector<LowRankMatrix>& FarFieldMat  = hmat.FarFieldMat;
   const vector<Matrix>&        NearFieldMat = hmat.NearFieldMat;
+  
   for(int j=0; j<FarFieldMat.size(); j++){
     Real nr   = nb_rows(FarFieldMat[j]);
     Real nc   = nb_cols(FarFieldMat[j]);
     Real rank = rank_of(FarFieldMat[j]);
     comp += rank*(nr + nc)/size;
   }
-
-  for(int j=0; j<FarFieldMat.size(); j++){
-    Real nr   = nb_rows(FarFieldMat[j]);
-    Real nc   = nb_cols(FarFieldMat[j]);
+  
+  for(int j=0; j<NearFieldMat.size(); j++){
+    Real nr   = nb_rows(NearFieldMat[j]);
+    Real nc   = nb_cols(NearFieldMat[j]);
     comp += nr*nc/size;
   }
   return comp;
