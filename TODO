@@ -1,2 +1,8 @@
-* Terminer le constructeur de la classe HMatrix
-
+* Mener une batterie de tests sur l'évolution du taux de compression
+en fonction de la taille de la matrice, pour different noyaux A_jk
+* Tester la precision du produit matrice vecteur en fonction de
+   l'agressivite de la compression ACA
+* Trouver un moyen plus intelligent de gérer les rayons d'action des
+   degrés de liberté qui définissent le champ proche
+   
+   
