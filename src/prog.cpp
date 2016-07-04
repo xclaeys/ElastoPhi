@@ -130,7 +130,7 @@ int main(){
   // cout << "cl:\t" << cl << endl;
   // DisplayTree(cl);
   
-  const int N = 150; const int N2 = N*N;
+  const int N = 50; const int N2 = N*N;
   const Real dx = 1./Real(N-1);
   vectR3 x(N2), y(N2);
   for(int j=0; j<N; j++){
@@ -142,11 +142,13 @@ int main(){
       y[j+k*N][1] = k*dx;
     }
   }
-  
+
+
+  Real epsilon = 1e-2;
   Matrix A(N2,N2);
   for(int j=0; j<N2; j++){
     for(int k=0; k<N2; k++){
-      Real r = norm(y[j]-x[k]);
+      Real r = epsilon+norm(y[j]-x[k]);
       A(j,k) = 1./r;
     }
   }

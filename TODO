@@ -4,5 +4,7 @@ en fonction de la taille de la matrice, pour different noyaux A_jk
    l'agressivite de la compression ACA
 * Trouver un moyen plus intelligent de gérer les rayons d'action des
    degrés de liberté qui définissent le champ proche
+* MOdifier cluster.hpp pour gerer les cas ou deux noeuds du nuage
+   coincident mais sont associes a des indices differents
    
    

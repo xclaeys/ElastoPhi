@@ -52,6 +52,7 @@ vectCplx operator-(const vectCplx& u, const vectCplx& v){
   assert(u.size()==v.size());
   vectCplx w=u; for(int j=0; j<v.size(); j++){w[j] = w[j]-v[j];}
   return w;}
+
 Cplx operator,(const vectCplx& u, const vectCplx& v){
   assert(u.size()==v.size());
   Cplx dot_prod = 0.;

@@ -12,8 +12,26 @@ typedef EigenSolver::EigenvectorsType EigenVector;
 typedef EigenSolver::EigenvalueType   EigenValue;
 
 //===============================//
-//           PAQUET              // 
+//           PAQUETS             // 
 //===============================//
+//
+// Refs biblio:
+//
+//  -> livre de Sauter-Schwab:
+//           http://www.springer.com/kr/book/9783540680925
+//           et en particulier le paragraphe 7.1.2                    
+//
+//  -> livre de Borm:  
+//           http://www.ems-ph.org/books/book.php?proj_nr=125
+//           et en particulier less paragraphes 3.1, 3.2 et 3.3
+//
+//  -> livre de Rjasanow-Steinbach:
+//           http://www.ems-ph.org/books/book.php?proj_nr=125
+//           et en particulier le paragraphe 3.1
+//
+//=================================//
+
+
 class Cluster{
   
 private:
@@ -32,6 +50,7 @@ public:
     Build();
     
     //=============== TEST ===============//
+    // Plus ou moins la finesse du maillage
     Real h = 1./100.;
     //=============== TEST ===============//
     
@@ -65,7 +84,6 @@ void DisplayTree(const Cluster& cl){
     DisplayTree(son_(cl,1));}
 }
 
-
 void Cluster::Build(){
   
   // Calcul centre du paquet
@@ -92,7 +110,7 @@ void Cluster::Build(){
   EigenVector ev = eig.eigenvectors();
   int l = 0; Real max=abs(lambda[0]);
   if( max<abs(lambda[1]) ){l=1; max=abs(lambda[1]);}
-  if( max<abs(lambda[1]) ){l=2;}
+  if( max<abs(lambda[2]) ){l=2;}
   R3 w;
   w[0] = ev(0,l).real();
   w[1] = ev(1,l).real();
@@ -104,17 +122,17 @@ void Cluster::Build(){
       R3 dx = x[num[j]] - xc;
       if( (w,dx)>0 ){
 	if(son[0]==0){son[0] = new Cluster(x,num[j]);}
-	else{son[0]->push_back(num[j]);}
+	else{ son[0]->push_back(num[j]); }
       }
       else{
 	if(son[1]==0){son[1] = new Cluster(x,num[j]);}
-	else{son[1]->push_back(num[j]);}
+	else{ son[1]->push_back(num[j]); }
       }
     }
   }
   
   // Recursivite
-  if(nb_pt>1){
+  if(nb_pt>1){ // ATTENTION A MODIFIER 
     assert( son[0]!=0 );
     assert( son[1]!=0 );
     son[0]->Build();
@@ -130,7 +148,7 @@ void Cluster::NearFieldBall(const Real& h){
   
   // Feuille de l'arbre
   int nb_pt = num.size();  
-  if(nb_pt==1){ctr=x[num[0]]; rad=h; return;}
+  if(nb_pt==1){ctr=x[num[0]]; rad=h; return;} ///  ATTENTION A MODIFIER
   
   // Recursivite
   son[0]->NearFieldBall(h);

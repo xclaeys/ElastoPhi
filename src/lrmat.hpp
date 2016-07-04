@@ -11,6 +11,23 @@
 //================================//
 //   CLASSE MATRICE RANG FAIBLE   //
 //================================//
+//
+// Refs biblio:
+//
+//  -> slides de Stéphanie Chaillat:
+//           http://uma.ensta-paristech.fr/var/files/chaillat/seance2.pdf
+//           et en particulier la slide 25                    
+//
+//  -> livre de M.Bebendorf:  
+//           http://www.springer.com/kr/book/9783540771463
+//           et en particulier le paragraphe 3.4
+//
+//  -> livre de Rjasanow-Steinbach:
+//           http://www.ems-ph.org/books/book.php?proj_nr=125
+//           et en particulier le paragraphe 3.2
+//
+//=================================//
+
 class LowRankMatrix{
 
 private:  
