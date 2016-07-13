@@ -7,6 +7,7 @@
 #include "lrmat.hpp"
 #include "cluster.hpp"
 #include "hmatrix.hpp"
+#include "loading.hpp"
 
 #include <stdlib.h> 
 #include <time.h>   
@@ -16,6 +17,11 @@ using namespace std;
 
 int main(){
 
+
+  vectR3   x;
+  vectReal r;
+  load("../data/maillage.txt",x,r);
+  
 
   /* ==========================================
      const int N = 10;
@@ -129,7 +135,9 @@ int main(){
   // Cluster cl(x);
   // cout << "cl:\t" << cl << endl;
   // DisplayTree(cl);
+
   
+  /* ====================================
   const int N = 50; const int N2 = N*N;
   const Real dx = 1./Real(N-1);
   vectR3 x(N2), y(N2);
@@ -156,8 +164,11 @@ int main(){
   HMatrix B(A,y,x);
   //  DisplayPartition(B,"PlotPartition.txt");
   cout << CompressionRate(B) << endl;
+  ======================================= */  
   
-  
+
+
+
   /* =======================
      int N2 = 6;
      vectInt I(N2),J(N2);

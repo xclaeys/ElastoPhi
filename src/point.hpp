@@ -45,6 +45,9 @@ public:
   friend ostream& operator<<(ostream& os, const a_t& a){
     for(int j=0; j<dim; j++){ os << a[j] << "\t";} return os;}
   
+  friend istream& operator>>(istream& is, a_t& a){
+    for(int j=0; j<dim; j++){ is >> a[j];} return is;}
+  
   friend a_t operator+(const a_t& l, const a_t& r){
     a_t a; for(int j=0; j<dim; j++){a[j]=l[j]+r[j];} return a;}
 
