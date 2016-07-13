@@ -20,10 +20,11 @@ using namespace std;
 void load(const char* filename, const vectR3& x, const vectReal& r){
   
   x.clear(); r.clear();
-  ifstream file; file.open(filename);
-  
   int NbElt, NbPt, poubelle;
   R3 Pt[4]; R3 Ctr; Real Rmax,Rad;
+
+  // Ouverture fichier
+  ifstream file; file.open(filename);
   
   // Nombre d'elements
   file >> NbElt; 
@@ -56,14 +57,13 @@ void load(const char* filename, const vectR3& x, const vectReal& r){
     
     if(e<NbElt-1){file >> poubelle;}
   }
-  
-  
-  for(int j=0; j<4; j++){
-    cout << "Pt["<< j << "]:\t" << Pt[j] << endl;}
-  
+
+  // Fermeture fichier
+  file.close();
 
 
 }
+
 
 
 
