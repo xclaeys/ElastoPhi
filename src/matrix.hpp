@@ -140,10 +140,12 @@ private:
   typedef SVDType::SingularValuesType            SgValType;
   
   DenseMatrix  mat;
-  const int    nr;
-  const int    nc;  
+  int  nr;
+  int  nc;  
   
 public:
+  Matrix(): mat(0,0), nr(0), nc(0){}
+  
   Matrix(const int& nbr, const int& nbc):
     mat(nbr,nbc), nr(nbr), nc(nbc){}
 
@@ -184,6 +186,9 @@ public:
       }
     }
     return v;}
+  
+  void resize(const int nbr, const int nbc){
+    mat.resize(nbr,nbc); nr = nbr; nc = nbc;}
   
   template <typename LhsType, typename RhsType>
   friend void MvProd(LhsType& lhs, const Matrix& m, const RhsType& rhs){

@@ -17,10 +17,12 @@ using namespace std;
 
 int main(){
 
-
-  vectR3   x;
-  vectReal r;
-  load("../data/maillage.txt",x,r);
+  //  vectR3   x;
+  //  vectReal r;
+  Matrix   m;
+  //  LoadPoints("../data/maillage.txt",x,r);
+  LoadMatrix("../data/matrice.txt",m);
+  
   
 
   /* ==========================================
