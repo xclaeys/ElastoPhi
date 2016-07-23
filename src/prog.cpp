@@ -17,6 +17,9 @@ using namespace std;
 
 int main(){
 
+
+
+  
   //  vectR3   x;
   //  vectReal r;
   Matrix   m;
@@ -24,7 +27,10 @@ int main(){
   LoadMatrix("../data/matrice.txt",m);
   
   
-
+  
+  
+  
+  
   /* ==========================================
      const int N = 10;
      Matrix A(N,N);

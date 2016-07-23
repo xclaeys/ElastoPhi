@@ -9,7 +9,6 @@
 
 using namespace std;
 
-
 //==================================================//
 //
 //  DESCRIPTION:
@@ -126,17 +125,10 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
   // Fermeture fichier
   file.close();
 
-
   for(int j=0; j<r.size(); j++){
     cout << "r[" << j << "]:\t" << r[j] << endl;}
-  
-  
 
 }
-
-
-
-
 
 
 #endif
