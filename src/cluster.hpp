@@ -93,6 +93,11 @@ void Cluster::Build(){
     xc += x[num[j]];}
   xc = (1./Real(nb_pt))*xc;
   
+  Real rmax=0.;
+  for(int j=0; j<nb_pt; j++){
+    if( rmax<norm(xc-x[num[j]]) ){
+      rmax=norm(xc-x[num[j]]);} }
+  
   // Calcul matrice de covariance
   MatR3 cov; cov.setZero();
   for(int j=0; j<nb_pt; j++){
@@ -117,7 +122,7 @@ void Cluster::Build(){
   w[2] = ev(2,l).real();  
   
   // Construction des paquets enfants
-  if(nb_pt>1){
+  if(rmax>0.){
     for(int j=0; j<nb_pt; j++){
       R3 dx = x[num[j]] - xc;
       if( (w,dx)>0 ){
@@ -132,7 +137,7 @@ void Cluster::Build(){
   }
   
   // Recursivite
-  if(nb_pt>1){ // ATTENTION A MODIFIER 
+  if(rmax>0.){ 
     assert( son[0]!=0 );
     assert( son[1]!=0 );
     son[0]->Build();
@@ -142,14 +147,15 @@ void Cluster::Build(){
 }
 
 void Cluster::NearFieldBall(const Real& h){
-
+  
   // Si deja construit
   if(rad>0){return;}
   
   // Feuille de l'arbre
   int nb_pt = num.size();  
-  if(nb_pt==1){ctr=x[num[0]]; rad=h; return;} ///  ATTENTION A MODIFIER
-  
+  if(son[0]==0){
+    ctr=x[num[0]]; rad=h; return;} // ATTENTION A MODIFIER: GESTION RAYON
+    
   // Recursivite
   son[0]->NearFieldBall(h);
   son[1]->NearFieldBall(h); 
