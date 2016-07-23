@@ -10,6 +10,8 @@
 #include "loading.hpp"
 #include "export.hpp"
 
+
+#include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h>   
 
@@ -26,9 +28,25 @@ int main(){
   ExportGMSH("../data/maillage3.txt");  
   HMatrix B(A,x,x);
 
-  
 
+  // Vecteur (pseudo-)aleatoire
+  int nr  = nb_rows(A);
+  vectCplx u(nr);
+  int NbSpl = 1000; 
+  double du = 5./double(NbSpl);
+  srand (time(NULL));  
+  for(int j=0; j<nr; j++){
+    int n = rand()%(NbSpl+1);
+    u[j] = n*du;}
+
+  vectCplx ua(nr),ub(nr);
+  MvProd(ua,A,u);
+  MvProd(ub,B,u);  
+  Real err = norm(ua-ub)/norm(ua);
+  cout << "Erreur:\t" << err << endl;
   
+  //cout << "Taux de compression:\t";
+  //cout << CompressionRate(B) << endl;
   
   
   
