@@ -8,6 +8,7 @@
 #include "cluster.hpp"
 #include "hmatrix.hpp"
 #include "loading.hpp"
+#include "export.hpp"
 
 #include <stdlib.h> 
 #include <time.h>   
@@ -16,19 +17,30 @@
 using namespace std;
 
 int main(){
-
-
-
   
-  //  vectR3   x;
-  //  vectReal r;
+  
+  
+  
+  ExportGMSH("../data/maillage3.txt");
+  
+  /*
+  vectR3   x;
+  vectReal r;
   Matrix   m;
-  //  LoadPoints("../data/maillage.txt",x,r);
-  LoadMatrix("../data/matrice.txt",m);
+  LoadPoints("../data/maillage3.txt",x,r);
+  LoadMatrix("../data/matrice3.txt",m);
+  */
+
+
+  
+  //cout << "______________________________" << endl;
+  //cout << "r:\n" << r << endl;
+  //cout << "x[" << 0 << "]:\t" << x[0] << endl;
+  //for(int j=0; j<x.size(); j++){
+  //cout << "x[" << j << "]:\t" << x[j] << endl;}
   
   
-  
-  
+
   
   
   /* ==========================================

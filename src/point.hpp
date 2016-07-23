@@ -76,6 +76,14 @@ typedef array_<2,Real> R2;
 typedef array_<3,Real> R3;
 typedef array_<2,Cplx> C2;
 typedef array_<3,Cplx> C3;
+typedef array_<2,R2> R2x2;
+typedef array_<2,R3> R3x2;
+typedef array_<3,R2> R2x3;
+typedef array_<3,R3> R3x3;
+typedef array_<4,R2> R2x4;
+typedef array_<4,R3> R3x4;
+
+
 
 
 #endif

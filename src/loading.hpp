@@ -111,6 +111,8 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
     // Calcul du rayon champ 
     // proche associe a l'element
     Rmax = norm(Ctr-Pt[0]);
+    cout << "Rmax:  " << Rmax << endl;
+    
     for(int j=1; j<NbPt; j++){
       Rad = norm(Ctr-Pt[j]);
       if(Rad>Rmax){Rmax=Rad;}}
@@ -124,9 +126,6 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
 
   // Fermeture fichier
   file.close();
-
-  for(int j=0; j<r.size(); j++){
-    cout << "r[" << j << "]:\t" << r[j] << endl;}
 
 }
 
