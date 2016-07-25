@@ -87,7 +87,8 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
   // Ouverture fichier
   ifstream file; file.open(filename);
   if(!file.good()){
-    cout << "LoadPoints in loading.hpp: error opening the geometry file" << endl;
+    cout << "LoadPoints in loading.hpp: " ;
+    cout << "error opening the geometry file\n";
     abort();}
   
   // Nombre d'elements
@@ -111,7 +112,6 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
     // Calcul du rayon champ 
     // proche associe a l'element
     Rmax = norm(Ctr-Pt[0]);
-    cout << "Rmax:  " << Rmax << endl;
     
     for(int j=1; j<NbPt; j++){
       Rad = norm(Ctr-Pt[j]);

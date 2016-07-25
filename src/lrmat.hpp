@@ -61,7 +61,6 @@ public:
     int q = 0;
     while( (aux/frob)>epsilon && q < min(nr,nc) ){
       
-      
       q++;
       //======= Historique estimateur ==============//
       //cout << "___________________________" << endl;

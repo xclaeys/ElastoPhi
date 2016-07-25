@@ -10,6 +10,8 @@
 #include "loading.hpp"
 #include "export.hpp"
 
+
+#include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h>   
 
@@ -18,29 +20,34 @@ using namespace std;
 
 int main(){
   
-  
-  
-  
-  ExportGMSH("../data/maillage3.txt");
-  
-  /*
   vectR3   x;
   vectReal r;
-  Matrix   m;
+  Matrix   A;
   LoadPoints("../data/maillage3.txt",x,r);
-  LoadMatrix("../data/matrice3.txt",m);
-  */
+  LoadMatrix("../data/matrice3.txt",A);
+  ExportGMSH("../data/maillage3.txt");  
+  HMatrix B(A,x,x);
 
 
-  
-  //cout << "______________________________" << endl;
-  //cout << "r:\n" << r << endl;
-  //cout << "x[" << 0 << "]:\t" << x[0] << endl;
-  //for(int j=0; j<x.size(); j++){
-  //cout << "x[" << j << "]:\t" << x[j] << endl;}
-  
-  
+  // Vecteur (pseudo-)aleatoire
+  int nr  = nb_rows(A);
+  vectCplx u(nr);
+  int NbSpl = 1000; 
+  double du = 5./double(NbSpl);
+  srand (time(NULL));  
+  for(int j=0; j<nr; j++){
+    int n = rand()%(NbSpl+1);
+    u[j] = n*du;}
 
+  vectCplx ua(nr),ub(nr);
+  MvProd(ua,A,u);
+  MvProd(ub,B,u);  
+  Real err = norm(ua-ub)/norm(ua);
+  cout << "Erreur:\t" << err << endl;
+  
+  //cout << "Taux de compression:\t";
+  //cout << CompressionRate(B) << endl;
+  
   
   
   /* ==========================================
@@ -78,8 +85,7 @@ int main(){
      cout << "v1:\t" << v1 << endl;
      cout << "g:\t"  << g << endl;  
      ========================================== */
-  
-  
+    
   /*  
       const int N = 20;
       vectCplx U(N);
@@ -87,28 +93,28 @@ int main(){
       U[j] = 1.;}
       
       vectInt I(4);
-  I[0]=2; I[1]=3; I[2]=4; I[3]=5;
+      I[0]=2; I[1]=3; I[2]=4; I[3]=5;
   
-  SubVectCplx V(U,I);
-  V = 2.;
-
-  cout << "U:\t"     << U     << endl;
-  cout << "(V,V):\t" << (V,V) << endl;  
+      SubVectCplx V(U,I);
+      V = 2.;
+      
+      cout << "U:\t"     << U     << endl;
+      cout << "(V,V):\t" << (V,V) << endl;  
   */  
   
   
   /*
-  const int N = 10;
-  Matrix A(N,N);
-  for(int j=0; j<N; j++){
+    const int N = 10;
+    Matrix A(N,N);
+    for(int j=0; j<N; j++){
     for(int k=0; k<N; k++){
-      A(j,k) = 1./(1+abs(j+k));      
-      
+    A(j,k) = 1./(1+abs(j+k));      
+    
     }
-  }
-
-  cout << "A:\n" << A << endl;
-  
+    }
+    
+    cout << "A:\n" << A << endl;
+    
   vectInt I(4), J(4);
   I[0]=0; I[1]=1; I[2]=2; I[3]=3;
   J[0]=0; J[1]=1; J[2]=2; J[3]=3;
