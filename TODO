@@ -1,10 +1,61 @@
+
+   ===================
+   TESTS
+   ===================
+
+
+* Pierre: Test sur le decoupage hierarchique:
+   1) Prendre une matrice dense
+   2) Decouper par l'algo hierarchique
+   3) Stocker chaque bloc du decoupage au format dense
+   4) Verifier que les produit matrice-vecteur coincident
+   pour mla matrice de depart et la matrice au format hierarchique
+
+* Marcella: Tester la precision du produit matrice vecteur en fonction de
+   l'agressivite de la compression ACA   
+
+* Pierre te Marcella: Verifier qu'il est possible de mieux compresser la matrice quand les
+   nuages de points sources et cibles sont distants
+-> construction de la matrice:
+   1) avec BEMTOOL
+   2) A_jk = 1/4pi|xj-yk|
+-> Meme test en generant un nuage de point aleatoire   
+
+* Chaque fois qu'une classe est documentee, realiser des tests
+
 * Mener une batterie de tests sur l'évolution du taux de compression
-en fonction de la taille de la matrice, pour different noyaux A_jk
-* Tester la precision du produit matrice vecteur en fonction de
-   l'agressivite de la compression ACA
+   En fonction de la taille de la matrice, pour different noyaux A_jk
+   Exemple: A_jk = 1/(1+|j-k|)
+
+* Verifier que la precision du produit matrice vecteur augmente
+   quand on reduit le taux de compression, en jouant sur les
+   parametres de la methode ACA
+   -> impact du epsilon
+   -> impact du eta
+   
+* Dans le cas de nuages distant, effectuer le test sur la matrice
+   d'abord mise au format LowRank puis au format HMatrix
+   
+   
+   ===================
+   A IMPLEMENTER
+   ===================
+   
+* Realiser une routine permettant de visualiser le taux de compression
+   local suivant la position dans la matrice 
+   
 * Trouver un moyen plus intelligent de gérer les rayons d'action des
    degrés de liberté qui définissent le champ proche
-* MOdifier cluster.hpp pour gerer les cas ou deux noeuds du nuage
+   
+* Modifier cluster.hpp pour gerer les cas ou deux noeuds du nuage
    coincident mais sont associes a des indices differents
    
+* Rediger une documentation de chacune des classe de la librairie
+   
+   
+   ===================
+   QUESTION IBTIHEL
+   ===================
+   
+* Pouvez-vous expliquer plus en detail le procede de discretisation
    

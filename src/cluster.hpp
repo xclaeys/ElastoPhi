@@ -35,8 +35,9 @@ typedef EigenSolver::EigenvalueType   EigenValue;
 class Cluster{
   
 private:
-  const vectR3&   x;       // Nuage complet de points
+  const vectR3&   x;       // Nuage complet des points
   vectInt         num;     // Indices des noeuds du nuage
+
   Cluster*        son[2];  // Paquets enfants
   R3              ctr;     // Centre du paquet
   Real            rad;     // Rayon du champ proche
@@ -47,6 +48,7 @@ public:
   Cluster(const vectR3& x0): x(x0), ctr(0.), rad(0.) {
     son[0]=0;son[1]=0;
     for(int j=0; j<x.size(); j++){num.push_back(j);}
+    
     Build();
     
     //=============== TEST ===============//
