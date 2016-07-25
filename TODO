@@ -13,7 +13,7 @@
 
 * Marcella: Tester la precision du produit matrice vecteur en fonction de
    l'agressivite de la compression ACA   
-
+   
 * Pierre te Marcella: Verifier qu'il est possible de mieux compresser la matrice quand les
    nuages de points sources et cibles sont distants
 -> construction de la matrice:
@@ -26,12 +26,12 @@
 * Mener une batterie de tests sur l'évolution du taux de compression
    En fonction de la taille de la matrice, pour different noyaux A_jk
    Exemple: A_jk = 1/(1+|j-k|)
-
+   
 * Verifier que la precision du produit matrice vecteur augmente
    quand on reduit le taux de compression, en jouant sur les
    parametres de la methode ACA
-   -> impact du epsilon
-   -> impact du eta
+-> impact du epsilon
+-> impact du eta
    
 * Dans le cas de nuages distant, effectuer le test sur la matrice
    d'abord mise au format LowRank puis au format HMatrix
