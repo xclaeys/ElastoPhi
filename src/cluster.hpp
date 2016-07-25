@@ -117,7 +117,7 @@ void Cluster::Build(){
   EigenVector ev = eig.eigenvectors();
   int l = 0; Real max=abs(lambda[0]);
   if( max<abs(lambda[1]) ){l=1; max=abs(lambda[1]);}
-  if( max<abs(lambda[2]) ){l=2;}
+  if( max<abs(lambda[2]) ){l=2; }
   R3 w;
   w[0] = ev(0,l).real();
   w[1] = ev(1,l).real();
