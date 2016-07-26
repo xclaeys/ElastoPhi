@@ -14,3 +14,9 @@ To compile :
 To add a test :
 - add the file in test/
 - modify CMakeLists.txt and test/CMakeLists.txt 
+
+
+
+For the documentation :
+- HTML : open index.html
+- latex, do : make in bin/doc/latex and open bin/doc/latex/refman.pdf
