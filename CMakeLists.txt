@@ -13,4 +13,5 @@ add_subdirectory(test)
 
 # Testing project
 enable_testing()
-add_test(NAME Features_test COMMAND Tests)
+add_test(NAME Algebra_test COMMAND Test_algebra)
+add_test(NAME ACA_test COMMAND Test_ACA)
