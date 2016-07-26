@@ -7,6 +7,88 @@
 #include <stdlib.h>
 #include "matrix.hpp"
 
+
+
+//==================================================//
+//
+//  DESCRIPTION:
+//  Convertit le maillage au format de medit
+//  pour visualisation. Le fichier de sortie
+//  s'appelle "visu.mesh"
+//
+//  INPUT:
+//  filename: nom du fichier de maillage
+//
+//  OUTPUT:
+//  none
+//
+//  REMARQUE:
+//  Cette routine a ete ecrite en considerant
+//  que les elements etaient des quadrangles
+//
+//==================================================//
+
+void ExportMEDIT(const char* filename){
+
+  vector<R3x4> Elt;
+  int NbElt, NbPt, poubelle;
+  
+  // Ouverture fichier
+  ifstream infile;
+  infile.open(filename);
+  if(!infile.good()){
+    cout << "LoadPoints in loading.hpp: error opening the geometry file" << endl;
+    abort();}
+  
+  // Nombre d'elements
+  infile >> NbElt; 
+  Elt.resize(NbElt);
+  
+  // Lecture elements
+  for(int e=0; e<NbElt; e++){
+    infile >> poubelle;
+    infile >> NbPt;
+    
+    // Calcul centre element
+    for(int j=0; j<NbPt; j++){
+      infile >> poubelle;
+      infile >> Elt[e][j];
+    }
+
+    // Separateur inter-element
+    if(e<NbElt-1){infile >> poubelle;}    
+    
+  }
+  infile.close();  
+
+  // Ecriture fichier de sortie
+  ofstream outfile;
+  outfile.open("visu.mesh");
+  outfile << "MeshVersionFormatted 1\n";
+  outfile << "Dimension 3\n";
+  outfile << "Vertices\n";
+  outfile << 4*NbElt << endl;
+  for(int j=0; j<NbElt; j++){
+    for(int k=0; k<4; k++){
+      outfile << Elt[j][k] << "\t";
+      outfile << 0 << "\n";
+    }
+  }
+  outfile << endl;
+  outfile << "Quadrilaterals\n"; 
+  outfile << NbElt << endl;
+  for(int j=0; j<NbElt; j++){  
+    for(int k=0; k<4; k++){
+      outfile << 4*j+k+1 << "\t";}
+    outfile << 0 << endl;
+  }
+  outfile.close();
+  
+}
+
+
+
+
 //==================================================//
 //
 //  DESCRIPTION:
@@ -19,6 +101,10 @@
 //
 //  OUTPUT:
 //  none
+//
+//  REMARQUE:
+//  Cette routine a ete ecrite en considerant
+//  que les elements etaient des quadrangles
 //
 //==================================================//
 
