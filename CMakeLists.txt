@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.6)
 Project(ElastoPhi)
 
-# Add the headers into the project
+# List the headers and add them into the project
+FILE(GLOB_RECURSE MY_HEADERS "include/*.hpp")
 include_directories(include)
-
+message("${MY_HEADERS}")
 # Add sources file
 add_subdirectory(src)
 
