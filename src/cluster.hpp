@@ -1,4 +1,3 @@
-
 #ifndef CLUSTER_HPP
 #define CLUSTER_HPP
 #include <cassert>
@@ -36,6 +35,8 @@ class Cluster{
   
 private:
   const vectR3&   x;       // Nuage complet des points
+  const vectReal& r;       // Rayon de champs proche pour chaque point
+  
   vectInt         num;     // Indices des noeuds du nuage
 
   Cluster*        son[2];  // Paquets enfants
@@ -45,26 +46,17 @@ private:
   void Build();
   
 public:
-  Cluster(const vectR3& x0): x(x0), ctr(0.), rad(0.) {
+  Cluster(const vectR3& x0, const vectReal& r0): x(x0), r(r0), ctr(0.), rad(0.) {
     son[0]=0;son[1]=0;
     for(int j=0; j<x.size(); j++){num.push_back(j);}
-    
     Build();
-    
-    //=============== TEST ===============//
-    // Plus ou moins la finesse du maillage
-    Real h = 1./100.;
-    //=============== TEST ===============//
-    
-    NearFieldBall(h);
+    NearFieldBall();
   }
   
-  Cluster(const vectR3& x0, const int& j0): x(x0), ctr(0.), rad(0.) {
+  Cluster(const vectR3& x0, const vectReal& r0, const int& j0): x(x0), r(r0), ctr(0.), rad(0.) {
     son[0]=0;son[1]=0; num.push_back(j0);}
-  
   Cluster(const Cluster& ); // Pas de recopie 
-  
-  void NearFieldBall(const Real&);
+  void NearFieldBall();
   bool IsLeaf() const { if(son[0]==0){return true;} return false; }
   void push_back(const int& j){num.push_back(j);}
   void push_back(const vectInt& init){num = init;}  
@@ -124,22 +116,22 @@ void Cluster::Build(){
   w[2] = ev(2,l).real();  
   
   // Construction des paquets enfants
-  if(rmax>0.){
+  if(rmax>1e-10){
     for(int j=0; j<nb_pt; j++){
       R3 dx = x[num[j]] - xc;
       if( (w,dx)>0 ){
-	if(son[0]==0){son[0] = new Cluster(x,num[j]);}
+	if(son[0]==0){son[0] = new Cluster(x,r,num[j]);}
 	else{ son[0]->push_back(num[j]); }
       }
       else{
-	if(son[1]==0){son[1] = new Cluster(x,num[j]);}
+	if(son[1]==0){son[1] = new Cluster(x,r,num[j]);}
 	else{ son[1]->push_back(num[j]); }
       }
     }
   }
   
   // Recursivite
-  if(rmax>0.){ 
+  if(rmax>1e-10){ 
     assert( son[0]!=0 );
     assert( son[1]!=0 );
     son[0]->Build();
@@ -148,7 +140,7 @@ void Cluster::Build(){
   
 }
 
-void Cluster::NearFieldBall(const Real& h){
+void Cluster::NearFieldBall(){
   
   // Si deja construit
   if(rad>0){return;}
@@ -156,17 +148,19 @@ void Cluster::NearFieldBall(const Real& h){
   // Feuille de l'arbre
   int nb_pt = num.size();  
   if(son[0]==0){
-    ctr=x[num[0]]; rad=h; return;} // ATTENTION A MODIFIER: GESTION RAYON
-    
+    ctr=x[num[0]];
+    rad=r[num[0]];
+    return;} 
+  
   // Recursivite
-  son[0]->NearFieldBall(h);
-  son[1]->NearFieldBall(h); 
+  son[0]->NearFieldBall();
+  son[1]->NearFieldBall(); 
   
   // Centre et rayon champ proche
   const Real& r0 = son[0]->rad;
   const Real& r1 = son[1]->rad;  
-  const R3& c0   = son[0]->ctr;
-  const R3& c1   = son[1]->ctr;  
+  const R3&   c0 = son[0]->ctr;
+  const R3&   c1 = son[1]->ctr;  
   
   Real l = 0.5*( 1 + (r1-r0)/norm(c1-c0) );
   ctr = (1-l)*c0 + l*c1;
@@ -192,13 +186,12 @@ public:
   friend const Cluster& src_(const Block& b){return *(b.s);}
   bool IsAdmissible() const{
     return max(rad_(*t),rad_(*s)) < 2*eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
-
   friend ostream& operator<<(ostream& os, const Block& b){
     os << "src:\t" << src_(b) << endl; os << "tgt:\t" << tgt_(b); return os;}
   
 };
-const Real Block::eta = 0.8;
 
+const Real Block::eta = 1;
 
 //===============================//
 //       ARBRE DES BLOCS         // 

@@ -23,12 +23,22 @@ int main(){
   vectR3   x;
   vectReal r;
   Matrix   A;
-  LoadPoints("../data/maillage3.txt",x,r);
-  LoadMatrix("../data/matrice3.txt",A);
-  ExportGMSH("../data/maillage3.txt");  
-  HMatrix B(A,x,x);
 
+  LoadPoints("../data/maillage6.txt",x,r);
+  LoadMatrix("../data/matrice6.txt",A);
+  ExportGMSH("../data/maillage6.txt");  
 
+  /*
+  cout << "x.size():"   << x.size()   << endl;
+  cout << "r.size():"   << r.size()   << endl;
+  cout << "nb_rows(A):" << nb_rows(A) << endl;
+  cout << "nb_cols(A):" << nb_cols(A) << endl;
+  */
+
+  for(int j=0; j<r.size(); j++){r[j] = 0.1*r[j];}
+  HMatrix B(A,x,r,x,r);
+
+  
   // Vecteur (pseudo-)aleatoire
   int nr  = nb_rows(A);
   vectCplx u(nr);
@@ -45,8 +55,8 @@ int main(){
   Real err = norm(ua-ub)/norm(ua);
   cout << "Erreur:\t" << err << endl;
   
-  //cout << "Taux de compression:\t";
-  //cout << CompressionRate(B) << endl;
+  cout << "Taux de compression:\t";
+  cout << CompressionRate(B) << endl;
   
   
   
