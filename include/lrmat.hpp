@@ -29,9 +29,9 @@
 //=================================//
 
 class LowRankMatrix{
-
+  
 private:  
-
+  
   Real epsilon;
   int rank, nr, nc;
   vector<vectCplx> u, v;
@@ -39,13 +39,13 @@ private:
 public:
   
   LowRankMatrix(const int& nbr, const int& nbc){
-    nr=nbr; nc=nbc; rank=0; epsilon = 1e-6;}
+    nr=nbr; nc=nbc; rank=0; epsilon = 1e-5;}
   
   //=========================//
   //    PARTIAL PIVOT ACA    //
   //=========================//
   template <typename mat>
-  LowRankMatrix(const mat& A, const Real& eps = 1e-4){
+  LowRankMatrix(const mat& A, const Real& eps = 1e-5){
     
     epsilon = eps;
     nr = nb_rows(A);
@@ -67,7 +67,7 @@ public:
       //cout << "Iteration:\t"  << q++ << endl; 
       //cout << "Estimateur:\t" << aux/frob << endl;
       //============================================//
-
+      
       //==================//
       // Recherche colonne
       Real rmax = 0.;

@@ -5,7 +5,6 @@
 #include <fstream>
 #include "matrix.hpp"
 
-
 //===============================//
 //     MATRICE HIERARCHIQUE      // 
 //===============================//
@@ -20,7 +19,7 @@ private:
   
   vector<Block>         FarField;
   vector<LowRankMatrix> FarFieldMat;
-  
+    
   vector<Block>         NearField;
   vector<Matrix>        NearFieldMat;
   
@@ -28,12 +27,11 @@ private:
   
 public:
   
-  HMatrix(const Matrix&, const vectR3&, const vectR3&); 
+  HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&); 
   friend void DisplayPartition(const HMatrix&, char const* const);
   friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
   friend Real CompressionRate(const HMatrix&);
-  
-  
+    
 };
 
 void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
@@ -72,17 +70,21 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
   
 }
 
-HMatrix::HMatrix(const Matrix& mat0, const vectR3& xt0, const vectR3& xs0):
+HMatrix::HMatrix(const Matrix& mat0,
+		 const vectR3& xt0, const vectReal& rt,
+		 const vectR3& xs0, const vectReal& rs):
+  
   mat(mat0), xt(xt0), xs(xs0) {
   assert( nb_rows(mat)==xt.size() && nb_cols(mat)==xs.size() );
   
   // Construction arbre des paquets
-  Cluster t(xt); Cluster s(xs);
+  Cluster t(xt,rt); Cluster s(xs,rs);
   
   // Construction arbre des blocs
   BuildBlockTree(t,s);  
   
 }
+
 
 Real CompressionRate(const HMatrix& hmat){
   
@@ -103,6 +105,7 @@ Real CompressionRate(const HMatrix& hmat){
     Real nc   = nb_cols(NearFieldMat[j]);
     comp += nr*nc/size;
   }
+
   return comp;
   
 }
@@ -120,10 +123,10 @@ void DisplayPartition(const HMatrix& hmat, char const * const name){
   const Real ds = 1./Real(Ns-1);
   const int  Nt = xt.size();
   const Real dt = 1./Real(Nt-1);
-
+  
   ofstream file; file.open(name);
   for(int j=0; j<FarField.size(); j++){
-
+    
     const Cluster& t = tgt_(FarField[j]);
     const vectInt& It = num_(t);
     Real at = (It[0]-0.5)*dt;
@@ -145,6 +148,7 @@ void DisplayPartition(const HMatrix& hmat, char const * const name){
   file.close();
  
 }
+
 
 void MvProd(vectCplx& f, const HMatrix& A, const vectCplx& x){
   assert(size(f)==size(x)); fill(f,0.);
