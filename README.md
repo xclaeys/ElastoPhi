@@ -17,6 +17,13 @@ To add a test :
 
 
 
-For the documentation :
+To write latex in documentation :
+- in-text forumulas : \f$ ... \f$
+- unumbered centered displayed formulas : \f[ ... \f]
+- special env : \f{env}{ ... \f}
+ 
+To read the documentation :
 - HTML : open index.html
 - latex, do : make in bin/doc/latex and open bin/doc/latex/refman.pdf
+
+
