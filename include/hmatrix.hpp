@@ -18,6 +18,7 @@ private:
   const vectR3& xs;
   
   const Real eta;
+  const Real epsilon;
   
   vector<Block>         FarField;
   vector<LowRankMatrix> FarFieldMat;
@@ -25,25 +26,25 @@ private:
   vector<Block>         NearField;
   vector<Matrix>        NearFieldMat;
   
-  void BuildBlockTree(const Cluster&, const Cluster&, const Real);
+  void BuildBlockTree(const Cluster&, const Cluster&);
   
 public:
   
-  HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&, const Real); 
+  HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&, const Real, const Real); 
   friend void DisplayPartition(const HMatrix&, char const* const);
   friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
   friend Real CompressionRate(const HMatrix&);
     
 };
 
-void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, const Real eta){
+void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
   Block B(t,s,eta);
   if( B.IsAdmissible() ){
     FarField.push_back(B);
     const vectInt& I = num_(t);
     const vectInt& J = num_(s);
     SubMatrix submat = SubMatrix(mat,I,J);
-    FarFieldMat.push_back(LowRankMatrix(submat));
+    FarFieldMat.push_back(LowRankMatrix(submat, epsilon));
   }
   else if( s.IsLeaf() ){
     if( t.IsLeaf() ){
@@ -53,20 +54,20 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, const Real eta)
       NearFieldMat.push_back(SubMatrix(mat,I,J));      
     }    
     else{
-      BuildBlockTree(son_(t,0),s,eta);
-      BuildBlockTree(son_(t,1),s,eta);
+      BuildBlockTree(son_(t,0),s);
+      BuildBlockTree(son_(t,1),s);
     }
   }
   else{    
     if( t.IsLeaf() ){
-      BuildBlockTree(t,son_(s,0),eta);
-      BuildBlockTree(t,son_(s,1),eta);
+      BuildBlockTree(t,son_(s,0));
+      BuildBlockTree(t,son_(s,1));
     }
     else{
-      BuildBlockTree(son_(t,0),son_(s,0),eta);
-      BuildBlockTree(son_(t,0),son_(s,1),eta);
-      BuildBlockTree(son_(t,1),son_(s,0),eta);
-      BuildBlockTree(son_(t,1),son_(s,1),eta);    
+      BuildBlockTree(son_(t,0),son_(s,0));
+      BuildBlockTree(son_(t,0),son_(s,1));
+      BuildBlockTree(son_(t,1),son_(s,0));
+      BuildBlockTree(son_(t,1),son_(s,1));    
     }
   }
   
@@ -75,16 +76,16 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, const Real eta)
 HMatrix::HMatrix(const Matrix& mat0,
 		 const vectR3& xt0, const vectReal& rt,
 		 const vectR3& xs0, const vectReal& rs,
-		 const Real eta0):
+		 const Real eta0, const Real epsilon0):
   
-  mat(mat0), xt(xt0), xs(xs0), eta(eta0) {
+  mat(mat0), xt(xt0), xs(xs0), eta(eta0), epsilon(epsilon0) {
   assert( nb_rows(mat)==xt.size() && nb_cols(mat)==xs.size() );
   
   // Construction arbre des paquets
   Cluster t(xt,rt); Cluster s(xs,rs);
   
   // Construction arbre des blocs
-  BuildBlockTree(t,s,eta);  
+  BuildBlockTree(t,s);  
   
 }
 
