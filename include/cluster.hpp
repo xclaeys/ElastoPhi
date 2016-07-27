@@ -174,14 +174,14 @@ void Cluster::NearFieldBall(){
 class Block{
   
 private:
-  static const Real eta;  
+  Real eta;  
   const Cluster* t; 
   const Cluster* s; 
   
 public:
-  Block(const Cluster& t0, const Cluster& s0):  t(&t0), s(&s0) {};
-  Block(const Block& b): t(b.t), s(b.s) {};
-  Block& operator=(const Block& b){t=b.t; s=b.s; return *this;}
+  Block(const Cluster& t0, const Cluster& s0, Real eta0):  t(&t0), s(&s0), eta(eta0) {};
+  Block(const Block& b): t(b.t), s(b.s), eta(b.eta) {};
+  Block& operator=(const Block& b){t=b.t; s=b.s; eta=b.eta; return *this;}
   friend const Cluster& tgt_(const Block& b){return *(b.t);}
   friend const Cluster& src_(const Block& b){return *(b.s);}
   bool IsAdmissible() const{
@@ -191,60 +191,58 @@ public:
   
 };
 
-const Real Block::eta = 1;
-
 //===============================//
 //       ARBRE DES BLOCS         // 
 //===============================//
-class BlockTree{
-  
-private:
-  vector<Block> FarField;
-  vector<Block> NearField;
-  
-public:
-  BlockTree(){};  
-  void Build(const Cluster&, const Cluster&);
-  friend ostream& operator<<(ostream& os, const BlockTree& bt)
-  {
-    os << "__________" << endl;
-    os << "NearField:" << endl;
-    for(int j=0; j<bt.NearField.size(); j++){
-      os << bt.NearField[j] << endl << endl;}
-    os << "__________" << endl;
-    os << "FarField:" << endl;
-    for(int j=0; j<bt.FarField.size(); j++){
-      os << bt.FarField[j] << endl << endl;}
-    return os;
-  }  
-  
-};
-
-
-void BlockTree::Build(const Cluster& t, const Cluster& s){
-  Block B(t,s);
-  if( B.IsAdmissible() ){FarField.push_back(B);}
-  else if( s.IsLeaf() ){
-    if( t.IsLeaf() ){NearField.push_back(B);}    
-    else{
-      Build(son_(t,0),s);
-      Build(son_(t,1),s);
-    }
-  }
-  else{
-    if( t.IsLeaf() ){
-      Build(t,son_(s,0));
-      Build(t,son_(s,1));
-    }
-    else{
-      Build(son_(t,0),son_(s,0));
-      Build(son_(t,0),son_(s,1));
-      Build(son_(t,1),son_(s,0));
-      Build(son_(t,1),son_(s,1));    
-    }
-  }
-  
-}
+// class BlockTree{
+//   
+// private:
+//   vector<Block> FarField;
+//   vector<Block> NearField;
+//   
+// public:
+//   BlockTree(){};  
+//   void Build(const Cluster&, const Cluster&);
+//   friend ostream& operator<<(ostream& os, const BlockTree& bt)
+//   {
+//     os << "__________" << endl;
+//     os << "NearField:" << endl;
+//     for(int j=0; j<bt.NearField.size(); j++){
+//       os << bt.NearField[j] << endl << endl;}
+//     os << "__________" << endl;
+//     os << "FarField:" << endl;
+//     for(int j=0; j<bt.FarField.size(); j++){
+//       os << bt.FarField[j] << endl << endl;}
+//     return os;
+//   }  
+//   
+// };
+// 
+// 
+// void BlockTree::Build(const Cluster& t, const Cluster& s){
+//   Block B(t,s);
+//   if( B.IsAdmissible() ){FarField.push_back(B);}
+//   else if( s.IsLeaf() ){
+//     if( t.IsLeaf() ){NearField.push_back(B);}    
+//     else{
+//       Build(son_(t,0),s);
+//       Build(son_(t,1),s);
+//     }
+//   }
+//   else{
+//     if( t.IsLeaf() ){
+//       Build(t,son_(s,0));
+//       Build(t,son_(s,1));
+//     }
+//     else{
+//       Build(son_(t,0),son_(s,0));
+//       Build(son_(t,0),son_(s,1));
+//       Build(son_(t,1),son_(s,0));
+//       Build(son_(t,1),son_(s,1));    
+//     }
+//   }
+//   
+// }
 
 
 
