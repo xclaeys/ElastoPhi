@@ -6,6 +6,7 @@
 #include <vector>
 #include <cassert>
 #include "matrix.hpp"
+#include "loading.hpp"
 
 
 //================================//
@@ -31,23 +32,21 @@
 class LowRankMatrix{
   
 private:  
-  
-  Real epsilon;
+  Param Parametres;
   int rank, nr, nc;
   vector<vectCplx> u, v;
   
 public:
   
   LowRankMatrix(const int& nbr, const int& nbc){
-    nr=nbr; nc=nbc; rank=0; epsilon = 1e-5;}
+    nr=nbr; nc=nbc; rank=0;}
   
   //=========================//
   //    PARTIAL PIVOT ACA    //
   //=========================//
   template <typename mat>
-  LowRankMatrix(const mat& A, const Real& eps = 1e-5){
+  LowRankMatrix(const mat& A){
     
-    epsilon = eps;
     nr = nb_rows(A);
     nc = nb_cols(A);  
     vector<bool> visited_row(nr,false); 
@@ -59,7 +58,7 @@ public:
     
     int I=0, J=0;
     int q = 0;
-    while( (aux/frob)>epsilon && q < min(nr,nc) ){
+    while( (aux/frob)>Parametres.epsilon && q < min(nr,nc) ){
       
       q++;
       //======= Historique estimateur ==============//
@@ -117,7 +116,7 @@ public:
   }
     
   LowRankMatrix(const LowRankMatrix& m){
-    nr=m.nr; nc=m.nc; rank = m.rank; epsilon = m.epsilon;
+    nr=m.nr; nc=m.nc; rank = m.rank;
     u.resize(rank); v.resize(rank);
     for(int j=0; j<rank; j++){
       u[j] = m.u[j]; v[j] = m.v[j];}

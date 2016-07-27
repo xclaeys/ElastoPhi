@@ -4,6 +4,7 @@
 #include <cassert>
 #include <fstream>
 #include "matrix.hpp"
+#include "loading.hpp"
 
 //===============================//
 //     MATRICE HIERARCHIQUE      // 
@@ -17,9 +18,6 @@ private:
   const vectR3& xt;
   const vectR3& xs;
   
-  const Real eta;
-  const Real epsilon;
-  
   vector<Block>         FarField;
   vector<LowRankMatrix> FarFieldMat;
     
@@ -30,7 +28,7 @@ private:
   
 public:
   
-  HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&, const Real, const Real); 
+  HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&); 
   friend void DisplayPartition(const HMatrix&, char const* const);
   friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
   friend Real CompressionRate(const HMatrix&);
@@ -38,13 +36,13 @@ public:
 };
 
 void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
-  Block B(t,s,eta);
+  Block B(t,s);
   if( B.IsAdmissible() ){
     FarField.push_back(B);
     const vectInt& I = num_(t);
     const vectInt& J = num_(s);
     SubMatrix submat = SubMatrix(mat,I,J);
-    FarFieldMat.push_back(LowRankMatrix(submat, epsilon));
+    FarFieldMat.push_back(LowRankMatrix(submat));
   }
   else if( s.IsLeaf() ){
     if( t.IsLeaf() ){
@@ -75,10 +73,9 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
 
 HMatrix::HMatrix(const Matrix& mat0,
 		 const vectR3& xt0, const vectReal& rt,
-		 const vectR3& xs0, const vectReal& rs,
-		 const Real eta0, const Real epsilon0):
+		 const vectR3& xs0, const vectReal& rs):
   
-  mat(mat0), xt(xt0), xs(xs0), eta(eta0), epsilon(epsilon0) {
+  mat(mat0), xt(xt0), xs(xs0) {
   assert( nb_rows(mat)==xt.size() && nb_cols(mat)==xs.size() );
   
   // Construction arbre des paquets

@@ -2,6 +2,7 @@
 #define CLUSTER_HPP
 #include <cassert>
 #include "matrix.hpp"
+#include "loading.hpp"
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues> 
 
@@ -174,18 +175,19 @@ void Cluster::NearFieldBall(){
 class Block{
   
 private:
-  Real eta;  
+  Param Parametres;
+  
   const Cluster* t; 
   const Cluster* s; 
   
 public:
-  Block(const Cluster& t0, const Cluster& s0, Real eta0):  t(&t0), s(&s0), eta(eta0) {};
-  Block(const Block& b): t(b.t), s(b.s), eta(b.eta) {};
-  Block& operator=(const Block& b){t=b.t; s=b.s; eta=b.eta; return *this;}
+  Block(const Cluster& t0, const Cluster& s0):  t(&t0), s(&s0) {};
+  Block(const Block& b): t(b.t), s(b.s) {};
+  Block& operator=(const Block& b){t=b.t; s=b.s; return *this;}
   friend const Cluster& tgt_(const Block& b){return *(b.t);}
   friend const Cluster& src_(const Block& b){return *(b.s);}
   bool IsAdmissible() const{
-    return max(rad_(*t),rad_(*s)) < eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
+    return max(rad_(*t),rad_(*s)) < Parametres.eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
   friend ostream& operator<<(ostream& os, const Block& b){
     os << "src:\t" << src_(b) << endl; os << "tgt:\t" << tgt_(b); return os;}
   

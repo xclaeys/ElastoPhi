@@ -12,8 +12,8 @@
 
 using namespace std;
 
-////========================================================////
-///////////////===== Gestion temps ======///////////////////////
+////////////////========================================================////////////////
+////////////////////////========  Gestion temps	========////////////////////////////////
 
 stack<clock_t> tictoc_stack;
 
@@ -30,8 +30,8 @@ void toc(vector<double>& times) {
 
 
 
-////========================================================////
-/////////////////===== Conversions ======///////////////////////
+////////////////========================================================////////////////
+////////////////////////========  Conversions	========////////////////////////////////
 
 template <typename nbr>
 string NbrToStr(nbr N){
@@ -62,8 +62,8 @@ Cplx StrToCplx(string str){
 	return N;
 }
 
-////========================================================////
-///////////////////////===== Input ======///////////////////////
+////////////////========================================================////////////////
+////////////////////////========    String splitting	========////////////////////////
 
 vector<string> &split(const string &s, char delim, vector<string> &elems) {
     stringstream ss(s);
@@ -77,33 +77,6 @@ vector<string> split(const string &s, char delim) {
 	vector<string> elems;
 	split(s, delim, elems);
 	return elems;
-}
-
-void GetInput(string data_name, Real& epsilon, Real& eta){
-	ifstream data(data_name.c_str());
-	
-	// Si le fichier n'existe pas
-	if (!data){
-		cerr << "Input file doesn't exist" << endl;
-		exit(1);
-	}
-	// Lecture du fichier
-	else {
-		while (data){
-			string strInput;
-			getline(data,strInput);
-
-			vector<string> line = split (strInput,' ');
-			if (!line.empty()){
-				if (line.at(0)=="Eta"){
-					eta=StrToReal(line.back());
-				}
-				else if (line.at(0)=="Epsilon"){
-					epsilon=StrToReal(line.back());
-				}
-			}
-		}
-	}
 }
 
 
