@@ -127,9 +127,23 @@ void fill(SubVectCplx& u, const Cplx& v){
   for(int j=0; j<size(u); j++){u[j]=v;}}
 
 
-//================================//
-//         CLASSE MATRICE         //
-//================================//
+
+//=================================================================//
+//                         CLASS MATRIX
+/******************************************************************//**	
+ * This class is a wrapper for the Matrix class with Dynamic size of  
+ *  the [Eigen3](http://eigen.tuxfamily.org/dox/) library.
+ *  Elements of the class Matrix represent dense matrices.    
+ * 
+ *  The number of rows and columns can be changed after initialisation.
+ *  
+ *  Elements of this class store
+ *     - mat: an instance of an Eigen3 matrix
+ *     - nr:  the number of rows
+ *     - nc:  the number of columns
+ *
+ *********************************************************************/
+
 class Matrix{
 
 private:
@@ -139,19 +153,45 @@ private:
   typedef Eigen::JacobiSVD<DenseMatrix>          SVDType;
   typedef SVDType::SingularValuesType            SgValType;
   
+
   DenseMatrix  mat;
   int  nr;
   int  nc;  
   
 public:
+
+  //! ### Default constructor
+  /*!
+    Initialise the matrix to the size 0*0 
+  */
   Matrix(): mat(0,0), nr(0), nc(0){}
-  
+
+
+  //! ### Another constructor
+  /*!
+    Initialise the matrix with _nbr_ rows and _nbc_ columns, 
+    and fills the matrix with zeros
+  */  
   Matrix(const int& nbr, const int& nbc):
     mat(nbr,nbc), nr(nbr), nc(nbc){}
 
+
+  //! ### Copy constructor
+  /*!
+    Initialise the matrix with _nbr_ rows and _nbc_ columns, 
+    and fills the matrix with zeros
+  */  
   Matrix(const Matrix& A):
     nr(A.nr), nc(A.nc), mat(A.mat){}
-  
+
+  //! ### Templated copy constructor
+  /*!
+    Does the same as the copy constructor 
+    but the input argument can _A_ be of any type.
+    The only requirement is that the parenthesis operator 
+    be overloaded so that the expression _A(j,k)_ provides 
+    access to the elements of _A_.  
+  */    
   template <typename MatType>
   Matrix(const MatType& A):
     nr(nb_rows(A)), nc(nb_cols(A)), mat(nb_rows(A),nb_cols(A)){
@@ -161,17 +201,45 @@ public:
       }
     }
   }
-  
+
+
+  //! ### Access operator 
+  /*!
+    If _A_ is the instance calling the operator 
+    _A(j,k)_ returns the entry of _A_ located 
+    jth row and kth column. Modification of the entries 
+    are allowed.
+  */  
   Cplx& operator()(const int& j, const int& k){
     return mat(j,k);}
-  
+
+
+  //! ### Access operator
+  /*!
+    If _A_ is the instance calling the operator 
+    _A(j,k)_ returns the entry of _A_ located 
+    jth row and kth column. Modification of the 
+    entries are forbidden.
+  */  
   const Cplx& operator()(const int& j, const int& k) const {
     return mat(j,k);}  
-  
+
+  //! ### Assignement operator with matrix input argument
+  /*!
+    Copies the value of the entries of the input _A_ 
+    (which is a matrix) argument into the entries of 
+    calling instance.
+  */    
   void operator=(const Matrix& A){
     assert( nr==A.nr && nc==A.nc);
     mat = A.mat;} 
-  
+
+  //! ### Assignement operator with matrix input argument
+  /*!
+    Copies the value of the entries of the input _A_ 
+    (which is a matrix) argument into the entries of 
+    calling instance.
+  */    
   void operator=(const Cplx& z){
     for(int j=0; j<nr; j++){
       for(int k=0; k<nc; k++){

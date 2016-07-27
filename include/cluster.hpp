@@ -185,7 +185,7 @@ public:
   friend const Cluster& tgt_(const Block& b){return *(b.t);}
   friend const Cluster& src_(const Block& b){return *(b.s);}
   bool IsAdmissible() const{
-    return max(rad_(*t),rad_(*s)) < 2*eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
+    return max(rad_(*t),rad_(*s)) < eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
   friend ostream& operator<<(ostream& os, const Block& b){
     os << "src:\t" << src_(b) << endl; os << "tgt:\t" << tgt_(b); return os;}
   

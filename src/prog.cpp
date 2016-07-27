@@ -19,7 +19,45 @@
 using namespace std;
 
 int main(){
-    
+
+   vectR3   x;
+   vectReal r;
+   Matrix   A;
+
+  LoadPoints("../data/maillage6.txt",x,r);
+  LoadMatrix("../data/matrice6.txt",A);
+  ExportGMSH("../data/maillage6.txt");  
+  
+  for(int j=0; j<r.size(); j++){r[j] = 0.1*r[j];}
+  HMatrix B(A,x,r,x,r);
+  
+  // Vecteur (pseudo-)aleatoire
+  int nr  = nb_rows(A);
+  vectCplx u(nr);
+  int NbSpl = 1000; 
+  double du = 5./double(NbSpl);
+  srand (time(NULL));  
+  for(int j=0; j<nr; j++){
+    int n = rand()%(NbSpl+1);
+    u[j] = n*du;}
+  
+  vectCplx ua(nr),ub(nr);
+  MvProd(ua,A,u);
+  MvProd(ub,B,u);  
+  Real err = norm(ua-ub)/norm(ua);
+  cout << "Erreur:\t" << err << endl;
+  
+
+  cout << "Taux de compression:\t";
+  cout << CompressionRate(B) << endl;
+
+
+  
+
+  
+
+
+  /*
     // Build matrix A with property for ACA
     int nr = 100;
     // p1: random points in a unit disk, plane z=z1
@@ -55,13 +93,13 @@ int main(){
     double du = 5./double(NbSpl);
     srand (time(NULL));
     for(int j=0; j<nr; j++){
-        int n = rand()%(NbSpl+1);
-        u[j] = n*du;}
-     
-    /* // Vector of 1
-    vectCplx u(nr);
-    for(int j=0; j<nr; j++){
-        u[j] = 1.;}*/
+    int n = rand()%(NbSpl+1);
+    u[j] = n*du;}
+    
+    // Vector of 1
+    //vectCplx u(nr);
+    //for(int j=0; j<nr; j++){
+    //   u[j] = 1.;}
     
     vectCplx ua(nr),ub(nr);
     MvProd(ua,A,u);
@@ -71,14 +109,23 @@ int main(){
     
     //cout << "Taux de compression:\t";
     //cout << CompressionRate(B) << endl;
+    
+    */
   
- /*vectR3   x;
-  vectReal r;
-  Matrix   A;
+
+
+    
+ /*
+   vectR3   x;
+   vectReal r;
+   Matrix   A;
 
   LoadPoints("../data/maillage6.txt",x,r);
   LoadMatrix("../data/matrice6.txt",A);
   ExportGMSH("../data/maillage6.txt");  
+ */
+
+
 
   /*
   cout << "x.size():"   << x.size()   << endl;
@@ -87,6 +134,8 @@ int main(){
   cout << "nb_cols(A):" << nb_cols(A) << endl;
   */
 
+    /*
+    
   for(int j=0; j<r.size(); j++){r[j] = 0.1*r[j];}
   HMatrix B(A,x,r,x,r);
 
@@ -110,7 +159,7 @@ int main(){
 
   cout << "Taux de compression:\t";
   cout << CompressionRate(B) << endl;
-  
+    */  
   
   
   /* ==========================================
