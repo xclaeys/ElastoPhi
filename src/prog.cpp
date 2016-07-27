@@ -9,7 +9,7 @@
 #include "hmatrix.hpp"
 #include "loading.hpp"
 #include "export.hpp"
-#include "user.h"
+#include "user.hpp"
 
 
 #include <stdio.h> 
@@ -43,9 +43,20 @@ int main(int argc, char* argv[]){
  cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
  cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
  cout<<"##################################"<<endl;
-	
+ 
   ////////////////========================================================////////////////
-  
+
+
+ // vectReal r;
+ // vectR3   x;
+ // Matrix   A;
+ 
+ // LoadMatrix("../data/matrice6.txt",A);
+ // LoadPoints("../data/maillage6.txt",x,r);
+ ExportGMSH("../data/maillage7.txt");
+ 
+
+ 
   
 //  vectReal r;
 //  vectR3   x;

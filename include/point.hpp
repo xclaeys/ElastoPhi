@@ -72,6 +72,9 @@ Real norm(const array_<dim,Cplx>& u){
   Real r = 0.; for(int j=0; j<dim; j++){r+=abs(u[j])*abs(u[j]);}
   return sqrt(r);}
 
+typedef array_<2,int>  N2;
+typedef array_<3,int>  N3;
+typedef array_<4,int>  N4;
 typedef array_<2,Real> R2;
 typedef array_<3,Real> R3;
 typedef array_<2,Cplx> C2;
