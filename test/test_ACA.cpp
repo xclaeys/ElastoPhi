@@ -21,7 +21,7 @@ int main(){
         p1[j][0] = rho*cos(2*M_PI*theta); p1[j][1] = rho*sin(2*M_PI*theta); p1[j][2] = z1;
     }
     // p2: random points in a unit disk, plane z=z2
-    srand (1); //srand (time(NULL));
+    //srand (1); //srand (time(NULL));
     double z2 = 10;
     vectR3 p2(nr);
     for(int j=0; j<nr; j++){
@@ -42,7 +42,7 @@ int main(){
     vectCplx u(nr);
     int NbSpl = 1000;
     double du = 5./double(NbSpl);
-    srand (1);
+    //srand (1);
     for(int j=0; j<nr; j++){
         int n = rand()%(NbSpl+1);
         u[j] = n*du;}
