@@ -36,7 +36,7 @@ int main(){
         }
     }
     
-    LowRankMatrix B(A, 1e-4); //ACA
+    LowRankMatrix B(A); //ACA
     
     // Vecteur (pseudo-)aleatoire
     vectCplx u(nr);
