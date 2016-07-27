@@ -31,7 +31,7 @@ public:
   friend void DisplayPartition(const HMatrix&, char const* const);
   friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
   friend Real CompressionRate(const HMatrix&);
-    
+  
 };
 
 void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
