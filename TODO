@@ -3,7 +3,6 @@
    TESTS
    ===================
 
-
 * Pierre: Test sur le decoupage hierarchique:
    1) Prendre une matrice dense
    2) Decouper par l'algo hierarchique
@@ -36,6 +35,10 @@
 * Dans le cas de nuages distant, effectuer le test sur la matrice
    d'abord mise au format LowRank puis au format HMatrix
    
+* Generer un reseau aleatoire de fracture, et assembler la matrice
+   A_jk = 1/4pi|x_j-x_k| pour j\neq k et A_jk = 0 pour j=k
+   et verifier la correlation entre le taux de compression et
+   la densite de fractures
    
    ===================
    A IMPLEMENTER
@@ -52,10 +55,12 @@
    
 * Rediger une documentation de chacune des classe de la librairie
    
-   
    ===================
    QUESTION IBTIHEL
    ===================
    
 * Pouvez-vous expliquer plus en detail le procede de discretisation
-   
+* Pour chaque cas de calcul, pourrait-on aussi avoir la matrice
+   sparsifie obtenu par l'heuristique de l'IFPEN afin de comparer
+   la consistance entre le produit matrice-vecteur pour cette matrice
+   d'une part, et pour la matrice compressee par ACA.
