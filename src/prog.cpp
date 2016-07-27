@@ -9,7 +9,7 @@
 #include "hmatrix.hpp"
 #include "loading.hpp"
 #include "export.hpp"
-#include "user.h"
+#include "user.hpp"
 
 
 #include <stdio.h> 
