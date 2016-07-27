@@ -12,7 +12,7 @@ int main(){
     // Build matrix A with property for ACA
     int nr = 100;
     // p1: random points in a unit disk, plane z=z1
-    srand (time(NULL));
+    srand (1); //srand (time(NULL));
     double z1 = 1;
     vectR3 p1(nr);
     for(int j=0; j<nr; j++){
@@ -21,7 +21,7 @@ int main(){
         p1[j][0] = rho*cos(2*M_PI*theta); p1[j][1] = rho*sin(2*M_PI*theta); p1[j][2] = z1;
     }
     // p2: random points in a unit disk, plane z=z2
-    srand (time(NULL));
+    //srand (1); //srand (time(NULL));
     double z2 = 10;
     vectR3 p2(nr);
     for(int j=0; j<nr; j++){
@@ -36,21 +36,21 @@ int main(){
         }
     }
     
-    LowRankMatrix B(A, 1e-4); //ACA
+    LowRankMatrix B(A); //ACA
     
     // Vecteur (pseudo-)aleatoire
     vectCplx u(nr);
     int NbSpl = 1000;
     double du = 5./double(NbSpl);
-    srand (time(NULL));
+    //srand (1);
     for(int j=0; j<nr; j++){
         int n = rand()%(NbSpl+1);
         u[j] = n*du;}
-    
-    /* // Vector of 1
-     vectCplx u(nr);
-     for(int j=0; j<nr; j++){
-     u[j] = 1.;}*/
+    /*
+    // Vector of 1
+    vectCplx u(nr);
+    for(int j=0; j<nr; j++){
+    u[j] = 1.;}*/
     
     vectCplx ua(nr),ub(nr);
     MvProd(ua,A,u);

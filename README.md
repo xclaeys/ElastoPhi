@@ -10,6 +10,7 @@ Files of the CEMRACS project ElastoPhi
 - if you want to generate documentation, do : make doc
 - the executable will be bin/src/main or build/src/main
 
+Note : -DCMAKE_BUILD_TYPE=debug or release
 
 ## Testing
 

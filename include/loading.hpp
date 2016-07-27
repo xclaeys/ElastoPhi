@@ -6,6 +6,7 @@
 #include <string>
 #include <stdlib.h>
 #include "matrix.hpp"
+#include "user.hpp"
 
 using namespace std;
 
@@ -129,5 +130,68 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
 
 }
 
+//==================================================//
+//
+//  DESCRIPTION:
+//  
+//  
+//
+//  INPUT:
+//  filename: nom du fichier d'input
+//
+//  OUTPUT:
+//  
+//  
+//
+//==================================================//
+
+class Param{
+	public:
+		static Real eta;
+		static Real epsilon;
+		Param (string inputname); // Lecture du fichier
+		Param (); // Constructeur par defaut
+		Param (Real , Real); // Valeur par defaut appelee apres def de la classe
+};
+
+// Allocation de la mémoire pour les valeurs statiques (obligatoire)
+Real Param::eta;
+Real Param::epsilon;
+
+Param::Param (){
+	
+}
+Param::Param(string inputname){
+	ifstream data(inputname.c_str());
+	
+	// Si le fichier n'existe pas
+	if (!data){
+		cerr << "Input file doesn't exist" << endl;
+		exit(1);
+	}
+	// Lecture du fichier
+	else {
+		while (data){
+			string strInput;
+			getline(data,strInput);
+
+			vector<string> line = split (strInput,' ');
+			if (!line.empty()){
+				if (line.at(0)=="Eta"){
+					eta=StrToReal(line.back());
+				}
+				else if (line.at(0)=="Epsilon"){
+					epsilon=StrToReal(line.back());
+				}
+			}
+		}
+	}
+}
+Param::Param(Real eta0, Real epsilon0){
+	eta=eta0;
+	epsilon=epsilon0;
+}
+
+Param ParametreDefaut(1.0,1.e-2);
 
 #endif

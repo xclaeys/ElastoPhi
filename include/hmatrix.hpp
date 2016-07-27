@@ -4,6 +4,7 @@
 #include <cassert>
 #include <fstream>
 #include "matrix.hpp"
+#include "loading.hpp"
 
 //===============================//
 //     MATRICE HIERARCHIQUE      // 

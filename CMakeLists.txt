@@ -4,7 +4,11 @@ Project(ElastoPhi)
 # List the headers and add them into the project
 FILE(GLOB_RECURSE MY_HEADERS "include/*.hpp")
 include_directories(include)
-message("${MY_HEADERS}")
+
+# Eigen package
+find_package (Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 # Add sources file
 add_subdirectory(src)
 
@@ -15,7 +19,7 @@ add_subdirectory(test)
 # Testing project
 enable_testing()
 add_test(NAME Algebra_test COMMAND Test_algebra)
-add_test(NAME ACA_test COMMAND Test_ACA)
+add_test(NAME lrmatrix_test COMMAND Test_lrmatrix)
 
 
 # Add documentation
