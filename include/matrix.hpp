@@ -234,18 +234,24 @@ public:
     assert( nr==A.nr && nc==A.nc);
     mat = A.mat;} 
 
-  //! ### Assignement operator with matrix input argument
+  //! ### Assignement operator with scalar input argument
   /*!
-    Copies the value of the entries of the input _A_ 
-    (which is a matrix) argument into the entries of 
-    calling instance.
+    Sets the values of the entries of the calling instance 
+    to the input value _z_
   */    
   void operator=(const Cplx& z){
     for(int j=0; j<nr; j++){
       for(int k=0; k<nc; k++){
 	mat(j,k)=z;}}
   }
-  
+
+  //! ### Matrix-vector product
+  /*!
+    Naive self-contained implementation of matrix-vector product 
+    for dense matrices. The input parameter _u_ is the input vector 
+    (i.e. the right operand). This operator does not rely on the 
+    matrix-vector operator obtained via the library eigen3 
+  */    
   vectCplx operator*(const vectCplx& u){
     vectCplx v(nr,0.);
     for(int j=0; j<nr; j++){
@@ -255,9 +261,29 @@ public:
     }
     return v;}
   
+  //! ### Modifies the size of the matrix
+  /*!
+    Changes the size of the matrix so that 
+    the number of rows is set to _nbr_ and 
+    the number of columns is set to _nbc_
+  */      
   void resize(const int nbr, const int nbc){
     mat.resize(nbr,nbc); nr = nbr; nc = nbc;}
+
   
+  //! ### Matrix-vector product
+  /*!
+    Another instanciation of the matrix-vector product
+    that avoids the generation of temporary instance for the 
+    output vector. This routine achieves the operation
+
+    lhs = m*rhs
+
+    The left and right operands (_lhs_ and _rhs_) are templated
+    and can then be of any type (not necessarily of type vectCplx).
+    The only requirement is that an overload of the parentesis-based 
+    access operator be available for the operands.
+  */      
   template <typename LhsType, typename RhsType>
   friend void MvProd(LhsType& lhs, const Matrix& m, const RhsType& rhs){
     for(int j=0; j<m.nr; j++){
@@ -269,21 +295,44 @@ public:
   
   friend ostream& operator<<(ostream& os, const Matrix& m){
     return os << m.mat;} 
-  
+
+
+  //! ### Access to number of rows
+  /*!
+    Returns the number of rows of the input argument _A_
+  */      
   friend const int& nb_rows(const Matrix& A){ return A.nr;} 
   
+  //! ### Access to number of columnss
+  /*!
+    Returns the number of columns of the input argument _A_
+  */      
   friend const int& nb_cols(const Matrix& A){ return A.nc;} 
+
   
+  //! ### Extraction of a column
+  /*!
+    Returns, as a vector, the column numbered _k_ ofthe matrix _A_
+  */        
   friend vectCplx col(const Matrix& A, const int& k){    
     vectCplx u(A.nr,0.);
     for(int j=0; j<A.nr; j++){u[j]=A(j,k);}
     return u;}
-  
+
+  //! ### Extraction of a row
+  /*!
+    Returns, as a vector, the row numbered _j_ ofthe matrix  _A_
+  */        
   friend vectCplx row(const Matrix& A, const int& j){    
     vectCplx u(A.nc,0.);
     for(int k=0; k<A.nc; k++){u[k]=A(j,k);}
     return u;}
   
+  //! ### Looking for the entry of maximal modulus
+  /*!
+    Returns the number of row and column of the entry 
+    of maximal modulus in the matrix _A_
+  */          
   friend Int2 argmax(const Matrix& A){
     int jj=0,kk=0; Real Amax=0.;
     for(int j=0; j<A.nr; j++){
@@ -295,7 +344,13 @@ public:
     }
     return Int2(jj,kk);
   }
-  
+
+
+  //! ### Computation of singular values 
+  /*!
+    Returns a vector of Real containing the singular values 
+    of the input matrix _A_ in decreasing order
+  */          
   friend vectReal SVD(const Matrix& A){
     SVDType svd(A.mat);
     const SgValType& sv = svd.singularValues();
