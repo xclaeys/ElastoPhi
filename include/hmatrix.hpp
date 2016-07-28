@@ -5,6 +5,7 @@
 #include <fstream>
 #include "matrix.hpp"
 #include "loading.hpp"
+#include "lrmat.hpp"
 
 //===============================//
 //     MATRICE HIERARCHIQUE      // 
