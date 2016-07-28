@@ -83,8 +83,17 @@ HMatrix::HMatrix(const Matrix& mat0,
   Cluster t(xt,rt); Cluster s(xs,rs);
   
   // Construction arbre des blocs
-  BuildBlockTree(t,s);  
-  
+  BuildBlockTree(t,s);
+	  
+  /// !!! Warning !!!
+  /// Dans le cas où la matrice entière peut être directement approximée par un LowRankMatrix (elle est admissible)
+  /// Il n'y a qu'un bloc dans FarField, qui correspond à toutes les interactions des points données
+  /// Mais la destruction des clusters t et s (variables locales du constructeur HMatrix)
+  /// provoque la mise à zéro de num des clusters racines de FarField.at(0).
+  /// Ce qui cause une erreur lors du produit matrice vecteur.
+  /// !!! Warning !!!
+	  
+	  
 }
 
 
