@@ -51,7 +51,7 @@ int main(){
 ////////////////////////////////    Build Hmatrix 	////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 	// Parametres
-	Param Parametre(1.,1.e-1);
+	Param Parametre(-1.,1.e-1); // Pas de low rank matrices pour eta=-1
 	
 	HMatrix B(A,p1,r1,p2,r2);
 
@@ -68,21 +68,13 @@ int main(){
 		int n = rand()%(NbSpl+1);
 		u[j] = n*du;
 	}
-	
-
-    
-	/* // Vector of 1
-	vectCplx u(nr);
-	for(int j=0; j<nr; j++){
-	u[j] = 1.;}*/
     
 	vectCplx ua(nr),ub(nr);
 	MvProd(ua,A,u);
 	MvProd(ub,B,u);
 	Real err = norm(ua-ub)/norm(ua);
-	cout << "Erreur:\t" << err << endl;
 	
-    cout << "Taux de compression:\t";
-    cout << CompressionRate(B) << endl;
+	assert(abs(CompressionRate(B)-1)<1e-10);
+	assert(err<1e-16);
 
 }
