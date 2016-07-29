@@ -123,6 +123,7 @@ public:
 	}
 	
 	LowRankMatrix(const LowRankMatrix& m){
+		Param Parametre;
 		ir=m.ir;
 		ic=m.ic;
 		nr=m.nr; nc=m.nc; rank = m.rank;

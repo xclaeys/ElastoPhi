@@ -3,7 +3,11 @@
 add_executable(main prog.cpp ${MY_HEADERS}) 
 target_link_libraries (main  ${EIGEN3_LIBRARIES})
 
-# Creation de l executable compression a partir de compress
+# Creation de l executable Visu a partir de visualization
+add_executable(Visu visualization.cpp)
+target_link_libraries (Visu ${EIGEN3_LIBRARIES})
+
+# Creation de l executable Compression a partir de compress
 add_executable(Compression compress.cpp)
 target_link_libraries (Compression ${EIGEN3_LIBRARIES})
 

@@ -149,14 +149,24 @@ class Param{
 	public:
 		static Real eta;
 		static Real epsilon;
+		static string datapath;
+		static string outputpath;
+		static string meshname;
+		static string matrixname;
+	
 		Param (string inputname); // Lecture du fichier
 		Param (); // Constructeur par defaut
-		Param (Real , Real); // Valeur par defaut appelee apres def de la classe
+		Param (Real , Real, string , string, string , string); // Valeurs données à la main
+		Param (Real , Real); // Valeurs données à la main quand on construit la matrice
 };
 
 // Allocation de la mémoire pour les valeurs statiques (obligatoire)
 Real Param::eta;
 Real Param::epsilon;
+string Param::datapath;
+string Param::outputpath;
+string Param::meshname;
+string Param::matrixname;
 
 Param::Param (){
 	
@@ -183,6 +193,18 @@ Param::Param(string inputname){
 				else if (line.at(0)=="Epsilon"){
 					epsilon=StrToReal(line.back());
 				}
+				else if (line.at(0)=="Data_path"){
+					datapath=line.back();
+				}
+				else if (line.at(0)=="Output_path"){
+					outputpath=line.back();
+				}
+				else if (line.at(0)=="Mesh_name"){
+					meshname=line.back();
+				}
+				else if (line.at(0)=="Matrix_name"){
+					matrixname=line.back();
+				}
 			}
 		}
 	}
@@ -191,7 +213,16 @@ Param::Param(Real eta0, Real epsilon0){
 	eta=eta0;
 	epsilon=epsilon0;
 }
+Param::Param(Real eta0, Real epsilon0, string datapath0, string outputpath0, string meshname0, string matrixname0){
+	eta=eta0;
+	epsilon=epsilon0;
+	datapath=datapath0;
+	outputpath=outputpath0;
+	meshname=meshname0;
+	matrixname=matrixname0;
+	
+}
 
-Param ParametreDefaut(1.0,1.e-2);
+Param ParametreDefaut(1.0,1.e-2,"../data","../output","maillage1.msh","matrice1.txt");
 
 #endif
