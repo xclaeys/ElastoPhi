@@ -58,7 +58,7 @@ public:
     a_t a; for(int j=0; j<dim; j++){a[j]=l*r[j];} return a;}  
 
   friend v_t operator,(const a_t& l, const a_t& r){
-    v_t v; for(int j=0; j<dim; j++){v+=l[j]*r[j];} return v;}
+    v_t v=0; for(int j=0; j<dim; j++){v+=l[j]*r[j];} return v;}
   
 };
 
