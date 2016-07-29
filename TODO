@@ -6,21 +6,25 @@
 * Pierre: Test sur le decoupage hierarchique:
    1) Prendre une matrice dense
    2) Decouper par l'algo hierarchique
-   3) Stocker chaque bloc du decoupage au format dense
+   ( 3) Stocker chaque bloc du decoupage au format dense) -> on s'est ramenés à des blocs 1*1
    4) Verifier que les produit matrice-vecteur coincident
-   pour mla matrice de depart et la matrice au format hierarchique
+   pour la matrice de depart et la matrice au format hierarchique
+=> Fait dans test_hmatrix.cpp
 
 * Marcella: Tester la precision du produit matrice vecteur en fonction de
    l'agressivite de la compression ACA   
+
    
 * Pierre te Marcella: Verifier qu'il est possible de mieux compresser la matrice quand les
    nuages de points sources et cibles sont distants
 -> construction de la matrice:
-   1) avec BEMTOOL
+   ( 1) avec BEMTOO)L
    2) A_jk = 1/4pi|xj-yk|
 -> Meme test en generant un nuage de point aleatoire   
+=> Test_ACA.cpp
 
 * Chaque fois qu'une classe est documentee, realiser des tests
+=> test_cluster (en cours), test_lrmatrix.cpp, test_hmatrix.cpp, documentation à faire
 
 * Mener une batterie de tests sur l'évolution du taux de compression
    En fonction de la taille de la matrice, pour different noyaux A_jk
@@ -34,7 +38,8 @@
    
 * Dans le cas de nuages distant, effectuer le test sur la matrice
    d'abord mise au format LowRank puis au format HMatrix
-   
+=> prendre eta=1 dans test_hmatrix et on retrouve le résultat de test_lmatrix
+
 * Generer un reseau aleatoire de fracture, et assembler la matrice
    A_jk = 1/4pi|x_j-x_k| pour j\neq k et A_jk = 0 pour j=k
    et verifier la correlation entre le taux de compression et
