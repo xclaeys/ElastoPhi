@@ -14,16 +14,23 @@ using namespace std;
 
 int main(){
     
+    // Parametres
+    Param Parametre(1.,1.e-2); // eta (only for hmatrix), ACA epsilon
+    
     srand (1);
     // we set a constant seed for rand because we want always the same result if we run the check many times
     // (two different initializations with the same seed will generate the same succession of results in the subsequent calls to rand)
     
     // Build matrix A with property for ACA
     int nr = 100;
+    vectInt Ir(nr); // row indices for the lrmatrix
+    vectInt Ic(nr); // column indices for the lrmatrix
     // p1: points in a unit disk of the plane z=z1
     double z1 = 1;
     vectR3 p1(nr);
     for(int j=0; j<nr; j++){
+        Ir[j] = j;
+        Ic[j] = j;
         double rho = ((double) rand() / (double)(RAND_MAX)); // (double) otherwise integer division!
         double theta = ((double) rand() / (double)(RAND_MAX));
         p1[j][0] = sqrt(rho)*cos(2*M_PI*theta); p1[j][1] = sqrt(rho)*sin(2*M_PI*theta); p1[j][2] = z1;
@@ -44,7 +51,8 @@ int main(){
         }
     }
     
-    LowRankMatrix B(A); // construct a low rank matrix B applying ACA to matrix A
+    SubMatrix Abis(A,Ir,Ic); // A viewed as a SubMatrix
+    LowRankMatrix B(Abis,Ir,Ic); // construct a low rank matrix B applying ACA to matrix A
     
     // Vecteur
     vectCplx u(nr);
