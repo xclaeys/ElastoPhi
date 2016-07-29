@@ -61,7 +61,6 @@ public:
 	void NearFieldBall();
 	bool IsLeaf() const { if(son[0]==0){return true;} return false; }
 	void push_back(const int& j){num.push_back(j);}
-	void push_back(const vectInt& init){num = init;}
 	
 	friend const Real&    rad_(const Cluster& t){return t.rad;}
 	friend const R3&      ctr_(const Cluster& t){return t.ctr;}
@@ -192,59 +191,6 @@ public:
 		os << "src:\t" << src_(b) << endl; os << "tgt:\t" << tgt_(b); return os;}
 	
 };
-
-//===============================//
-//       ARBRE DES BLOCS         //
-//===============================//
-// class BlockTree{
-//
-// private:
-//   vector<Block> FarField;
-//   vector<Block> NearField;
-//
-// public:
-//   BlockTree(){};
-//   void Build(const Cluster&, const Cluster&);
-//   friend ostream& operator<<(ostream& os, const BlockTree& bt)
-//   {
-//     os << "__________" << endl;
-//     os << "NearField:" << endl;
-//     for(int j=0; j<bt.NearField.size(); j++){
-//       os << bt.NearField[j] << endl << endl;}
-//     os << "__________" << endl;
-//     os << "FarField:" << endl;
-//     for(int j=0; j<bt.FarField.size(); j++){
-//       os << bt.FarField[j] << endl << endl;}
-//     return os;
-//   }
-//
-// };
-//
-//
-// void BlockTree::Build(const Cluster& t, const Cluster& s){
-//   Block B(t,s);
-//   if( B.IsAdmissible() ){FarField.push_back(B);}
-//   else if( s.IsLeaf() ){
-//     if( t.IsLeaf() ){NearField.push_back(B);}
-//     else{
-//       Build(son_(t,0),s);
-//       Build(son_(t,1),s);
-//     }
-//   }
-//   else{
-//     if( t.IsLeaf() ){
-//       Build(t,son_(s,0));
-//       Build(t,son_(s,1));
-//     }
-//     else{
-//       Build(son_(t,0),son_(s,0));
-//       Build(son_(t,0),son_(s,1));
-//       Build(son_(t,1),son_(s,0));
-//       Build(son_(t,1),son_(s,1));
-//     }
-//   }
-//
-// }
 
 
 
