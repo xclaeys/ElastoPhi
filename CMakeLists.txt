@@ -21,6 +21,6 @@ enable_testing()
 add_test(NAME Algebra_test COMMAND Test_algebra)
 add_test(NAME lrmatrix_test COMMAND Test_lrmatrix)
 add_test(NAME hmatrix_test COMMAND Test_hmatrix)
-
+add_test(NAME cluster_test COMMAND Test_cluster) 
 # Add documentation
 add_subdirectory(doc)
