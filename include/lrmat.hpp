@@ -32,7 +32,6 @@
 class LowRankMatrix{
 	
 private:
-	Param Parametres;
 	int rank, nr, nc;
 	vector<vectCplx> u, v;
 	vectInt ir;
@@ -53,7 +52,7 @@ public:
 	//    PARTIAL PIVOT ACA    //
 	//=========================//
 	LowRankMatrix(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0): ir(ir0), ic(ic0){
-		
+		Param Parametres;
 		nr = nb_rows(A);
 		nc = nb_cols(A);
 		

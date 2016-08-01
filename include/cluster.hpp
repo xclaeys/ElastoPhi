@@ -174,7 +174,6 @@ void Cluster::NearFieldBall(){
 class Block{
 	
 private:
-	Param Parametres;
 	
 	const Cluster* t;
 	const Cluster* s;
@@ -186,6 +185,7 @@ public:
 	friend const Cluster& tgt_(const Block& b){return *(b.t);}
 	friend const Cluster& src_(const Block& b){return *(b.s);}
 	bool IsAdmissible() const{
+		Param Parametres;
 		return max(rad_(*t),rad_(*s)) < Parametres.eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
 	friend ostream& operator<<(ostream& os, const Block& b){
 		os << "src:\t" << src_(b) << endl; os << "tgt:\t" << tgt_(b); return os;}

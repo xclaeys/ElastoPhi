@@ -14,7 +14,7 @@
 class HMatrix{
 	
 private:
-	
+
 	const Matrix& mat;
 	const vectR3& xt;
 	const vectR3& xs;
@@ -30,6 +30,7 @@ public:
 //	friend void DisplayPartition(const HMatrix&, char const* const); 
 	friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
 	friend Real CompressionRate(const HMatrix&);
+	friend void Output(const HMatrix&, string filename);
 	
 };
 
@@ -106,6 +107,49 @@ Real CompressionRate(const HMatrix& hmat){
 	return comp;
 	
 }
+
+void Output(const HMatrix& hmat, string filename){
+	Param Parametres;
+	string path=Parametres.outputpath+"/"+filename;
+	
+	ofstream outputfile(path.c_str());
+	
+	if (!outputfile){
+		cerr << "Output file cannot be created in "+path << endl;
+		exit(1);
+	}
+	else{
+	
+		const vector<LowRankMatrix>& FarFieldMat  = hmat.FarFieldMat;
+//		const vector<SubMatrix>&     NearFieldMat = hmat.NearFieldMat;
+		
+		for(int i=0; i<FarFieldMat.size(); i++){
+			
+			vectInt ir = ir_(FarFieldMat[i]);
+			vectInt ic = ic_(FarFieldMat[i]);
+			Real local_compression = CompressionRate(FarFieldMat[i]);
+			
+			for (int j=0;j<ir.size();j++){
+				for (int k=0;k<ic.size();k++){
+					outputfile<<ir[j]<<" "<<ic[k]<<" "<<local_compression<<endl;
+				}
+			}
+		}
+	
+//		for(int i=0; i<NearFieldMat.size(); i++){
+//			vectInt ir = ir_(NearFieldMat[i]);
+//			vectInt ic = ic_(NearFieldMat[i]);
+//			for (int j=0;j<ir.size();j++){
+//				for (int k=0;k<ic.size();k++){
+//					outputfile<<ir[j]<<" "<<ic[k]<<" "<<1<<endl;
+//				}
+//			}
+//		}
+	}
+	
+}
+
+
 
 
 // Representation graphique de la partition en bloc
