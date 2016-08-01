@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <complex>
 #include <vector>
 #include <cassert>
@@ -71,7 +72,7 @@ int main(int argc, char* argv[]){
 	vectCplx u(nr);
 	int NbSpl = 1000;
 	double du = 5./double(NbSpl);
-	srand (time(NULL));
+	srand (1);
 	for(int j=0; j<nr; j++){
 		int n = rand()%(NbSpl+1);
 		u[j] = n*du;}
@@ -80,17 +81,28 @@ int main(int argc, char* argv[]){
 	MvProd(ua,A,u);
 	MvProd(ub,B,u);
 	Real err = norm(ua-ub)/norm(ua);
-	cout << "Erreur:\t" << err << endl;
+	Real compression=CompressionRate(B);
 	
-	
-	cout << "Taux de compression:\t";
-	cout << CompressionRate(B) << endl;
-	
-	
-	
-	
-	
-	
-	
+	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////    Fichier de sortie 	////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
+	string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
+	ifstream infile(filename);
+	ofstream output;
+	output.open(filename,ios::app);
+	if (!output){
+		cerr<<"Output file cannot be created"<<endl;
+		exit(1);
+	}
+	else{
+		if (!infile.good()){
+			output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
+		}
+		else{
+			
+		}
+		output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
+	}
+	output.close();
 	
 }
