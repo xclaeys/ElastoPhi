@@ -2,4 +2,6 @@
 build*/
 bin/
 data/
-output/
+output/output_local*
+output/*.msh
+output/*.mesh
