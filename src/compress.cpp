@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
 	////////////////////////////////    Test MvProd 	////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////
 	
-	// Vecteur (pseudo-)aleatoire
+	// Vecteur
 	int nr  = nb_rows(A);
 	vectCplx u(nr);
 	int NbSpl = 1000;
@@ -85,5 +85,27 @@ int main(int argc, char* argv[]){
 	
 	cout<<"Erreur : "<<err<<endl;
 	cout<<"Compression :"<<compression<<endl;
+    
+//    ////////////////////////////////////////////////////////////////////////////////////////
+//    ////////////////////////////////    Fichier de sortie 	////////////////////////////////
+//    ////////////////////////////////////////////////////////////////////////////////////////
+//    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
+//    ifstream infile(filename);
+//    ofstream output;
+//    output.open(filename,ios::app);
+//    if (!output){
+//        cerr<<"Output file cannot be created"<<endl;
+//        exit(1);
+//    }
+//    else{
+//        if (!infile.good()){
+//            output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
+//        }
+//        else{
+//            
+//        }
+//        output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
+//    }
+//    output.close();
 	
 }
