@@ -50,5 +50,7 @@ int main(int argc, char* argv[]){
  
 	////////////////========================================================////////////////
 	ExportGMSH(Parametres.datapath+"/"+Parametres.meshname,"visu_"+(split(Parametres.meshname,'.')).at(0)+".msh");
+    
+    ExportMEDIT(Parametres.datapath+"/"+Parametres.meshname,"visu_"+(split(Parametres.meshname,'.')).at(0)+".mesh");
 	
 }
