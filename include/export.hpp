@@ -202,7 +202,7 @@ void ExportGMSH(string inputname, string outputname){
 		outfile << 2  << "\t";
 		outfile << 99 << "\t";
 		outfile << 1  << "\t";
-		for(int k=0; k<NbPt[k]; k++){
+		for(int k=0; k<NbPt[j]; k++){
 			outfile << Elt[j][k]+1 << "\t";}
 		outfile << "\n";
 	}
