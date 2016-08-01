@@ -83,26 +83,7 @@ int main(int argc, char* argv[]){
 	Real err = norm(ua-ub)/norm(ua);
 	Real compression=CompressionRate(B);
 	
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Fichier de sortie 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
-	string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-	ifstream infile(filename);
-	ofstream output;
-	output.open(filename,ios::app);
-	if (!output){
-		cerr<<"Output file cannot be created"<<endl;
-		exit(1);
-	}
-	else{
-		if (!infile.good()){
-			output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
-		}
-		else{
-			
-		}
-		output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
-	}
-	output.close();
+	cout<<"Erreur : "<<err<<endl;
+	cout<<"Compression :"<<compression<<endl;
 	
 }
