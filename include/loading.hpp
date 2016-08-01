@@ -223,6 +223,6 @@ Param::Param(Real eta0, Real epsilon0, string datapath0, string outputpath0, str
 	
 }
 
-Param ParametreDefaut(1.0,1.e-2,"../data","../output","maillage1.msh","matrice1.txt");
+Param ParametreDefaut(1.0,1.e-2,"../data","../output","maillage1.txt","matrice1.txt");
 
 #endif
