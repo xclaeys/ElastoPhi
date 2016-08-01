@@ -41,68 +41,78 @@ int main(int argc, char* argv[]){
 	Param Parametres(inputname);
  
 	cout<<"############# Inputs #############"<<endl;
-	cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
-	cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
+	//cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
+	//cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
 	cout<<"Data path : "+Parametres.datapath<<endl;
 	cout<<"Output path : "+Parametres.outputpath<<endl;
 	cout<<"Mesh name : "+Parametres.meshname<<endl;
 	cout<<"Matrix name : "+Parametres.matrixname<<endl;
 	cout<<"##################################"<<endl;
- 
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Build Hmatrix 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
+    
 	
 	vectReal r;
 	vectR3   x;
 	Matrix   A;
-	
 	LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
 	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
-	
-	HMatrix B(A,x,r,x,r);
- 
-	
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Test MvProd 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
-	
-	// Vecteur (pseudo-)aleatoire
-	int nr  = nb_rows(A);
-	vectCplx u(nr);
-	int NbSpl = 1000;
-	double du = 5./double(NbSpl);
-	srand (1);
-	for(int j=0; j<nr; j++){
-		int n = rand()%(NbSpl+1);
-		u[j] = n*du;}
-	
-	vectCplx ua(nr),ub(nr);
-	MvProd(ua,A,u);
-	MvProd(ub,B,u);
-	Real err = norm(ua-ub)/norm(ua);
-	Real compression=CompressionRate(B);
-	
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Fichier de sortie 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
-	string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-	ifstream infile(filename);
-	ofstream output;
-	output.open(filename,ios::app);
-	if (!output){
-		cerr<<"Output file cannot be created"<<endl;
-		exit(1);
-	}
-	else{
-		if (!infile.good()){
-			output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
-		}
-		else{
-			
-		}
-		output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
-	}
+    
+    // Vecteur pour le produit matrice vecteur
+    int nr  = nb_rows(A);
+    vectCplx u(nr);
+    int NbSpl = 1000;
+    double du = 5./double(NbSpl);
+    srand (1); //!!
+    for(int j=0; j<nr; j++){
+        int n = rand()%(NbSpl+1);
+        u[j] = n*du;}
+    
+    vectCplx ua(nr);
+    MvProd(ua,A,u);
+    
+    // Values of eta and epsilon
+    int neta = 4;
+    double eta[neta];
+    eta[0] = 1e+1; eta[1] = 1e+0; eta[2] = 1e-1; eta[3] = 1e-2;
+    int nepsilon = 4;
+    double epsilon[nepsilon];
+    epsilon[0] = 1e+1; epsilon[1] = 1e+0; epsilon[2] = 1e-1; epsilon[3] = 1e-2;
+    
+    // for output file
+    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
+    ofstream output(filename.c_str());
+    if (!output){
+        cerr<<"Output file cannot be created"<<endl;
+        exit(1);
+    }
+    //output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur "<<"TimeHMatrix "<<"TimeMvProd"<<endl;
+    
+    for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
+    {
+        cout << "iepsilon: " << iepsilon << endl;
+        
+        for(int ieta=0; ieta<neta; ieta++)
+        {
+            cout << "ieta: " << ieta << endl;
+            Param Parametre(eta[ieta],epsilon[iepsilon]);
+            
+            vector<double> times;
+            
+            tic();
+            HMatrix B(A,x,r,x,r); // Build the hierarchical matrix with compressed and dense blocks
+            toc(times);
+            
+            vectCplx ub(nr);
+            tic();
+            MvProd(ub,B,u); // Do the matrix vector product
+            toc(times);
+            
+            Real err = norm(ua-ub)/norm(ua);
+            Real compression=CompressionRate(B);
+            
+            // write in output file
+            output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<" "<<times[0]<<" "<<times[1]<<endl;
+        }
+    }
 	output.close();
 	
 }
