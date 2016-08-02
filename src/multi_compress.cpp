@@ -20,6 +20,17 @@
 
 using namespace std;
 
+/**************************************************************************//**
+ * It builds the hierarchical matrix with compressed and dense blocks and 
+ * computes the consistency error for the matrix vector product
+ * for different values of the parameters eta (of the admissibility test) and 
+ * epsilon (of the ACA compression).
+ * In the output file, each line displays the values of eta, epsilon, 
+ * the compression factor, the matrix vector product error, the time (in seconds)
+ * to build the HMatrix and the time for the matrix vector product.
+ * (To be run it requires the input file with the desidered mesh/matrix names and paths)
+ *****************************************************************************/
+
 int main(int argc, char* argv[]){
 	
 	
