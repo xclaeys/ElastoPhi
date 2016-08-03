@@ -44,57 +44,35 @@ int main(int argc, char* argv[]){
  cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
  cout<<"##################################"<<endl;
  
-  ////////////////========================================================////////////////
+ ////////////////========================================================////////////////
 
-
- // vectReal r;
- // vectR3   x;
- // Matrix   A;
+ vectReal r;
+ vectR3   x;
+ Matrix   A;
  
- // LoadMatrix("../data/matrice6.txt",A);
- // LoadPoints("../data/maillage6.txt",x,r);
- ExportGMSH("../data/maillage7.txt");
+ LoadMatrix( "../data/matrice7.txt",A);
+ LoadPoints( "../data/maillage7.txt",x,r);
+ ExportMEDIT("../data/maillage7.txt");
  
+ HMatrix B(A,x,r,x,r); 
 
+ // Vecteur (pseudo-)aleatoire
+ int nr  = nb_rows(A);
+ vectCplx u(nr);
+ int NbSpl = 1000; 
+ double du = 5./double(NbSpl);
+ srand (time(NULL));  
+ for(int j=0; j<nr; j++){
+   int n = rand()%(NbSpl+1);
+   u[j] = n*du;}
  
-  
-//  vectReal r;
-//  vectR3   x;
-//  Matrix   A;
-//  
-//  LoadMatrix("../data/matrice6.txt",A);
-//  LoadPoints("../data/maillage6.txt",x,r);
-//  
-//  
-//  for(int j=0; j<r.size(); j++){r[j] = 0.1*r[j];}
-//  HMatrix B(A,x,r,x,r);
-//  
-//  
-//  // Vecteur (pseudo-)aleatoire
-//  int nr  = nb_rows(A);
-//  vectCplx u(nr);
-//  int NbSpl = 1000; 
-//  double du = 5./double(NbSpl);
-//  srand (time(NULL));  
-//  for(int j=0; j<nr; j++){
-//    int n = rand()%(NbSpl+1);
-//    u[j] = n*du;}
-//
-//  vectCplx ua(nr),ub(nr);
-//  MvProd(ua,A,u);
-//  MvProd(ub,B,u);  
-//  Real err = norm(ua-ub)/norm(ua);
-//  cout << "Erreur:\t" << err << endl;
-//  
-//
-//  cout << "Taux de compression:\t";
-//  cout << CompressionRate(B) << endl;  
-	
-  
-  
-
-  
-
-
+ vectCplx ua(nr),ub(nr);
+ MvProd(ua,A,u);
+ MvProd(ub,B,u);  
+ Real err = norm(ua-ub)/norm(ua);
+ cout << "Erreur:\t" << err << endl;
+ 
+ cout << "Taux de compression:\t";
+ cout << CompressionRate(B) << endl;  
   
 }
