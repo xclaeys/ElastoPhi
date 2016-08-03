@@ -20,6 +20,13 @@
 
 using namespace std;
 
+/**************************************************************************//**
+ * It builds the hierarchical matrix with compressed and dense blocks and
+ * computes the consistency error for the matrix vector product.
+ * It also produces an output file to visualize the compression of the matrix. TO BE WRITTEN
+ * (To be run it requires the input file with the desidered parameters)
+ *****************************************************************************/
+
 int main(int argc, char* argv[]){
 	
 	
@@ -62,7 +69,7 @@ int main(int argc, char* argv[]){
 	
 	HMatrix B(A,x,r,x,r);
 	
-	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname);
+	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
  
 	
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -88,6 +95,7 @@ int main(int argc, char* argv[]){
 	cout<<"Erreur : "<<err<<endl;
 	cout<<"Compression :"<<compression<<endl;
     
+//    // Ecriture dans un fichier avec append:
 //    ////////////////////////////////////////////////////////////////////////////////////////
 //    ////////////////////////////////    Fichier de sortie 	////////////////////////////////
 //    ////////////////////////////////////////////////////////////////////////////////////////

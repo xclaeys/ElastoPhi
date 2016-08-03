@@ -19,6 +19,12 @@
 
 using namespace std;
 
+/**************************************************************************//**
+ * It converts the mesh file from the format given by Ibtihel to gmsh format (.msh)
+ * and to medit format (.mesh) for visualization of the mesh
+ * (To be run it requires the input file with the desidered parameters)
+ *****************************************************************************/
+
 int main(int argc, char* argv[]){
 	
 	
