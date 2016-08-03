@@ -7,58 +7,83 @@
 #include "lrmat.hpp"
 using namespace std;
 
+/**************************************************************************//**
+ * Test the precision of the matrix vector product after the ACA compression
+ * varyng the parameter epsilon of the algorithm and 
+ * the distance between the clusters of points used to generate the considered matrix                                                                            
+ *****************************************************************************/                                                                            
+
 int main(){
     
-    // Build matrix A with property for ACA
-    int nr = 100;
-    // p1: random points in a unit disk, plane z=z1
-    srand (1); //srand (time(NULL));
-    double z1 = 1;
-    vectR3 p1(nr);
-    for(int j=0; j<nr; j++){
-        double rho = ((double) rand() / (double)(RAND_MAX)); // (double) otherwise integer division!
-        double theta = ((double) rand() / (double)(RAND_MAX));
-        p1[j][0] = rho*cos(2*M_PI*theta); p1[j][1] = rho*sin(2*M_PI*theta); p1[j][2] = z1;
-    }
-    // p2: random points in a unit disk, plane z=z2
-    //srand (1); //srand (time(NULL));
-    double z2 = 10;
-    vectR3 p2(nr);
-    for(int j=0; j<nr; j++){
-        double rho = ((double) rand() / (RAND_MAX)); // (double) otherwise integer division!
-        double theta = ((double) rand() / (RAND_MAX));
-        p2[j][0] = rho*cos(2*M_PI*theta); p2[j][1] = rho*sin(2*M_PI*theta); p2[j][2] = z2;
-    }
-    Matrix A(nr,nr);
-    for(int j=0; j<nr; j++){
-        for(int k=0; k<nr; k++){
-            A(j,k) = 1./(4*M_PI*norm(p1[j]-p2[k]));
+    double epsilon[4];
+    epsilon[0] = 1; epsilon[1] = 1e-1; epsilon[2] = 1e-2; epsilon[3] = 1e-3;
+    double distance[4];
+    distance[0] = 2; distance[1] = 5; distance[2] = 10; distance[3] = 20;
+    
+    for(int ieps=0; ieps<4; ieps++)
+    {
+        // Parametres
+        Param Parametre(1.,epsilon[ieps]); // eta (only for hmatrix), ACA epsilon
+        cout << "-> Epsilon of ACA: " << epsilon[ieps] << endl;
+        
+        for(int idist=0; idist<4; idist++)
+        {
+            cout << "Distance between the clusters: " << distance[idist] << endl;
+            
+            srand (1);
+            // we set a constant seed for rand because we want always the same result if we run the check many times
+            // (two different initializations with the same seed will generate the same succession of results in the subsequent calls to rand)
+            
+            // Build matrix A with property for ACA
+            int nr = 100;
+            vectInt Ir(nr); // row indices for the lrmatrix
+            vectInt Ic(nr); // column indices for the lrmatrix
+            // p1: points in a unit disk of the plane z=z1
+            double z1 = 1;
+            vectR3 p1(nr);
+            for(int j=0; j<nr; j++){
+                Ir[j] = j;
+                Ic[j] = j;
+                double rho = ((double) rand() / (double)(RAND_MAX)); // (double) otherwise integer division!
+                double theta = ((double) rand() / (double)(RAND_MAX));
+                p1[j][0] = sqrt(rho)*cos(2*M_PI*theta); p1[j][1] = sqrt(rho)*sin(2*M_PI*theta); p1[j][2] = z1;
+                // sqrt(rho) otherwise the points would be concentrated in the center of the disk
+            }
+            // p2: points in a unit disk of the plane z=z2
+            double z2 = 1+distance[idist];
+            vectR3 p2(nr);
+            for(int j=0; j<nr; j++){
+                double rho = ((double) rand() / (RAND_MAX)); // (double) otherwise integer division!
+                double theta = ((double) rand() / (RAND_MAX));
+                p2[j][0] = sqrt(rho)*cos(2*M_PI*theta); p2[j][1] = sqrt(rho)*sin(2*M_PI*theta); p2[j][2] = z2;
+            }
+            Matrix A(nr,nr);
+            for(int j=0; j<nr; j++){
+                for(int k=0; k<nr; k++){
+                    A(j,k) = 1./(4*M_PI*norm(p1[j]-p2[k]));
+                }
+            }
+            
+            SubMatrix Abis(A,Ir,Ic); // A viewed as a SubMatrix
+            LowRankMatrix B(Abis,Ir,Ic); // construct a low rank matrix B applying ACA to matrix A
+            
+            // Vecteur
+            vectCplx u(nr);
+            int NbSpl = 1000;
+            double du = 5./double(NbSpl);
+            for(int j=0; j<nr; j++){
+                int n = rand()%(NbSpl+1);
+                u[j] = n*du;}
+            
+            vectCplx ua(nr),ub(nr);
+            MvProd(ua,A,u);
+            MvProd(ub,B,u);
+            Real err = norm(ua-ub)/norm(ua);
+            cout << "Erreur: " << err << endl;
+            
+            cout << "Taux de compression: ";
+            cout << CompressionRate(B) << endl;
         }
     }
-    
-    LowRankMatrix B(A); //ACA
-    
-    // Vecteur (pseudo-)aleatoire
-    vectCplx u(nr);
-    int NbSpl = 1000;
-    double du = 5./double(NbSpl);
-    //srand (1);
-    for(int j=0; j<nr; j++){
-        int n = rand()%(NbSpl+1);
-        u[j] = n*du;}
-    /*
-    // Vector of 1
-    vectCplx u(nr);
-    for(int j=0; j<nr; j++){
-    u[j] = 1.;}*/
-    
-    vectCplx ua(nr),ub(nr);
-    MvProd(ua,A,u);
-    MvProd(ub,B,u);
-    Real err = norm(ua-ub)/norm(ua);
-    cout << "Erreur:\t" << err << endl;
-    
-    //cout << "Taux de compression:\t";
-    //cout << CompressionRate(B) << endl;
 
 }

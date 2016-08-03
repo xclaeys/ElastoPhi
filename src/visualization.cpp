@@ -12,16 +12,22 @@
 #include "user.hpp"
 
 
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <time.h>   
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 
 using namespace std;
 
-int main(int argc, char* argv[]){
+/**************************************************************************//**
+ * It converts the mesh file from the format given by Ibtihel to gmsh format (.msh)
+ * and to medit format (.mesh) for visualization of the mesh
+ * (To be run it requires the input file with the desidered parameters)
+ *****************************************************************************/
 
-  
+int main(int argc, char* argv[]){
+	
+	
 	////////////////========================================================////////////////
 	////////////////////////////////========  Input ========////////////////////////////////
 	
@@ -47,8 +53,10 @@ int main(int argc, char* argv[]){
 	cout<<"Mesh name : "+Parametres.meshname<<endl;
 	cout<<"Matrix name : "+Parametres.matrixname<<endl;
 	cout<<"##################################"<<endl;
-
-  ////////////////========================================================////////////////
-
-  
+ 
+	////////////////========================================================////////////////
+	ExportGMSH(Parametres.datapath+"/"+Parametres.meshname,"visu_"+(split(Parametres.meshname,'.')).at(0)+".msh");
+    
+    ExportMEDIT(Parametres.datapath+"/"+Parametres.meshname,"visu_"+(split(Parametres.meshname,'.')).at(0)+".mesh");
+	
 }

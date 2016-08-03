@@ -21,6 +21,12 @@ void tic() {
 	tictoc_stack.push(clock());
 }
 
+void toc() {
+    double time =((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
+    cout << "Time elapsed: " << time << endl;
+    tictoc_stack.pop();
+}
+
 void toc(vector<double>& times) {
 	double time =((double)(clock() - tictoc_stack.top())) / CLOCKS_PER_SEC;
 	cout << "Time elapsed: " << time << endl;

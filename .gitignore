@@ -2,3 +2,8 @@
 build*/
 bin/
 data/
+output/output_local*
+output/*.msh
+output/*.mesh
+output/graphe_*
+*.pyc
