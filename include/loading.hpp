@@ -207,6 +207,16 @@ Param::Param(string inputname){
 				}
 			}
 		}
+		ifstream Matrixname(datapath+"/"+matrixname);
+		if (!Matrixname){
+			cerr << "Matrix file does not exist" << endl;
+			exit(1);
+		}
+		ifstream Meshname(datapath+"/"+meshname);
+		if (!Meshname){
+			cerr << "Mesh file does not exist" << endl;
+			exit(1);
+		}
 	}
 }
 Param::Param(Real eta0, Real epsilon0){
