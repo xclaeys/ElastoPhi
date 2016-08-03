@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
 	LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
 	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
 	
-	HMatrix B(A,x,r,x,r);
+	HMatrix B(A,x,r);
 	
 	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
  

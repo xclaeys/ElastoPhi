@@ -26,7 +26,8 @@ private:
 	
 public:
 	
-	HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&);
+	HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&); // To be used with two different clusters
+	HMatrix(const Matrix&, const vectR3&, const vectReal&); // To be used with one cluster
 //	friend void DisplayPartition(const HMatrix&, char const* const); 
 	friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
 	friend Real CompressionRate(const HMatrix&);
@@ -80,6 +81,20 @@ mat(mat0), xt(xt0), xs(xs0) {
 
 	// Construction arbre des blocs
 	BuildBlockTree(t,s);
+	
+}
+
+HMatrix::HMatrix(const Matrix& mat0,
+		 const vectR3& xt0, const vectReal& rt):
+
+mat(mat0), xt(xt0), xs(xt0) {
+	assert( nb_rows(mat)==xt.size() && nb_cols(mat)==xs.size() );
+	
+	// Construction arbre des paquets
+	Cluster t(xt,rt);
+	
+	// Construction arbre des blocs
+	BuildBlockTree(t,t);
 	
 }
 

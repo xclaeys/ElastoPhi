@@ -40,10 +40,18 @@ int main(){
 		r2[j]=1.e-16;
 	}
 	
-	Matrix A(nr,nr);
+	Matrix A1(nr,nr);
+	Matrix A2(nr,nr);
+	
 	for(int j=0; j<nr; j++){
 	for(int k=0; k<nr; k++){
-	   	A(j,k) = 1./(4*M_PI*norm(p1[j]-p2[k]));
+	   	A1(j,k) = 1./(4*M_PI*norm(p1[j]-p2[k]));
+		if (j!=k){
+			A2(j,k) = 1./(4*M_PI*norm(p1[j]-p1[k]));
+		}
+		else{
+			A2(j,k)=0;
+		}
 	}
 	}
     
@@ -53,7 +61,9 @@ int main(){
 	// Parametres
 	Param Parametre(-1.,1.e-1); // Pas de low rank matrices pour eta=-1
 	
-	HMatrix B(A,p1,r1,p2,r2);
+	HMatrix B1(A1,p1,r1,p2,r2);
+	HMatrix B2(A2,p1,r1,p1,r1);
+	HMatrix B3(A2,p1,r1);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -70,11 +80,18 @@ int main(){
 	}
     
 	vectCplx ua(nr),ub(nr);
-	MvProd(ua,A,u);
-	MvProd(ub,B,u);
+	MvProd(ua,A1,u);
+	MvProd(ub,B1,u);
 	Real err = norm(ua-ub)/norm(ua);
 	
-	assert(abs(CompressionRate(B)-1)<1e-10);
+	assert(abs(CompressionRate(B1)-1)<1e-10);
 	assert(err<1e-16);
+	
+	MvProd(ua,B2,u);
+	MvProd(ub,B3,u);
+	err = norm(ua-ub)/norm(ua);
+	assert(abs(CompressionRate(B2)-CompressionRate(B3))<1e-16);
+	assert(err<1e-16);
+				      
 
 }
