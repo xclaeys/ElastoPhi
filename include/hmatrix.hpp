@@ -36,7 +36,7 @@ public:
 
 void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s){
 	Block B(t,s);
-	if( B.IsAdmissible() ){
+	if( B.IsAdmissible() & (!s.IsLeaf() || !t.IsLeaf())){ // we don't do ACA compression on interactions between leaves (blocks 3x3 because vectorial)
 		const vectInt& I = num_(t);
 		const vectInt& J = num_(s);
 		SubMatrix submat = SubMatrix(mat,I,J);
