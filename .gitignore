@@ -5,3 +5,4 @@ data/
 output/output_local*
 output/*.msh
 output/*.mesh
+output/graphe_*
