@@ -19,6 +19,10 @@ To use the executable created by visualization.cpp, give an input file with:
 - Output_path : ...
 - Data_path
 
+## Postprocessing
+To generate the plots of the multi-compress results, in postprocessing directory do:
+python graphes_output_compression.py ../output/output_compression_matrice....txt 
+
 ## Testing
 
 ### To add a test
