@@ -106,9 +106,11 @@ public:
 				// Estimateur d'erreur
 				frob_aux = 0.;
 				aux = abs(dprod(c,c)*dprod(r,r));
+                // aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
 				for(int j=0; j<u.size(); j++){
 					frob_aux += dprod(v[j],r)*dprod(c,u[j]);}
-				frob += aux + 2*frob_aux.real();
+                // frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
+				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
 				
 				//==================//
 				// Nouvelle croix
@@ -116,7 +118,10 @@ public:
 				v.push_back(r);
 			}
 			else{ break; }
-		}while( (aux/frob)>Parametres.epsilon && q < min(nr,nc) );
+		}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) ); // added sqrt
+        // (see stopping criterion in slide 26 of Stephanie Chaillat)
+        // si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
+        // indeed, it's a sort of relative error
 		
 		rank = u.size();
 	}
