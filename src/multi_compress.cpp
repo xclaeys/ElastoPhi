@@ -60,19 +60,24 @@ int main(int argc, char* argv[]){
 	cout<<"Matrix name : "+Parametres.matrixname<<endl;
 	cout<<"##################################"<<endl;
     
+    vector<double> times2;
 	
 	vectReal r;
 	vectR3   x;
 	Matrix   A;
+    tic();
 	LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
+    toc(times2);
+    tic();
 	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
+    toc(times2);
     
     // Vecteur pour le produit matrice vecteur
     int nr  = nb_rows(A);
     vectCplx u(nr);
     int NbSpl = 1000;
     double du = 5./double(NbSpl);
-    srand (1); //!!
+    srand (1); // !! pour reproducibilite'
     for(int j=0; j<nr; j++){
         int n = rand()%(NbSpl+1);
         u[j] = n*du;}
@@ -86,10 +91,11 @@ int main(int argc, char* argv[]){
     eta[0] = 1e+1; eta[1] = 1e+0; eta[2] = 1e-1; eta[3] = 1e-2;
     int nepsilon = 4;
     double epsilon[nepsilon];
-    epsilon[0] = 1e+1; epsilon[1] = 1e+0; epsilon[2] = 1e-1; epsilon[3] = 1e-2;
+    epsilon[0] = 1e+0; epsilon[1] = 5e-1; epsilon[2] = 1e-1; epsilon[3] = 1e-2;
     
     // for output file
     string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
+    //string filename=Parametres.outputpath+"/output_compression_PROVA_"+Parametres.matrixname;
     ofstream output(filename.c_str());
     if (!output){
         cerr<<"Output file cannot be created"<<endl;
@@ -122,6 +128,7 @@ int main(int argc, char* argv[]){
             
             // write in output file
             output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<" "<<times[0]<<" "<<times[1]<<endl;
+            cout<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<" "<<times[0]<<" "<<times[1]<<endl;
         }
     }
 	output.close();
