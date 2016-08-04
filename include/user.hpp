@@ -39,35 +39,22 @@ void toc(vector<double>& times) {
 ////////////////========================================================////////////////
 ////////////////////////========  Conversions	========////////////////////////////////
 
-template <typename nbr>
-string NbrToStr(nbr& N){
-	ostringstream strs;
-	strs << N;
-	string str(strs.str());
-	strs.str("");
-	return str;
+template <typename T>
+string NbrToStr ( T Number )
+{
+	ostringstream ss;
+	ss << Number;
+	return ss.str();
 }
 
-int StrToInt(string str){
-//	stringstream i(str);
-//	int  N;
-//	i >> N;
-	return atoi(str.c_str());
+template <typename T>
+T StrToNbr ( const string &Text )
+{
+	istringstream ss(Text);
+	T result;
+	return ss >> result ? result : 0;
 }
 
-Real StrToReal(string str){
-//	stringstream i(str);
-//	Real  N;
-//	i >> N;
-	return strtod(str.c_str(),NULL);
-}
-
-//Cplx StrToCplx(string str){
-//	stringstream i(str);
-//	Cplx  N;
-//	i >> N;
-//	return N;
-//}
 
 ////////////////========================================================////////////////
 ////////////////////////========    String splitting	========////////////////////////

@@ -188,10 +188,10 @@ Param::Param(string inputname){
 			vector<string> line = split (strInput,' ');
 			if (!line.empty()){
 				if (line.at(0)=="Eta"){
-					eta=StrToReal(line.back());
+					eta=StrToNbr<Real>(line.back());
 				}
 				else if (line.at(0)=="Epsilon"){
-					epsilon=StrToReal(line.back());
+					epsilon=StrToNbr<Real>(line.back());
 				}
 				else if (line.at(0)=="Data_path"){
 					datapath=line.back();
