@@ -108,7 +108,7 @@ public:
 				aux = abs(dprod(c,c)*dprod(r,r));
                 // aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
 				for(int j=0; j<u.size(); j++){
-					frob_aux += dprod(v[j],r)*dprod(c,u[j]);}
+					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
                 // frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
 				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
 				
@@ -161,7 +161,7 @@ public:
 		Cplx frob = 0.;
 		for(int j=0; j<rank; j++){
 			for(int k=0; k<rank; k++){
-				frob += dprod(v[j],v[k])*dprod(u[k],u[j]) ;
+				frob += dprod(v[k],v[j])*dprod(u[k],u[j]) ;
 			}
 		}
 		return sqrt(abs(frob));
@@ -216,6 +216,18 @@ public:
 	friend const int& nb_cols(const LowRankMatrix& m){ return m.nc;}
 	friend const vectInt& ir_(const LowRankMatrix& m){ return m.ir;}
 	friend const vectInt& ic_(const LowRankMatrix& m){ return m.ic;}
+	
+//	friend const Real& error (const LowRankMatrix& m, const SubMatrix& subm){
+//		Real err=0;
+//		for (int j=0;j<m.nr;j++){
+//			for (int k=0;k<m.nc;k++){
+//				Real aux=subm(j,k);
+//				for (int l=0;l<m.u.size();l++){
+//				
+//				err+=
+//			}
+//		}
+//	}
 	
 };
 
