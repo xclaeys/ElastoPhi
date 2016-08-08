@@ -9,4 +9,4 @@ output/graphe_*
 *.pyc
 
 install
-input.txt
+input*.txt

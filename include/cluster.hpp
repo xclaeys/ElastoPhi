@@ -133,11 +133,11 @@ void Cluster::Build(){
 		for(int j=0; j<nb_pt; j++){
 			R3 dx = x[num[j]] - xc;
 			if( (w,dx)>0 ){
-				if(son[0]==0){son[0] = new Cluster(x,r,num[j]);}
+				if(son[0]==0){son[0] = new Cluster(x,r,num[j],depth+1);}
 				else{ son[0]->push_back(num[j]); }
 			}
 			else{
-				if(son[1]==0){son[1] = new Cluster(x,r,num[j]);}
+				if(son[1]==0){son[1] = new Cluster(x,r,num[j],depth+1);}
 				else{ son[1]->push_back(num[j]); }
 			}
 		}
