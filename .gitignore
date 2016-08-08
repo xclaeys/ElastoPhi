@@ -7,3 +7,6 @@ output/*.msh
 output/*.mesh
 output/graphe_*
 *.pyc
+
+install
+input.txt
