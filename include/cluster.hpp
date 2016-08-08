@@ -46,15 +46,20 @@ private:
     
     unsigned int depth; // profondeur du cluster dans l'arbre des paquets
 	
+	void Build_Borm();
 	void Build();
 	
 public:
 	Cluster(const vectR3& x0, const vectReal& r0): x(x0), r(r0), ctr(0.), rad(0.) {
 		son[0]=0;son[1]=0;
-        depth = 0; // ce constructeur est appele' juste pour la racine
+		depth = 0; // ce constructeur est appele' juste pour la racine
 		for(int j=0; j<x.size(); j++){num.push_back(j);}
+		// Nouvel algorithme qui calcule le barycentre et le rayon max pour le nuage de points du cluster :
 		Build();
-		NearFieldBall();
+		
+		// page 45 et algorithme 4 du livre de Borm :
+//		Build_Borm();
+//		NearFieldBall();
 	}
 	
 	Cluster(const vectR3& x0, const vectReal& r0, const int& j0, const unsigned int& dep): x(x0), r(r0), ctr(0.), rad(0.) {
@@ -86,7 +91,7 @@ void DisplayTree(const Cluster& cl){
 		DisplayTree(son_(cl,1));}
 }
 
-void Cluster::Build(){
+void Cluster::Build_Borm(){
 	
 	// Calcul centre du paquet
 	int nb_pt = num.size();
@@ -99,8 +104,9 @@ void Cluster::Build(){
 	
 	Real radmax=0.;
 	for(int j=0; j<nb_pt; j++){
-		if( radmax<norm(xc-x[num[j]]) ){
-			radmax=norm(xc-x[num[j]]);} }
+		
+	if( radmax<norm(xc-x[num[j]]) ){
+		radmax=norm(xc-x[num[j]]);} }
 	
 	// Calcul matrice de covariance
 	MatR3 cov; cov.setZero();
@@ -108,7 +114,7 @@ void Cluster::Build(){
 	for(int j=0; j<nb_pt; j++){
 		R3 u = x[num[j]] - xc;
 		//		cout<<rad<<" "<<norm(u)<<" "<<max(rad,norm(u)) <<endl;
-//		rad=max(rad,norm(u));
+//		rad=max(rad,norm(u)+r[num[j]]);
 		for(int p=0; p<3; p++){
 			for(int q=0; q<3; q++){
 				cov(p,q) += u[p]*u[q];
@@ -147,42 +153,87 @@ void Cluster::Build(){
 	if(radmax>1e-10){
 		assert( son[0]!=0 );
 		assert( son[1]!=0 );
+		son[0]->Build_Borm();
+		son[1]->Build_Borm();
+	}
+//	cout<<ctr<<" "<<rad<<endl;
+	
+}
+
+
+void Cluster::Build(){
+	
+	// Calcul centre du paquet
+	int nb_pt = num.size();
+	R3 xc = 0.;
+	for(int j=0; j<nb_pt; j++){
+		xc += x[num[j]];}
+	xc = (1./Real(nb_pt))*xc;
+	
+	ctr = xc;
+	
+//	Real radmax=0.;
+//	for(int j=0; j<nb_pt; j++){
+//		if( radmax<norm(xc-x[num[j]]) ){
+//			radmax=norm(xc-x[num[j]]);} }
+	
+	// Calcul matrice de covariance
+	MatR3 cov; cov.setZero();
+	rad=0.;
+	for(int j=0; j<nb_pt; j++){
+		R3 u = x[num[j]] - xc;
+		//		cout<<rad<<" "<<norm(u)<<" "<<max(rad,norm(u)) <<endl;
+		rad=max(rad,norm(u)+r[num[j]]);
+		for(int p=0; p<3; p++){
+			for(int q=0; q<3; q++){
+				cov(p,q) += u[p]*u[q];
+			}
+		}
+	}
+	
+	// Calcul direction principale
+	EigenSolver eig(cov);
+	EigenValue  lambda = eig.eigenvalues();
+	EigenVector ev = eig.eigenvectors();
+	int l = 0; Real max=abs(lambda[0]);
+	if( max<abs(lambda[1]) ){l=1; max=abs(lambda[1]);}
+	if( max<abs(lambda[2]) ){l=2; }
+	R3 w;
+	w[0] = ev(0,l).real();
+	w[1] = ev(1,l).real();
+	w[2] = ev(2,l).real();
+	
+	// Construction des paquets enfants
+	if(num.size()!=3){
+		for(int j=0; j<nb_pt; j++){
+			R3 dx = x[num[j]] - xc;
+			if( (w,dx)>0 ){
+				if(son[0]==0){son[0] = new Cluster(x,r,num[j],depth+1);}
+				else{ son[0]->push_back(num[j]); }
+			}
+			else{
+				if(son[1]==0){son[1] = new Cluster(x,r,num[j],depth+1);}
+				else{ son[1]->push_back(num[j]); }
+			}
+		}
+	}
+	
+	// Recursivite
+	if(num.size()!=3){
+		assert( son[0]!=0 );
+		assert( son[1]!=0 );
 		son[0]->Build();
 		son[1]->Build();
 	}
-//	else{
-//		rad=r[num[0]];
-//		ctr=x[num[0]];
-//	}
+	else{
+		ctr=x[num[0]];
+		rad=r[num[0]];
+	}
 //	cout<<ctr<<" "<<rad<<endl;
 	
 }
 
 void Cluster::NearFieldBall(){
-//	// Calcul centre du paquet
-//	int nb_pt = num.size();
-//	R3 xc = 0.;
-//	for(int j=0; j<nb_pt; j++){
-//		xc += x[num[j]];}
-//	ctr = (1./Real(nb_pt))*xc;
-//	
-//	rad=0;
-//	for(int j=0; j<nb_pt; j++){
-//		R3 u =ctr-x[num[j]];
-//		Real n = norm(u);
-//		rad=max(rad,n);
-//	}
-//	// Feuille de l'arbre
-//	if(son[0]==0){
-//		ctr=x[num[0]];
-//		rad=r[num[0]];
-//		return;
-//	}
-//	// Recursivite
-//	son[0]->NearFieldBall();
-//	son[1]->NearFieldBall();
-	
-	
 	// Si deja construit
 	if(rad>0){return;}
 	
@@ -190,6 +241,7 @@ void Cluster::NearFieldBall(){
 	if(son[0]==0){
 		ctr=x[num[0]];
 		rad=r[num[0]];
+//		cout<<"rayon minimal :"<<r[num[0]]<<endl;
 		return;}
 	
 	// Recursivite
@@ -206,7 +258,7 @@ void Cluster::NearFieldBall(){
 	ctr = (1-l)*c0 + l*c1;
 	rad = l*norm(c1-c0)+r0;
 	
-	cout<<ctr<<" "<<rad<<endl;
+//	cout<<ctr<<" "<<rad<<endl;
 	
 	}
 void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt){
