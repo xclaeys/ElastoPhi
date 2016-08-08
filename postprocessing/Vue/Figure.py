@@ -80,7 +80,8 @@ class Figure:
 			plt.yscale(self.yscale)
 			
 		
-		
+	def Noaxes(self):
+		frame1.axes.get_xaxis().set_visible(False)
 		
 	def EnregistreFigure(self,outputname):
 		plt.figure(self.id)
@@ -198,14 +199,14 @@ class Graphe2D(Figure):
 	def TraceSurface(self):
 		plt.figure(self.id)
 		#print(self.donnee)
-		plt.imshow(self.donnee.surface,interpolation=self.interpolation,origin=self.origin,cmap=self.cmap,extent=[self.donnee.xextent[0],self.donnee.xextent[1],self.donnee.yextent[0],self.donnee.yextent[1]])
+		plt.imshow(self.donnee.surface,interpolation=self.interpolation,origin=self.origin,cmap=self.cmap,extent=self.donnee.extent)
 		plt.colorbar()
 		self.OptionsFigure()
 		
 	def TraceSurfaceMasquee(self):
 		plt.figure(self.id)
 
-		plt.imshow(self.surface_masquee,interpolation=self.interpolation,origin=self.origin,cmap=self.cmap,extent=[self.donnee.xextent[0],self.donnee.xextent[1],self.donnee.yextent[0],self.donnee.yextent[1]])
+		plt.imshow(self.surface_masquee,interpolation=self.interpolation,origin=self.origin,cmap=self.cmap,extent=self.donnee.xextent)
 		self.OptionsFigure()
 		plt.colorbar()
 		

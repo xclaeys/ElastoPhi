@@ -44,21 +44,14 @@ class Surface(Donnee):
 	- ordonnee
 	- nom
 	- unite
-	- xextent
-	- yextent
+	- extent
 	"""
 
-	def __init__(self,surface=None,xextent=None,yextent=None,nom=None,unite=None): # Constructeur
+	def __init__(self,surface=None,extent=None,nom=None,unite=None): # Constructeur
 		Donnee.__init__(self,nom,unite)
 		self.surface=surface
+		self.extent=extent
 		
-		if xextent==None or yextent==None:
-			shape=self.surface.shape
-			self.xextent=[0,a[0]]
-			self.yextent=[0,a[1]]
-		else:
-			self.xextent=xextent
-			self.yextent=yextent
 			
 		
 		
