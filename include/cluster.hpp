@@ -43,19 +43,22 @@ private:
 	Cluster*        son[2];  // Paquets enfants
 	R3              ctr;     // Centre du paquet
 	Real            rad;     // Rayon du champ proche
+    
+    unsigned int depth; // profondeur du cluster dans l'arbre des paquets
 	
 	void Build();
 	
 public:
 	Cluster(const vectR3& x0, const vectReal& r0): x(x0), r(r0), ctr(0.), rad(0.) {
 		son[0]=0;son[1]=0;
+        depth = 0; // ce constructeur est appele' juste pour la racine
 		for(int j=0; j<x.size(); j++){num.push_back(j);}
 		Build();
 		NearFieldBall();
 	}
 	
-	Cluster(const vectR3& x0, const vectReal& r0, const int& j0): x(x0), r(r0), ctr(0.), rad(0.) {
-		son[0]=0;son[1]=0; num.push_back(j0);}
+	Cluster(const vectR3& x0, const vectReal& r0, const int& j0, const unsigned int& dep): x(x0), r(r0), ctr(0.), rad(0.) {
+        son[0]=0;son[1]=0; num.push_back(j0); depth = dep;}
 	Cluster(const Cluster& ); // Pas de recopie
 	~Cluster(){if (son[0]!=0){ delete son[0];}if (son[1]!=0){ delete son[1];}};
 	void NearFieldBall();
@@ -69,6 +72,10 @@ public:
 	friend ostream& operator<<(ostream& os, const Cluster& cl){
 		for(int j=0; j<(cl.num).size(); j++){os<<cl.num[j]<< "\t";} return os;}
 	friend void DisplayTree(const Cluster&);
+    
+    friend void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt);
+    friend void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, const unsigned int visudep);
+    
 	
 };
 
@@ -121,11 +128,11 @@ void Cluster::Build(){
 		for(int j=0; j<nb_pt; j++){
 			R3 dx = x[num[j]] - xc;
 			if( (w,dx)>0 ){
-				if(son[0]==0){son[0] = new Cluster(x,r,num[j]);}
+				if(son[0]==0){son[0] = new Cluster(x,r,num[j],depth+1);}
 				else{ son[0]->push_back(num[j]); }
 			}
 			else{
-				if(son[1]==0){son[1] = new Cluster(x,r,num[j]);}
+				if(son[1]==0){son[1] = new Cluster(x,r,num[j],depth+1);}
 				else{ son[1]->push_back(num[j]); }
 			}
 		}
@@ -168,6 +175,103 @@ void Cluster::NearFieldBall(){
 	
 }
 
+void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt){
+    if(t.depth<visudep){
+        assert( t.son[0]!=0 ); // check if visudep is too high!
+        TraversalBuildLabel(*(t.son[0]),labelVisu,visudep,2*cnt);
+        TraversalBuildLabel(*(t.son[1]),labelVisu,visudep,2*cnt+1);
+    }
+    else{
+        for(int i=0; i<(t.num).size()/3; i++)
+        {
+            labelVisu[ t.num[3*i]/3 ] = cnt-pow(2,visudep);
+            
+        }
+    }
+    
+}
+
+void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, const unsigned int visudep){
+    
+    assert(t.depth==0); // on peut l'appeler juste pour la racine
+    
+    vector<R3>  X;
+    vector<N4>  Elt;
+    vector<int> NbPt;
+    int   num,NbElt,poubelle, NbTri, NbQuad;
+    R3    Pt;
+    
+    // Ouverture fichier
+    ifstream infile;
+    infile.open(inputname.c_str());
+    if(!infile.good()){
+        cout << "LoadPoints in loading.hpp: error opening the geometry file" << endl;
+        abort();}
+    
+    // Nombre d'elements
+    infile >> NbElt;
+    assert(NbElt==t.x.size()/3);
+    Elt.resize(NbElt);
+    NbPt.resize(NbElt);
+    
+    num=0; NbTri=0; NbQuad=0;
+    // Lecture elements
+    for(int e=0; e<NbElt; e++){
+        infile >> poubelle;
+        infile >> NbPt[e];
+        
+        if(NbPt[e]==3){NbTri++;}
+        if(NbPt[e]==4){NbQuad++;}
+        
+        // Calcul centre element
+        for(int j=0; j<NbPt[e]; j++){
+            infile >> poubelle;
+            infile >> Pt;
+            Elt[e][j] = num;
+            X.push_back(Pt);
+            num++;
+        }
+        
+        // Separateur inter-element
+        if(e<NbElt-1){infile >> poubelle;}
+        
+    }
+    infile.close();
+    
+    vectInt labelVisu(NbElt);
+    TraversalBuildLabel(t,labelVisu,visudep,1);
+    
+    // Ecriture fichier de sortie
+    Param Parametres;
+    ofstream outfile;
+    outfile.open(Parametres.outputpath+"/"+outputname);
+    outfile << "$MeshFormat\n";
+    outfile << "2.2 0 8\n";
+    outfile << "$EndMeshFormat\n";
+    outfile << "$Nodes\n";
+    outfile << X.size() << endl;
+    for(int j=0; j<X.size(); j++){
+        outfile << j+1 << "\t" << X[j] << "\n";}
+    outfile << "$EndNodes\n";
+    outfile << "$Elements\n";
+    outfile << NbElt << endl;
+    for(int j=0; j<NbElt; j++){
+        outfile << j  << "\t";
+        if(NbPt[j]==3){outfile << 2  << "\t";}
+        if(NbPt[j]==4){outfile << 3  << "\t";}
+        outfile << 2  << "\t";
+        outfile << 99 << "\t";
+        outfile << labelVisu[j] << "\t";
+        for(int k=0; k<NbPt[j]; k++){
+            outfile << Elt[j][k]+1 << "\t";}
+        outfile << "\n";
+    }
+    outfile << "$EndElements\n";
+    
+    
+}
+
+
 //===============================//
 //           BLOCK               //
 //===============================//
@@ -186,7 +290,8 @@ public:
 	friend const Cluster& src_(const Block& b){return *(b.s);}
 	bool IsAdmissible() const{
 		Param Parametres;
-		return max(rad_(*t),rad_(*s)) < Parametres.eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
+		return max(rad_(*t),rad_(*s)) < Parametres.eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );// (min in 3.35 bebendorf, max plus contraignant)
+    }
 	friend ostream& operator<<(ostream& os, const Block& b){
 		os << "src:\t" << src_(b) << endl; os << "tgt:\t" << tgt_(b); return os;}
 	
