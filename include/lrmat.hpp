@@ -127,7 +127,8 @@ public:
         // (see stopping criterion in slide 26 of Stephanie Chaillat)
         // si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
         // indeed, it's a sort of relative error
-		
+        
+        //}while(sqrt(aux/frob)>Parametres.epsilon*(1-Parametres.eta)/(1+Parametres.epsilon) && q < min(nr,nc) ); // pag 141 Bebendorf mais resultat pas terrible		
 		rank = u.size();
 	}
 	
@@ -241,7 +242,7 @@ public:
 //		rank++;
 //	}
 	
-	friend Real Frob(const LowRankMatrix& m){
+	friend Real NormFrob(const LowRankMatrix& m){
 		const vector<vectCplx>& u = m.u;
 		const vector<vectCplx>& v = m.v;
 		const int& rank = m.rank;

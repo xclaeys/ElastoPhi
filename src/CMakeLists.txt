@@ -26,3 +26,7 @@ target_link_libraries (VisuCluster ${EIGEN3_LIBRARIES})
 # Creation de l executable ErrDecrease a partir de err_decrease
 add_executable(ErrDecrease err_decrease.cpp)
 target_link_libraries (ErrDecrease ${EIGEN3_LIBRARIES})
+
+# Creation de l executable CompaSparse a partir de comparison_sparse
+add_executable(CompaSparse comparison_sparse.cpp)
+target_link_libraries (CompaSparse ${EIGEN3_LIBRARIES})

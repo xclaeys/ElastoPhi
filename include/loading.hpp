@@ -7,16 +7,17 @@
 #include <stdlib.h>
 #include "matrix.hpp"
 #include "user.hpp"
+#include "sparsematrix.hpp"
 
 using namespace std;
 
 //==================================================//
 //
 //  DESCRIPTION:
-//  Charge la matrice
+//  Charge la matrice dense
 //
 //  INPUT:
-//  filename: nom du fichier de maillage
+//  filename: nom du fichier de la matrice de Ibtihel
 //
 //  OUTPUT:
 //  m: matrice dense
@@ -63,6 +64,69 @@ void LoadMatrix(const char* filename, Matrix& m){
 	
 	file.close();
 }
+
+//==================================================//
+//
+//  DESCRIPTION:
+//  Charge la matrice sparse
+//
+//  INPUT:
+//  filename: nom du fichier de la matrice sparse de Ibtihel
+//
+//  OUTPUT:
+//  m: matrice sparse
+//
+//==================================================//
+
+void LoadSpMatrix(const char* filename, SpMatrix& m){
+    
+    int NbRow, NbCol;
+    string      line;
+    int        j0,k0;
+    Cplx         val;
+    
+    // Ouverture fichier
+    ifstream file; file.open(filename);
+    if(!file.good()){
+        cout << "LoadMatrix in loading.hpp: error opening the matrix file" << endl;
+        abort();}
+    
+    // Lecture nombre de lignes et de colonnes
+    file >> NbRow; file >> NbCol;
+    m.resize(NbRow,NbCol,NbRow*max(NbCol/10,10));
+    
+    int NbCoef=0;
+    
+    getline(file,line);
+    getline(file,line);
+    while(!file.eof()){
+        
+        // Lecture de la ligne
+        istringstream iss(line);
+        
+        // Pour chaque ligne, stockage
+        // du bloc d'interaction
+        iss >> j0; j0 = 3*(j0-1);
+        iss >> k0; k0 = 3*(k0-1);
+        
+        for(int j=0; j<3; j++){
+            for(int k=0; k<3; k++){
+                iss >> val;
+                m.I_(NbCoef) = j0+j;
+                m.J_(NbCoef) = k0+k;
+                m.K_(NbCoef) = val;
+                //m(j0+j,k0+k) = val;
+                NbCoef++;
+            }
+        }
+        getline(file,line);
+    }
+    
+    file.close();
+    
+    m.resize(NbRow,NbCol,NbCoef);
+}
+
 
 //==================================================//
 //

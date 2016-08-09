@@ -358,6 +358,17 @@ public:
 		for(int j=0; j<sv.size(); j++){s[j]=sv[j];}
 		return s;
 	}
+    
+    friend Real NormFrob (const Matrix& A){
+        Real norm=0;
+        for (int j=0;j<A.nr;j++){
+            for (int k=0;k<A.nc;k++){
+                norm = norm + pow(abs(A(j,k)),2);
+            }
+        }
+        return sqrt(norm);
+    }
+
 	
 	
 };
@@ -434,12 +445,10 @@ public:
 	friend Real NormFrob (const SubMatrix& A){
 		Real norm=0;
 		for (int j=0;j<A.ir.size();j++){
-			for (int k=0;k<A.ic.size();){
+			for (int k=0;k<A.ic.size();k++){
 				norm = norm + pow(abs(A(j,k)),2);
 			}
 		}
-		
-		
 		return sqrt(norm);
 	}
 	
