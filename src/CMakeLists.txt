@@ -22,3 +22,7 @@ target_link_libraries (Test_ACA  ${EIGEN3_LIBRARIES})
 # Creation de l executable VisuCluster a partir de visualization
 add_executable(VisuCluster visucluster.cpp)
 target_link_libraries (VisuCluster ${EIGEN3_LIBRARIES})
+
+# Creation de l executable CompaSparse a partir de comparison_sparse
+add_executable(CompaSparse comparison_sparse.cpp)
+target_link_libraries (CompaSparse ${EIGEN3_LIBRARIES})
