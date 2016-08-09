@@ -431,6 +431,17 @@ public:
 			}
 		}
 	}
+	friend Real NormFrob (const SubMatrix& A){
+		Real norm=0;
+		for (int j=0;j<A.ir.size();j++){
+			for (int k=0;k<A.ic.size();){
+				norm = norm + pow(abs(A(j,k)),2);
+			}
+		}
+		
+		
+		return sqrt(norm);
+	}
 	
 };
 
