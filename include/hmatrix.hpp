@@ -35,6 +35,7 @@ public:
 	friend const LowRankMatrix& GetLowRankMatrix(HMatrix m, int i){
 		assert(i<m.FarFieldMat.size());
 		return m.FarFieldMat[i];}
+    friend Real squared_absolute_error(const HMatrix& B, const Matrix& A);
 	
 };
 
@@ -238,6 +239,15 @@ void MvProd(vectCplx& f, const HMatrix& A, const vectCplx& x){
 		MvProd(ff,M,xx);
 	}
 	
+}
+
+Real squared_absolute_error(const HMatrix& B, const Matrix& A){
+    Real err = 0;
+    for(int j=0; j<B.FarFieldMat.size(); j++){
+        SubMatrix subm(B.mat,ir_(B.FarFieldMat[j]),ic_(B.FarFieldMat[j]));
+        err += squared_absolute_error(B.FarFieldMat[j], subm);
+    }
+    return err;
 }
 
 
