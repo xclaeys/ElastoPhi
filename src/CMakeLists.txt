@@ -22,3 +22,7 @@ target_link_libraries (Test_ACA  ${EIGEN3_LIBRARIES})
 # Creation de l executable VisuCluster a partir de visualization
 add_executable(VisuCluster visucluster.cpp)
 target_link_libraries (VisuCluster ${EIGEN3_LIBRARIES})
+
+# Creation de l executable ErrDecrease a partir de err_decrease
+add_executable(ErrDecrease err_decrease.cpp)
+target_link_libraries (ErrDecrease ${EIGEN3_LIBRARIES})
