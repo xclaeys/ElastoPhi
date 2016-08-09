@@ -50,14 +50,14 @@ int main(int argc, char* argv[]){
 	//cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
 	cout<<"Data path : "+Parametres.datapath<<endl;
 	cout<<"Output path : "+Parametres.outputpath<<endl;
-	cout<<"Mesh name : "+Parametres.meshname<<endl;
-	cout<<"Matrix name : "+Parametres.matrixname<<endl;
+	//cout<<"Mesh name : "+Parametres.meshname<<endl;
+	//cout<<"Matrix name : "+Parametres.matrixname<<endl;
 	cout<<"##################################"<<endl;
     
     vector<double> times2;
 	
-//	vectReal r;
-//	vectR3   x;
+	vectReal r;
+	vectR3   x;
 	Matrix   A;
     SpMatrix spA;
     
@@ -66,11 +66,11 @@ int main(int argc, char* argv[]){
     toc();
     
     tic();
+    LoadPoints((Parametres.datapath+"/"+"maillage5364FracsTriangles.txt").c_str(),x,r);
+    toc();
+    tic();
 	LoadMatrix((Parametres.datapath+"/"+"matrice5364FracsTriangles.txt").c_str(),A);
     toc();
-//    tic();
-//	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
-//    toc(times2);
     
     // Vecteur pour le produit matrice vecteur
     int nr  = nb_rows(A);
@@ -88,29 +88,22 @@ int main(int argc, char* argv[]){
     vectCplx uasp(nr);
     MvProd(uasp,spA,u);
     
-    Real errsp = norm(ua-uasp)/norm(ua);
-    cout << "Erreur Sparse: " << errsp << endl;
+    Real errSp = norm(ua-uasp)/norm(ua);
+    cout << "Matrix-vector product relative error with Sparse matrix: " << errSp << endl;
     
     tic();
-    cout << "Norme de Frobenius de A: " << NormFrob(A) << endl;
+    Real normA = NormFrob(A);
     toc();
+    cout << "Frobenius norm of the dense matrix: " << normA << endl;
     
-    for(int i=0; i<nb_coeff(spA); i++){
-        A(spA.I_(i),spA.J_(i)) = 0; // now A = A-spA !!
-    }
+    // Values of eta and epsilon
+    int neta = 3;
+    double eta[neta];
+    eta[0] = 7e-1; eta[1] = 5e-1; eta[2] = 3e-1; //eta[3] = 1e-2;
+    int nepsilon = 3;
+    double epsilon[nepsilon];
+    epsilon[0] = 7e-1; epsilon[1] = 5e-1; epsilon[2] = 3e-1; //epsilon[3] = 1e-2;
     
-    cout << "Norme de Frobenius de A-spA: " << NormFrob(A) << endl;
-    
-    
-//    // Values of eta and epsilon
-//    int neta = 4;
-//    double eta[neta];
-//    eta[0] = 1e+1; eta[1] = 1e+0; eta[2] = 1e-1; eta[3] = 1e-2;
-//    //eta[0] = 1e+1; eta[1] = 8e-1; eta[2] = 1e-1; eta[3] = 1e-2;
-//    int nepsilon = 4;
-//    double epsilon[nepsilon];
-//    epsilon[0] = 1e+0; epsilon[1] = 5e-1; epsilon[2] = 1e-1; epsilon[3] = 1e-2;
-//    
 //    // for output file
 //    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
 //    //string filename=Parametres.outputpath+"/output_compression_CondAdmMin08_"+Parametres.matrixname;
@@ -119,36 +112,53 @@ int main(int argc, char* argv[]){
 //        cerr<<"Output file cannot be created"<<endl;
 //        exit(1);
 //    }
-//    //output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur "<<"TimeHMatrix "<<"TimeMvProd"<<endl;
-//    
-//    for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
-//    {
-//        cout << "iepsilon: " << iepsilon << endl;
-//        
-//        for(int ieta=0; ieta<neta; ieta++)
-//        {
-//            cout << "ieta: " << ieta << endl;
-//            Param Parametre(eta[ieta],epsilon[iepsilon]);
-//            
-//            vector<double> times;
-//            
-//            tic();
-//            HMatrix B(A,x,r); // Build the hierarchical matrix with compressed and dense blocks
-//            toc(times);
-//            
-//            vectCplx ub(nr);
-//            tic();
-//            MvProd(ub,B,u); // Do the matrix vector product
-//            toc(times);
-//            
-//            Real err = norm(ua-ub)/norm(ua);
-//            Real compression=CompressionRate(B);
-//            
+    //output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur "<<"TimeHMatrix "<<"TimeMvProd"<<endl;
+    
+    for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
+    {
+        cout << "iepsilon: " << iepsilon << endl;
+        
+        for(int ieta=0; ieta<neta; ieta++)
+        {
+            cout << "ieta: " << ieta << endl;
+            Param Parametre(eta[ieta],epsilon[iepsilon]);
+//            Param Parametre(0.5,0.5);
+            cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
+            cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
+    
+            vector<double> times;
+    
+            tic();
+            HMatrix B(A,x,r); // Build the hierarchical matrix with compressed and dense blocks
+            toc(times);
+            
+            vectCplx ub(nr);
+            tic();
+            MvProd(ub,B,u); // Do the matrix vector product
+            toc(times);
+            
+            Real errH = norm(ua-ub)/norm(ua);
+            cout << "Matrix-vector product relative error with HMatrix: " << errH << endl;
+    
+            Real compression=CompressionRate(B);
+            cout << "Compression rate :" << compression << endl;
+    
+            Real froberrH = sqrt(squared_absolute_error(B,A))/normA;
+            cout << "Relative error in Frobenius norm with HMatrix: " << froberrH << endl;
+    
 //            // write in output file
 //            output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<" "<<times[0]<<" "<<times[1]<<endl;
 //            cout<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<" "<<times[0]<<" "<<times[1]<<endl;
-//        }
-//    }
+        }
+    }
 //	output.close();
+    
+    
+    for(int i=0; i<nb_coeff(spA); i++){
+        A(spA.I_(i),spA.J_(i)) = 0; // now A = A-spA !! (to save memory)
+    }
+    
+    Real froberrSp = NormFrob(A)/normA;
+    cout << "Relative error in Frobenius norm with Sparse Matrix: " << froberrSp << endl;
 	
 }
