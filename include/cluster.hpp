@@ -55,10 +55,10 @@ public:
 		depth = 0; // ce constructeur est appele' juste pour la racine
 		for(int j=0; j<x.size(); j++){num.push_back(j);}
 		// Nouvel algorithme qui calcule le barycentre et le rayon max pour le nuage de points du cluster :
-		Build();
+//		Build();
 		
 		// page 45 et algorithme 4 du livre de Borm :
-//		Build_Borm();
+		Build_Borm();
 //		NearFieldBall();
 	}
 	
@@ -78,8 +78,8 @@ public:
 		for(int j=0; j<(cl.num).size(); j++){os<<cl.num[j]<< "\t";} return os;}
 	friend void DisplayTree(const Cluster&);
     
-    friend void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt);
-    friend void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, const unsigned int visudep);
+	friend void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt);
+	friend void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, const unsigned int visudep);
     
 	
 };
@@ -156,7 +156,24 @@ void Cluster::Build_Borm(){
 		son[0]->Build_Borm();
 		son[1]->Build_Borm();
 	}
-//	cout<<ctr<<" "<<rad<<endl;
+	
+	// Feuille de l'arbre
+	if(son[0]==0){
+		ctr=x[num[0]];
+		rad=r[num[0]];
+	}
+	else {
+		// Centre et rayon champ proche
+		const Real& r0 = son[0]->rad;
+		const Real& r1 = son[1]->rad;
+		const R3&   c0 = son[0]->ctr;
+		const R3&   c1 = son[1]->ctr;
+		
+		Real l = 0.5*( 1 + (r1-r0)/norm(c1-c0) );
+		ctr = (1-l)*c0 + l*c1;
+		rad = l*norm(c1-c0)+r0;
+	}
+	
 	
 }
 
@@ -233,34 +250,34 @@ void Cluster::Build(){
 	
 }
 
-void Cluster::NearFieldBall(){
-	// Si deja construit
-	if(rad>0){return;}
-	
-	// Feuille de l'arbre
-	if(son[0]==0){
-		ctr=x[num[0]];
-		rad=r[num[0]];
-//		cout<<"rayon minimal :"<<r[num[0]]<<endl;
-		return;}
-	
-	// Recursivite
-	son[0]->NearFieldBall();
-	son[1]->NearFieldBall();
-	
-	// Centre et rayon champ proche
-	const Real& r0 = son[0]->rad;
-	const Real& r1 = son[1]->rad;
-	const R3&   c0 = son[0]->ctr;
-	const R3&   c1 = son[1]->ctr;
-	
-	Real l = 0.5*( 1 + (r1-r0)/norm(c1-c0) );
-	ctr = (1-l)*c0 + l*c1;
-	rad = l*norm(c1-c0)+r0;
-	
-//	cout<<ctr<<" "<<rad<<endl;
-	
-	}
+//void Cluster::NearFieldBall(){
+//	// Si deja construit
+//	if(rad>0){return;}
+//	
+//	// Feuille de l'arbre
+//	if(son[0]==0){
+//		ctr=x[num[0]];
+//		rad=r[num[0]];
+////		cout<<"rayon minimal :"<<r[num[0]]<<endl;
+//		return;}
+//	
+//	// Recursivite
+//	son[0]->NearFieldBall();
+//	son[1]->NearFieldBall();
+//	
+//	// Centre et rayon champ proche
+//	const Real& r0 = son[0]->rad;
+//	const Real& r1 = son[1]->rad;
+//	const R3&   c0 = son[0]->ctr;
+//	const R3&   c1 = son[1]->ctr;
+//	
+//	Real l = 0.5*( 1 + (r1-r0)/norm(c1-c0) );
+//	ctr = (1-l)*c0 + l*c1;
+//	rad = l*norm(c1-c0)+r0;
+//	
+////	cout<<ctr<<" "<<rad<<endl;
+//	
+//	}
 void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt){
     if(t.depth<visudep){
         assert( t.son[0]!=0 ); // check if visudep is too high!
