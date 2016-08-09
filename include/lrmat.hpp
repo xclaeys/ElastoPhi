@@ -51,15 +51,18 @@ public:
 	//=========================//
 	//    PARTIAL PIVOT ACA    //
 	//=========================//
-	LowRankMatrix(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0): ir(ir0), ic(ic0){
+	LowRankMatrix(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0){
 		Param Parametres;
 		nr = nb_rows(A);
 		nc = nb_cols(A);
+		ir=ir0;
+		ic=ic0;
 		
 		vector<bool> visited_row(nr,false);
 		vector<bool> visited_col(nc,false);
 		
 		Real frob = 0.;
+		Real old_frob= 0.;
 		Real aux  = 0.;
 		Cplx frob_aux;
 		
@@ -110,6 +113,7 @@ public:
 				for(int j=0; j<u.size(); j++){
 					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
                 // frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
+				old_frob = frob;
 				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
 				
 				//==================//
@@ -118,13 +122,97 @@ public:
 				v.push_back(r);
 			}
 			else{ break; }
-		}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) ); // added sqrt
+//			cout<<q<<" "<<sqrt(aux)<<" "<<old_frob<<" "<<Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon)<<endl;
+		}while(sqrt(aux/old_frob)>Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon) && q < min(nr,nc) ); // added sqrt
         // (see stopping criterion in slide 26 of Stephanie Chaillat)
         // si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
         // indeed, it's a sort of relative error
 		
 		rank = u.size();
 	}
+	
+	
+	// Construit une matrix low rank à nombre de matrice de rang 1 fixé
+	LowRankMatrix(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0, int k){
+		Param Parametres;
+		nr = nb_rows(A);
+		nc = nb_cols(A);
+		ir=ir0;
+		ic=ic0;
+		
+		vector<bool> visited_row(nr,false);
+		vector<bool> visited_col(nc,false);
+		
+		Real frob = 0.;
+		Real old_frob= 0.;
+		Real aux  = 0.;
+		Cplx frob_aux;
+		
+		int I=0, J=0;
+		int q = 0;
+		do{
+			q++;
+			//======= Historique estimateur ==============//
+			//cout << "___________________________" << endl;
+			//cout << "Iteration:\t"  << q++ << endl;
+			//cout << "Estimateur:\t" << aux/frob << endl;
+			//============================================//
+			
+			//==================//
+			// Recherche colonne
+			Real rmax = 0.;
+			vectCplx r(nc);
+			for(int k=0; k<nc; k++){
+				r[k] = A(I,k);
+				for(int j=0; j<u.size(); j++){
+					r[k] += -u[j][I]*v[j][k];}
+				if( abs(r[k])>rmax && !visited_col[k] ){
+					J=k; rmax=abs(r[k]);}
+			}
+			visited_row[I] = true;
+			
+			//==================//
+			// Recherche ligne
+			if( abs(r[J]) ){
+				Cplx gamma = Cplx(1.)/r[J];
+				Real cmax = 0.;
+				vectCplx c(nr);
+				for(int j=0; j<nr; j++){
+					c[j] = A(j,J);
+					for(int k=0; k<u.size(); k++){
+						c[j] += -u[k][j]*v[k][J];}
+					c[j] = gamma*c[j];
+					if( abs(c[j])>cmax && !visited_row[j] ){
+						I=j; cmax=abs(c[j]);}
+				}
+				visited_col[J] = true;
+				
+				//====================//
+				// Estimateur d'erreur
+				frob_aux = 0.;
+				aux = abs(dprod(c,c)*dprod(r,r));
+				// aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
+				for(int j=0; j<u.size(); j++){
+					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
+				// frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
+				old_frob = frob;
+				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
+				
+				//==================//
+				// Nouvelle croix
+				u.push_back(c);
+				v.push_back(r);
+			}
+			else{ break; }
+			//			cout<<q<<" "<<sqrt(aux)<<" "<<old_frob<<" "<<Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon)<<endl;
+		}while(q < min(nr,nc) && q<k ); // added sqrt
+		// (see stopping criterion in slide 26 of Stephanie Chaillat)
+		// si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
+		// indeed, it's a sort of relative error
+		
+		rank = u.size();
+	}
+	
 	
 	LowRankMatrix(const LowRankMatrix& m){
 		Param Parametre;
@@ -217,17 +305,31 @@ public:
 	friend const vectInt& ir_(const LowRankMatrix& m){ return m.ir;}
 	friend const vectInt& ic_(const LowRankMatrix& m){ return m.ic;}
 	
-//	friend const Real& error (const LowRankMatrix& m, const SubMatrix& subm){
-//		Real err=0;
-//		for (int j=0;j<m.nr;j++){
-//			for (int k=0;k<m.nc;k++){
-//				Real aux=subm(j,k);
-//				for (int l=0;l<m.u.size();l++){
-//				
-//				err+=
-//			}
-//		}
-//	}
+	friend void squared_relative_error (Real& err, const LowRankMatrix& m, const SubMatrix& subm){
+		Real norm=0;
+		for (int j=0;j<m.nr;j++){
+			for (int k=0;k<m.nc;k++){
+				Cplx aux=subm(j,k);
+				norm+= pow(abs(aux),2);
+				for (int l=0;l<m.u.size();l++){
+					aux = aux - m.u[l][j] * m.v[l][k];
+				}
+				err+=pow(abs(aux),2);
+			}
+		}
+		err =err/norm;
+	}
+	friend void squared_absolute_error (Real& err, const LowRankMatrix& m, const SubMatrix& subm){
+		for (int j=0;j<m.nr;j++){
+			for (int k=0;k<m.nc;k++){
+				Cplx aux=subm(j,k);
+				for (int l=0;l<m.u.size();l++){
+					aux = aux - m.u[l][j] * m.v[l][k];
+				}
+				err+=pow(abs(aux),2);
+			}
+		}
+	}
 	
 };
 

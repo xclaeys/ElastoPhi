@@ -32,6 +32,9 @@ public:
 	friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
 	friend Real CompressionRate(const HMatrix&);
 	friend void Output(const HMatrix&, string filename);
+	friend const LowRankMatrix& GetLowRankMatrix(HMatrix m, int i){
+		assert(i<m.FarFieldMat.size());
+		return m.FarFieldMat[i];}
 	
 };
 
