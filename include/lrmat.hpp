@@ -306,8 +306,9 @@ public:
 	friend const vectInt& ir_(const LowRankMatrix& m){ return m.ir;}
 	friend const vectInt& ic_(const LowRankMatrix& m){ return m.ic;}
 	
-	friend void squared_relative_error (Real& err, const LowRankMatrix& m, const SubMatrix& subm){
-		Real norm=0;
+	friend Real squared_relative_error (const LowRankMatrix& m, const SubMatrix& subm){
+		Real norm= 0;
+        Real err = 0;
 		for (int j=0;j<m.nr;j++){
 			for (int k=0;k<m.nc;k++){
 				Cplx aux=subm(j,k);
@@ -319,9 +320,11 @@ public:
 			}
 		}
 		err =err/norm;
+        return err;
 	}
-	friend void squared_absolute_error (Real& err, const LowRankMatrix& m, const SubMatrix& subm){
-		for (int j=0;j<m.nr;j++){
+	friend Real squared_absolute_error (const LowRankMatrix& m, const SubMatrix& subm){
+        Real err=0;
+        for (int j=0;j<m.nr;j++){
 			for (int k=0;k<m.nc;k++){
 				Cplx aux=subm(j,k);
 				for (int l=0;l<m.u.size();l++){
@@ -330,6 +333,7 @@ public:
 				err+=pow(abs(aux),2);
 			}
 		}
+        return err;
 	}
 	
 };
