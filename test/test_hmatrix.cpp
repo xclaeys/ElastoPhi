@@ -59,7 +59,7 @@ int main(){
 ////////////////////////////////    Build Hmatrix 	////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 	// Parametres
-	Param Parametre(-1.,1.e-1); // Pas de low rank matrices pour eta=-1
+	Param Parametre(-1.,1e-1); // Pas de low rank matrices pour eta=-1
 	
 	HMatrix B1(A1,p1,r1,p2,r2);
 	HMatrix B2(A2,p1,r1,p1,r1);
