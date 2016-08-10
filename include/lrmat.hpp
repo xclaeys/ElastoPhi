@@ -62,76 +62,121 @@ public:
 		vector<bool> visited_col(nc,false);
 		
 		Real frob = 0.;
-		Real old_frob= 0.;
 		Real aux  = 0.;
 		Cplx frob_aux;
 		
 		int I=0, J=0;
 		int q = 0;
-		do{
-			q++;
-			//======= Historique estimateur ==============//
-			//cout << "___________________________" << endl;
-			//cout << "Iteration:\t"  << q++ << endl;
-			//cout << "Estimateur:\t" << aux/frob << endl;
-			//============================================//
-			
-			//==================//
-			// Recherche colonne
-			Real rmax = 0.;
-			vectCplx r(nc);
-			for(int k=0; k<nc; k++){
-				r[k] = A(I,k);
-				for(int j=0; j<u.size(); j++){
-					r[k] += -u[j][I]*v[j][k];}
-				if( abs(r[k])>rmax && !visited_col[k] ){
-					J=k; rmax=abs(r[k]);}
-			}
-			visited_row[I] = true;
-			
-			//==================//
-			// Recherche ligne
-			if( abs(r[J]) ){
-				Cplx gamma = Cplx(1.)/r[J];
-				Real cmax = 0.;
-				vectCplx c(nr);
-				for(int j=0; j<nr; j++){
-					c[j] = A(j,J);
-					for(int k=0; k<u.size(); k++){
-						c[j] += -u[k][j]*v[k][J];}
-					c[j] = gamma*c[j];
-					if( abs(c[j])>cmax && !visited_row[j] ){
-						I=j; cmax=abs(c[j]);}
-				}
-				visited_col[J] = true;
-				
-				//====================//
-				// Estimateur d'erreur
-				frob_aux = 0.;
-				aux = abs(dprod(c,c)*dprod(r,r));
+        
+        if(Parametres.epsilon > 1e10)
+            rank = 0; // approximate with a block of zeros
+        else{
+            vectCplx r(nc),c(nr);
+            
+            // Compute the first cross
+            // (don't modify the code because we want to really use the Bebendorf stopping criterion (3.58)!)
+            //==================//
+            // Recherche colonne
+            Real rmax = 0.;
+            for(int k=0; k<nc; k++){
+                r[k] = A(I,k);
+                for(int j=0; j<u.size(); j++){
+                    r[k] += -u[j][I]*v[j][k];}
+                if( abs(r[k])>rmax && !visited_col[k] ){
+                    J=k; rmax=abs(r[k]);}
+            }
+            visited_row[I] = true;
+            //==================//
+            // Recherche ligne
+            if( abs(r[J]) ){
+                Cplx gamma = Cplx(1.)/r[J];
+                Real cmax = 0.;
+                for(int j=0; j<nr; j++){
+                    c[j] = A(j,J);
+                    for(int k=0; k<u.size(); k++){
+                        c[j] += -u[k][j]*v[k][J];}
+                    c[j] = gamma*c[j];
+                    if( abs(c[j])>cmax && !visited_row[j] ){
+                        I=j; cmax=abs(c[j]);}
+                }
+                visited_col[J] = true;
+                
+                aux = abs(dprod(c,c)*dprod(r,r));
+            }
+            else{cout << "Check your ACA code" << endl;} // we didn't understand this
+            
+            while ( (q == 0) || ( sqrt(aux/frob)>Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon) && q < min(nr,nc) ) ){
+                
+                // We accept the cross
+                q++;
+                if(q>=2) cout << "q>=2" << endl;
+                //====================//
+                // Estimateur d'erreur
+                frob_aux = 0.;
+                //aux = abs(dprod(c,c)*dprod(r,r)); // (already computed to evaluate the test)
                 // aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
-				for(int j=0; j<u.size(); j++){
-					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
+                for(int j=0; j<u.size(); j++){
+                    frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
                 // frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
-				old_frob = frob;
-				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
-				
-				//==================//
-				// Nouvelle croix
-				u.push_back(c);
-				v.push_back(r);
-			}
-			else{ break; }
-//			cout<<q<<" "<<sqrt(aux)<<" "<<old_frob<<" "<<Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon)<<endl;
-		}while(sqrt(aux/old_frob)>Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon) && q < min(nr,nc) ); // added sqrt
-        // (see stopping criterion in slide 26 of Stephanie Chaillat)
+                frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix                
+                //==================//
+                // Nouvelle croix
+                u.push_back(c);
+                v.push_back(r);
+
+                
+                // Compute another cross
+                //==================//
+                // Recherche colonne
+                Real rmax = 0.;
+                vectCplx r(nc);
+                for(int k=0; k<nc; k++){
+                    r[k] = A(I,k);
+                    for(int j=0; j<u.size(); j++){
+                        r[k] += -u[j][I]*v[j][k];}
+                    if( abs(r[k])>rmax && !visited_col[k] ){
+                        J=k; rmax=abs(r[k]);}
+                }
+                visited_row[I] = true;
+                //==================//
+                // Recherche ligne
+                if( abs(r[J]) ){
+                    Cplx gamma = Cplx(1.)/r[J];
+                    Real cmax = 0.;
+                    vectCplx c(nr);
+                    for(int j=0; j<nr; j++){
+                        c[j] = A(j,J);
+                        for(int k=0; k<u.size(); k++){
+                            c[j] += -u[k][j]*v[k][J];}
+                        c[j] = gamma*c[j];
+                        if( abs(c[j])>cmax && !visited_row[j] ){
+                            I=j; cmax=abs(c[j]);}
+                    }
+                    visited_col[J] = true;
+                    
+                    aux = abs(dprod(c,c)*dprod(r,r));
+                }
+                else{ cout << "ACA's loop broke" << endl; break; }
+            }
+        
+        // old stopping criterion:
+        //}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) );
+        // (see stopping criterion in slide 26 of Stephanie Chaillat and Rjasanow-Steinbach)
         // si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
         // indeed, it's a sort of relative error
         
-        //}while(sqrt(aux/frob)>Parametres.epsilon*(1-Parametres.eta)/(1+Parametres.epsilon) && q < min(nr,nc) ); // pag 141 Bebendorf mais resultat pas terrible		
-		rank = u.size();
-	}
-	
+            rank = u.size();
+        }
+            
+            
+            //======= Historique estimateur ==============//
+            //cout << "___________________________" << endl;
+            //cout << "Iteration:\t"  << q++ << endl;
+            //cout << "Estimateur:\t" << aux/frob << endl;
+            //============================================//
+    }
+
+
 	
 	// Construit une matrix low rank à nombre de matrice de rang 1 fixé
 	LowRankMatrix(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0, int k){
