@@ -86,7 +86,9 @@ int main(int argc, char* argv[]){
     MvProd(ua,A,u);
     
     vectCplx uasp(nr);
+    tic();
     MvProd(uasp,spA,u);
+    toc();
     
     Real errSp = norm(ua-uasp)/norm(ua);
     cout << "Matrix-vector product relative error with Sparse matrix: " << errSp << endl;
@@ -96,23 +98,24 @@ int main(int argc, char* argv[]){
     toc();
     cout << "Frobenius norm of the dense matrix: " << normA << endl;
     
-    // Values of eta and epsilon
-    int neta = 3;
-    double eta[neta];
-    eta[0] = 7e-1; eta[1] = 5e-1; eta[2] = 3e-1; //eta[3] = 1e-2;
-    int nepsilon = 3;
-    double epsilon[nepsilon];
-    epsilon[0] = 7e-1; epsilon[1] = 5e-1; epsilon[2] = 3e-1; //epsilon[3] = 1e-2;
+    //int foo [5] = { 16, 2, 77, 40, 12071 };
     
-//    // for output file
-//    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-//    //string filename=Parametres.outputpath+"/output_compression_CondAdmMin08_"+Parametres.matrixname;
-//    ofstream output(filename.c_str());
-//    if (!output){
-//        cerr<<"Output file cannot be created"<<endl;
-//        exit(1);
-//    }
-    //output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur "<<"TimeHMatrix "<<"TimeMvProd"<<endl;
+    // Values of eta and epsilon
+    int neta = 1;
+    double eta[neta];
+    eta[0] = 5e-1; //eta[1] = 8e-1; eta[2] = 7e-1; eta[3] = 6e-1; eta[4] = 5e-1; eta[5] = 4e-1; eta[6] = 3e-1; eta[7] = 2e-1; eta[8] = 1e-1;
+    int nepsilon = 1;
+    double epsilon[nepsilon];
+    epsilon[0] = 1e-1; //epsilon[1] = 5e-1; epsilon[2]=2e-1; epsilon[3] = 1e-1; epsilon[4] = 5e-2; epsilon[5] = 2e-2; epsilon[6] = 1e-2;
+    
+    // for output file
+    string filename=Parametres.outputpath+"/output_compression_10_08_2016_d"+Parametres.matrixname;
+    ofstream output(filename.c_str());
+    if (!output){
+        cerr<<"Output file cannot be created"<<endl;
+        exit(1);
+    }
+    output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur_MvProd "<<"Erreur_Frob"<<endl;
     
     for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
     {
@@ -122,7 +125,7 @@ int main(int argc, char* argv[]){
         {
             cout << "ieta: " << ieta << endl;
             Param Parametre(eta[ieta],epsilon[iepsilon]);
-//            Param Parametre(0.5,0.5);
+            // Param Parametre(0.5,0.5);
             cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
             cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
     
@@ -146,12 +149,12 @@ int main(int argc, char* argv[]){
             Real froberrH = sqrt(squared_absolute_error(B,A))/normA;
             cout << "Relative error in Frobenius norm with HMatrix: " << froberrH << endl;
     
-//            // write in output file
-//            output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<" "<<times[0]<<" "<<times[1]<<endl;
-//            cout<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<" "<<times[0]<<" "<<times[1]<<endl;
+            // write in output file
+            output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<errH<<" "<<froberrH<<endl;
+            //cout<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<errH<<" "<<froberrH<<endl;
         }
     }
-//	output.close();
+	output.close();
     
     
     for(int i=0; i<nb_coeff(spA); i++){
