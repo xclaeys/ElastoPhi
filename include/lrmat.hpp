@@ -90,7 +90,7 @@ public:
             visited_row[I] = true;
             //==================//
             // Recherche ligne
-            if( abs(r[J])>1e-10 ){
+            if( abs(r[J]) > 1e-15 ){
                 Cplx gamma = Cplx(1.)/r[J];
                 Real cmax = 0.;
                 for(int j=0; j<nr; j++){
@@ -105,7 +105,7 @@ public:
                 
                 aux = abs(dprod(c,c)*dprod(r,r));
             }
-            else{cout << "There is a zero coefficient in the original full matrix and ACA didn't work" << endl;}
+            else{cout << "There is a zero row in the starting submatrix and ACA didn't work" << endl;}
             
             // (see Bebendorf stopping criterion (3.58) pag 141)
             while ( (q == 0) ||
@@ -144,7 +144,7 @@ public:
                 visited_row[I] = true;
                 //==================//
                 // Recherche ligne
-                if( abs(r[J])){//>1e-10 ){
+                if( abs(r[J]) > 1e-15 ){
                     Cplx gamma = Cplx(1.)/r[J];
                     Real cmax = 0.;
                     for(int j=0; j<nr; j++){
@@ -159,7 +159,7 @@ public:
                     
                     aux = abs(dprod(c,c)*dprod(r,r));
                 }
-                else{ cout << "ACA's loop broke" << endl; break; }
+                else{ cout << "ACA's loop broke" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
             }
         
         // old stopping criterion:
