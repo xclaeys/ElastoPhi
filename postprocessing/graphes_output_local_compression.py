@@ -3,7 +3,7 @@ import Vue.Figure as figure
 import Vue.Donnee as donnee
 import Lecture.FonctionLectureClassique as classique
 import numpy as np
-import sys 
+import sys
 
 ########################################################################################
 #-------------------------------          Input            -----------------------------
@@ -30,11 +30,11 @@ nmarker=0
 
 
 
-nc = 1350
-nr = 1350
+nc = 5496*3
+nr = 5496*3
 surface = np.ones((nr,nc))
 classique.lecturesurface(filename,surface)
-	
+
 
 
 # 				for j in range(0,len(ordonnee)):
@@ -57,7 +57,7 @@ ylabel={"label":"y","fontsize":25}
 titre={"titre":"Local compression rate","fontsize":25,"loc":"center"}
 				#legende={"loc":"upper left","bbox_to_anchor":None,"ncol":1,"fontsize":15}
 
-Figure0=figure.Graphe2D(id=0,titre=titre,xlabel=xlabel,ylabel=ylabel,interpolation="none",origin="upper")
+Figure0=figure.Graphe2D(id=0,titre=titre,xlabel=xlabel,ylabel=ylabel,interpolation="none",origin="upper",axis="off")
 
 Surface=donnee.Surface(surface=surface)
 
@@ -67,14 +67,3 @@ Figure0.AjoutSurface(Surface)
 Figure0.TraceSurface()
 Figure0.EnregistreFigure(outputname)
 Figure0.FermeFigure()
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
