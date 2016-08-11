@@ -329,6 +329,138 @@ public:
 		nc = nb_cols(A);
 		ir=ir0;
 		ic=ic0;
+		
+		Matrix M(A);
+		PartialSVD(M,u,v,k);
+		
+		rank = u.size();
+	}
+	
+	
+	
+	LowRankMatrixSVD(const LowRankMatrixSVD& m){
+		Param Parametre;
+		ir=m.ir;
+		ic=m.ic;
+		nr=m.nr; nc=m.nc; rank = m.rank;
+		u.resize(rank); v.resize(rank);
+		for(int j=0; j<rank; j++){
+			u[j] = m.u[j]; v[j] = m.v[j];}
+	}
+	
+	void operator=(const LowRankMatrixSVD& m){
+		nr=m.nr; nc=m.nc; rank = m.rank;
+		u.resize(rank); v.resize(rank);
+		for(int j=0; j<rank; j++){
+			u[j] = m.u[j]; v[j] = m.v[j];}
+	}
+	
+	friend Real CompressionRate(const LowRankMatrixSVD& m){
+		return m.rank*( 1./Real(m.nr) + 1./Real(m.nc) );
+	}
+	
+	//	void Append(const vectCplx& new_u, const vectCplx& new_v){
+	//		assert(new_u.size()==nr); u.push_back(new_u);
+	//		assert(new_v.size()==nc); v.push_back(new_v);
+	//		rank++;
+	//	}
+	
+	friend Real NormFrob(const LowRankMatrixSVD& m){
+		const vector<vectCplx>& u = m.u;
+		const vector<vectCplx>& v = m.v;
+		const int& rank = m.rank;
+		
+		Cplx frob = 0.;
+		for(int j=0; j<rank; j++){
+			for(int k=0; k<rank; k++){
+				frob += dprod(v[k],v[j])*dprod(u[k],u[j]) ;
+			}
+		}
+		return sqrt(abs(frob));
+	}
+	
+	vectCplx operator*(const vectCplx& rhs){
+		assert(rhs.size()==nc);
+		vectCplx lhs(nr,0.);
+		for(int k=0; k<v.size(); k++){
+			Cplx pk = (v[k],rhs);
+			for(int j=0; j<nr; j++){
+				lhs[j] += pk*u[k][j];
+			}
+		}
+		return lhs;
+	}
+	
+	template <typename LhsType, typename RhsType>
+	friend void MvProd(LhsType& lhs, const LowRankMatrixSVD& m, const RhsType& rhs){
+		const vector<vectCplx>& u = m.u;
+		const vector<vectCplx>& v = m.v;
+		for(int k=0; k<v.size(); k++){
+			Cplx pk = (rhs,v[k]);
+			for(int j=0; j<m.nr; j++){
+				lhs[j] += pk*u[k][j];
+			}
+		}
+	}
+	
+	friend ostream& operator<<(ostream& os, const LowRankMatrixSVD& m){
+		os << "rank:\t" << m.rank << endl;
+		os << "nr:\t"   << m.nr << endl;
+		os << "nc:\t"   << m.nc << endl;
+		os << "\nu:\n";
+		for(int j=0; j<m.nr; j++){
+			for(int k=0; k<m.rank; k++){
+				cout << m.u[k][j] << "\t";}
+			cout << "\n";}
+		os << "\nv:\n";
+		for(int j=0; j<m.nc; j++){
+			for(int k=0; k<m.rank; k++){
+				cout << m.v[k][j] << "\t";
+			}
+			cout << "\n";
+		}
+		
+		return os;
+	}
+	
+	friend const int& rank_of(const LowRankMatrixSVD& m){ return m.rank;}
+	friend const int& nb_rows(const LowRankMatrixSVD& m){ return m.nr;}
+	friend const int& nb_cols(const LowRankMatrixSVD& m){ return m.nc;}
+	friend const vectInt& ir_(const LowRankMatrixSVD& m){ return m.ir;}
+	friend const vectInt& ic_(const LowRankMatrixSVD& m){ return m.ic;}
+	
+	friend Real squared_relative_error (const LowRankMatrixSVD& m, const SubMatrix& subm){
+		Real norm= 0;
+		Real err = 0;
+		for (int j=0;j<m.nr;j++){
+			for (int k=0;k<m.nc;k++){
+				Cplx aux=subm(j,k);
+				norm+= pow(abs(aux),2);
+				for (int l=0;l<m.u.size();l++){
+					aux = aux - m.u[l][j] * m.v[l][k];
+				}
+				err+=pow(abs(aux),2);
+			}
+		}
+		err =err/norm;
+		return err;
+	}
+	friend Real squared_absolute_error (const LowRankMatrixSVD& m, const SubMatrix& subm){
+		Real err=0;
+		for (int j=0;j<m.nr;j++){
+			for (int k=0;k<m.nc;k++){
+				Cplx aux=subm(j,k);
+				for (int l=0;l<m.u.size();l++){
+					aux = aux - m.u[l][j] * m.v[l][k];
+				}
+				err+=pow(abs(aux),2);
+			}
+		}
+		return err;
+	}
+	
+	
+};
 
 
 //======================//
