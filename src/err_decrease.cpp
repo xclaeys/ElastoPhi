@@ -87,10 +87,11 @@ int main(int argc, char* argv[]){
 	}
 
 	
-	for (int j=1;j<10;j++){
+	
+	for (int j=1;j<6;j++){
 		// p2: points in a unit disk of the plane z=z2
 		
-		double z2 = 1+double(j)*0.1;
+		double z2 = 1+double(j)*0.2;
 		vectR3 p2(nr);
 		for(int j=0; j<nr; j++){
 			double rho = ((double) rand() / (RAND_MAX)); // (double) otherwise integer division!
@@ -109,13 +110,19 @@ int main(int argc, char* argv[]){
 		for (int i=1;i<50;i++){
 			
 			tic();
-			LowRankMatrix lrm(subm,Ir,Ic,i); // construct a low rank matrix B applying ACA to matrix A
+			LowRankMatrix lrm(subm,Ir,Ic,i);
+			toc();
+			tic();
+			LowRankMatrixSVD lrmsvd(subm,Ir,Ic,i); // construct a low rank matrix B applying ACA to matrix A
 			toc();
 			tic();
 			Real err=0;
-			err=squared_absolute_error(lrm,subm);
-			cout<<z2<<" "<<i<<" "<<err<<endl;
-			output <<z2<<" "<<i<<" "<<err<<endl;
+			Real err_SVD=0;
+			err=squared_relative_error(lrm,subm);
+			err_SVD=squared_relative_error(lrmsvd,subm);
+//			cout<<z2-z1<<" "<<i<<" "<<err<<endl;
+			output <<z2-z1<<" "<<i<<" "<<err<<" "<<err_SVD<<endl;
+			
 			toc();
 
 
