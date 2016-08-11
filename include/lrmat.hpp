@@ -7,6 +7,7 @@
 #include <cassert>
 #include "matrix.hpp"
 #include "loading.hpp"
+#include <Eigen/Dense>
 
 
 //================================//
@@ -302,6 +303,32 @@ public:
 };
 
 
+class LowRankMatrixSVD{
+	
+private:
+	
+	int rank, nr, nc;
+	vector<vectCplx> u, v;
+	vectInt ir;
+	vectInt ic;
+	
+public:
+	
+	LowRankMatrixSVD(const vectInt& ir0, const vectInt& ic0){
+		nr=ir0.size();
+		nc=ic0.size();
+		ir=ir0;
+		ic=ic0;
+		rank=0;
+	}
+	
+	
+	// Construit une matrix low rank SVD à nombre de matrice de rang 1 fixé
+	LowRankMatrixSVD(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0, int k){
+		nr = nb_rows(A);
+		nc = nb_cols(A);
+		ir=ir0;
+		ic=ic0;
 
 
 //======================//
