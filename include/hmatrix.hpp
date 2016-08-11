@@ -41,13 +41,17 @@ public:
 
 void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, int reqrank){
 	Block B(t,s);
-	if( B.IsAdmissible() & (!s.IsLeaf() || !t.IsLeaf())){ // we don't do ACA compression on interactions between leaves (blocks 3x3 because vectorial)
+	if( B.IsAdmissible() ){
 		const vectInt& I = num_(t);
 		const vectInt& J = num_(s);
 		SubMatrix submat = SubMatrix(mat,I,J);
-		FarFieldMat.push_back(LowRankMatrix(submat,I,J,reqrank));
+		LowRankMatrix lrm(submat,I,J,reqrank);
+		if(rank_of(lrm)!=-1){
+			FarFieldMat.push_back(LowRankMatrix(submat,I,J,reqrank));
+			return;
+		}
 	}
-	else if( s.IsLeaf() ){
+	if( s.IsLeaf() ){
 		if( t.IsLeaf() ){
 			const vectInt& I = num_(t);
 			const vectInt& J = num_(s);

@@ -63,20 +63,21 @@ public:
 		vector<bool> visited_col(nc,false);
 		
 		Real frob = 0.;
-		Real old_frob = 0.;
 		Real aux  = 0.;
 		Cplx frob_aux=0;
 		
 		int I=0, J=0;
 		int q = 0;
-		if(reqrank == 0)
+		if(reqrank == 0){
 			rank = 0; // approximate with a zero matrix
+		}
+		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
+			rank=-1;
+		}
 		else{
 			vectCplx r(nc),c(nr);
 			
 			// Compute the first cross
-			// (don't modify the code because we want to really use the Bebendorf stopping criterion (3.58),
-			// i.e. we don't want to accept the new cross if it is not satisfied because otherwise the approximation would be more precise than desired)
 			//==================//
 			// Recherche colonne
 			Real rmax = 0.;
@@ -129,6 +130,12 @@ public:
 				
 				if (q >= min(nr,nc) )
 					break;
+				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
+					if (reqrank <0){ // On a pas fixé le rang
+						rank=-1;
+					}
+					break;
+				}
 				// Compute another cross
 				//==================//
 				// Recherche colonne
@@ -176,7 +183,7 @@ public:
 				v.push_back(r);
 			}
 			
-			// old stopping criterion:
+			// stopping criterion:
 			//}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) );
 			// (see stopping criterion in slide 26 of Stephanie Chaillat and Rjasanow-Steinbach)
 			// si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
@@ -188,7 +195,9 @@ public:
 		
 //		if(reqrank == 0)
 //			rank = 0; // approximate with a zero matrix
-//		else{
+//		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
+//			rank=-1;
+//		} else{
 //			vectCplx r(nc),c(nr);
 //			
 //			// Compute the first cross
@@ -247,6 +256,12 @@ public:
 //				
 //				if (q >= min(nr,nc) )
 //					break;
+//				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
+//					if (reqrank <0){ // On a pas fixé le rang
+//						rank=-1;
+//					}
+//					break;
+//				}
 //				// Compute another cross
 //				//==================//
 //				// Recherche colonne
