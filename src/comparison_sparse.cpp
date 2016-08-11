@@ -50,8 +50,8 @@ int main(int argc, char* argv[]){
 	//cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
 	cout<<"Data path : "+Parametres.datapath<<endl;
 	cout<<"Output path : "+Parametres.outputpath<<endl;
-	//cout<<"Mesh name : "+Parametres.meshname<<endl;
-	//cout<<"Matrix name : "+Parametres.matrixname<<endl;
+	cout<<"Mesh name : "+Parametres.meshname<<endl;
+	cout<<"Matrix name : "+Parametres.matrixname<<endl;
 	cout<<"##################################"<<endl;
     
     vector<double> times2;
@@ -62,14 +62,17 @@ int main(int argc, char* argv[]){
     SpMatrix spA;
     
     tic();
-    LoadSpMatrix((Parametres.datapath+"/"+"matrice5364FracsTrianglesCreuse.txt").c_str(),spA);
+    //LoadSpMatrix((Parametres.datapath+"/"+"matrice5364FracsTrianglesCreuse.txt").c_str(),spA);
+    LoadSpMatrix((Parametres.datapath+"/"+(split(Parametres.matrixname,'.')).at(0)+"Creuse.txt").c_str(),spA);
     toc();
     
     tic();
-    LoadPoints((Parametres.datapath+"/"+"maillage5364FracsTriangles.txt").c_str(),x,r);
+    //LoadPoints((Parametres.datapath+"/"+"maillage5364FracsTriangles.txt").c_str(),x,r);
+    LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
     toc();
     tic();
-	LoadMatrix((Parametres.datapath+"/"+"matrice5364FracsTriangles.txt").c_str(),A);
+	//LoadMatrix((Parametres.datapath+"/"+"matrice5364FracsTriangles.txt").c_str(),A);
+    LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
     toc();
     
     // Vecteur pour le produit matrice vecteur
@@ -109,7 +112,7 @@ int main(int argc, char* argv[]){
     epsilon[0] = 1e-1; //epsilon[1] = 5e-1; epsilon[2]=2e-1; epsilon[3] = 1e-1; epsilon[4] = 5e-2; epsilon[5] = 2e-2; epsilon[6] = 1e-2;
     
     // for output file
-    string filename=Parametres.outputpath+"/output_compression_10_08_2016_d"+Parametres.matrixname;
+    string filename=Parametres.outputpath+"/output_compression_11_08_2016"+Parametres.matrixname;
     ofstream output(filename.c_str());
     if (!output){
         cerr<<"Output file cannot be created"<<endl;
