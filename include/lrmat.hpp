@@ -63,121 +63,234 @@ public:
 		vector<bool> visited_col(nc,false);
 		
 		Real frob = 0.;
+		Real old_frob = 0.;
 		Real aux  = 0.;
-		Cplx frob_aux;
+		Cplx frob_aux=0;
 		
 		int I=0, J=0;
 		int q = 0;
-    
-        if(reqrank == 0)
-            rank = 0; // approximate with a zero matrix
-        else{
-            vectCplx r(nc),c(nr);
-            
-            // Compute the first cross
-            // (don't modify the code because we want to really use the Bebendorf stopping criterion (3.58),
-            // i.e. we don't want to accept the new cross if it is not satisfied because otherwise the approximation would be more precise than desired)
-            //==================//
-            // Recherche colonne
-            Real rmax = 0.;
-            for(int k=0; k<nc; k++){
-                r[k] = A(I,k);
-                for(int j=0; j<u.size(); j++){
-                    r[k] += -u[j][I]*v[j][k];}
-                if( abs(r[k])>rmax && !visited_col[k] ){
-                    J=k; rmax=abs(r[k]);}
-            }
-            visited_row[I] = true;
-            //==================//
-            // Recherche ligne
-            if( abs(r[J]) > 1e-15 ){
-                Cplx gamma = Cplx(1.)/r[J];
-                Real cmax = 0.;
-                for(int j=0; j<nr; j++){
-                    c[j] = A(j,J);
-                    for(int k=0; k<u.size(); k++){
-                        c[j] += -u[k][j]*v[k][J];}
-                    c[j] = gamma*c[j];
-                    if( abs(c[j])>cmax && !visited_row[j] ){
-                        I=j; cmax=abs(c[j]);}
-                }
-                visited_col[J] = true;
-                
-                aux = abs(dprod(c,c)*dprod(r,r));
-            }
-            else{cout << "There is a zero row in the starting submatrix and ACA didn't work" << endl;}
-            
-            // (see Bebendorf stopping criterion (3.58) pag 141)
-            while ( (q == 0) ||
-                      ( (reqrank > 0) && (q < reqrank) ) ||
-                     ( (reqrank < 0) && ( sqrt(aux/frob)>Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon) ) ) ) {
-                
-                // We accept the cross
-                q++;
-                //====================//
-                // Estimateur d'erreur
-                frob_aux = 0.;
-                //aux = abs(dprod(c,c)*dprod(r,r)); // (already computed to evaluate the test)
-                // aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
-                for(int j=0; j<u.size(); j++){
-                    frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
-                // frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
-                frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix                
-                //==================//
-                // Nouvelle croix
-                u.push_back(c);
-                v.push_back(r);
+		if(reqrank == 0)
+			rank = 0; // approximate with a zero matrix
+		else{
+			vectCplx r(nc),c(nr);
+			
+			// Compute the first cross
+			// (don't modify the code because we want to really use the Bebendorf stopping criterion (3.58),
+			// i.e. we don't want to accept the new cross if it is not satisfied because otherwise the approximation would be more precise than desired)
+			//==================//
+			// Recherche colonne
+			Real rmax = 0.;
+			for(int k=0; k<nc; k++){
+				r[k] = A(I,k);
+				for(int j=0; j<u.size(); j++){
+					r[k] += -u[j][I]*v[j][k];}
+				if( abs(r[k])>rmax && !visited_col[k] ){
+					J=k; rmax=abs(r[k]);}
+			}
+			visited_row[I] = true;
+			//==================//
+			// Recherche ligne
+			if( abs(r[J]) > 1e-15 ){
+				Cplx gamma = Cplx(1.)/r[J];
+				Real cmax = 0.;
+				for(int j=0; j<nr; j++){
+					c[j] = A(j,J);
+					for(int k=0; k<u.size(); k++){
+						c[j] += -u[k][j]*v[k][J];}
+					c[j] = gamma*c[j];
+					if( abs(c[j])>cmax && !visited_row[j] ){
+						I=j; cmax=abs(c[j]);}
+				}
+				visited_col[J] = true;
+				
+				aux = abs(dprod(c,c)*dprod(r,r));
+				
+				// We accept the cross
+				q++;
+				//====================//
+				// Estimateur d'erreur
+				frob_aux = 0.;
+				//aux = abs(dprod(c,c)*dprod(r,r)); // (already computed to evaluate the test)
+				// aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
+				for(int j=0; j<u.size(); j++){
+					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
+				// frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
+				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
+				//==================//
+				// Nouvelle croix
+				u.push_back(c);
+				v.push_back(r);
+			}
+			else{cout << "There is a zero row in the starting submatrix and ACA didn't work" << endl;}
+			
+			// (see Bebendorf stopping criterion (3.58) pag 141)
+			while ( ((reqrank > 0) && (q < reqrank) ) ||
+			       ( (reqrank < 0) && ( sqrt(aux/frob)>Parametres.epsilon ) ) ) {
+				
+				if (q >= min(nr,nc) )
+					break;
+				// Compute another cross
+				//==================//
+				// Recherche colonne
+				rmax = 0.;
+				for(int k=0; k<nc; k++){
+					r[k] = A(I,k);
+					for(int j=0; j<u.size(); j++){
+						r[k] += -u[j][I]*v[j][k];}
+					if( abs(r[k])>rmax && !visited_col[k] ){
+						J=k; rmax=abs(r[k]);}
+				}
+				visited_row[I] = true;
+				//==================//
+				// Recherche ligne
+				if( abs(r[J]) > 1e-15 ){
+					Cplx gamma = Cplx(1.)/r[J];
+					Real cmax = 0.;
+					for(int j=0; j<nr; j++){
+						c[j] = A(j,J);
+						for(int k=0; k<u.size(); k++){
+							c[j] += -u[k][j]*v[k][J];}
+						c[j] = gamma*c[j];
+						if( abs(c[j])>cmax && !visited_row[j] ){
+							I=j; cmax=abs(c[j]);}
+					}
+					visited_col[J] = true;
+					
+					aux = abs(dprod(c,c)*dprod(r,r));
+				}
+				else{ cout << "ACA's loop broke" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
+				// We accept the cross
+				q++;
+				//====================//
+				// Estimateur d'erreur
+				frob_aux = 0.;
+				//aux = abs(dprod(c,c)*dprod(r,r)); // (already computed to evaluate the test)
+				// aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
+				for(int j=0; j<u.size(); j++){
+					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
+				// frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
+				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
+				//==================//
+				// Nouvelle croix
+				u.push_back(c);
+				v.push_back(r);
+			}
+			
+			// old stopping criterion:
+			//}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) );
+			// (see stopping criterion in slide 26 of Stephanie Chaillat and Rjasanow-Steinbach)
+			// si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
+			// indeed, it's a sort of relative error
+			
+			rank = u.size();
+		}
 
-                if (q >= min(nr,nc) )
-                    break;
-                // Compute another cross
-                //==================//
-                // Recherche colonne
-                rmax = 0.;
-                for(int k=0; k<nc; k++){
-                    r[k] = A(I,k);
-                    for(int j=0; j<u.size(); j++){
-                        r[k] += -u[j][I]*v[j][k];}
-                    if( abs(r[k])>rmax && !visited_col[k] ){
-                        J=k; rmax=abs(r[k]);}
-                }
-                visited_row[I] = true;
-                //==================//
-                // Recherche ligne
-                if( abs(r[J]) > 1e-15 ){
-                    Cplx gamma = Cplx(1.)/r[J];
-                    Real cmax = 0.;
-                    for(int j=0; j<nr; j++){
-                        c[j] = A(j,J);
-                        for(int k=0; k<u.size(); k++){
-                            c[j] += -u[k][j]*v[k][J];}
-                        c[j] = gamma*c[j];
-                        if( abs(c[j])>cmax && !visited_row[j] ){
-                            I=j; cmax=abs(c[j]);}
-                    }
-                    visited_col[J] = true;
-                    
-                    aux = abs(dprod(c,c)*dprod(r,r));
-                }
-                else{ cout << "ACA's loop broke" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
-            }
-        
-        // old stopping criterion:
-        //}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) );
-        // (see stopping criterion in slide 26 of Stephanie Chaillat and Rjasanow-Steinbach)
-        // si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
-        // indeed, it's a sort of relative error
-        
-            rank = u.size();
-        }
-            
-            
-            //======= Historique estimateur ==============//
-            //cout << "___________________________" << endl;
-            //cout << "Iteration:\t"  << q++ << endl;
-            //cout << "Estimateur:\t" << aux/frob << endl;
-            //============================================//
-    }
+		
+//		if(reqrank == 0)
+//			rank = 0; // approximate with a zero matrix
+//		else{
+//			vectCplx r(nc),c(nr);
+//			
+//			// Compute the first cross
+//			// (don't modify the code because we want to really use the Bebendorf stopping criterion (3.58),
+//			// i.e. we don't want to accept the new cross if it is not satisfied because otherwise the approximation would be more precise than desired)
+//			//==================//
+//			// Recherche colonne
+//			Real rmax = 0.;
+//			for(int k=0; k<nc; k++){
+//				r[k] = A(I,k);
+//				for(int j=0; j<u.size(); j++){
+//					r[k] += -u[j][I]*v[j][k];}
+//				if( abs(r[k])>rmax && !visited_col[k] ){
+//					J=k; rmax=abs(r[k]);}
+//			}
+//			visited_row[I] = true;
+//			//==================//
+//			// Recherche ligne
+//			if( abs(r[J]) > 1e-15 ){
+//				Cplx gamma = Cplx(1.)/r[J];
+//				Real cmax = 0.;
+//				for(int j=0; j<nr; j++){
+//					c[j] = A(j,J);
+//					for(int k=0; k<u.size(); k++){
+//						c[j] += -u[k][j]*v[k][J];}
+//					c[j] = gamma*c[j];
+//					if( abs(c[j])>cmax && !visited_row[j] ){
+//						I=j; cmax=abs(c[j]);}
+//				}
+//				visited_col[J] = true;
+//				
+//				aux = abs(dprod(c,c)*dprod(r,r));
+//			}
+//			else{cout << "There is a zero row in the starting submatrix and ACA didn't work" << endl;}
+//			
+//			// (see Bebendorf stopping criterion (3.58) pag 141)
+//			while ( (q == 0) ||
+//			       ( (reqrank > 0) && (q < reqrank) ) ||
+//			       ( (reqrank < 0) && ( sqrt(aux/frob)>Parametres.epsilon * (1 - Parametres.eta)/(1 + Parametres.epsilon) ) ) ) {
+//				
+//				// We accept the cross
+//				q++;
+//				//====================//
+//				// Estimateur d'erreur
+//				frob_aux = 0.;
+//				//aux = abs(dprod(c,c)*dprod(r,r)); // (already computed to evaluate the test)
+//				// aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
+//				for(int j=0; j<u.size(); j++){
+//					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
+//				// frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
+//				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
+//				//==================//
+//				// Nouvelle croix
+//				u.push_back(c);
+//				v.push_back(r);
+//				
+//				if (q >= min(nr,nc) )
+//					break;
+//				// Compute another cross
+//				//==================//
+//				// Recherche colonne
+//				rmax = 0.;
+//				for(int k=0; k<nc; k++){
+//					r[k] = A(I,k);
+//					for(int j=0; j<u.size(); j++){
+//						r[k] += -u[j][I]*v[j][k];}
+//					if( abs(r[k])>rmax && !visited_col[k] ){
+//						J=k; rmax=abs(r[k]);}
+//				}
+//				visited_row[I] = true;
+//				//==================//
+//				// Recherche ligne
+//				if( abs(r[J]) > 1e-15 ){
+//					Cplx gamma = Cplx(1.)/r[J];
+//					Real cmax = 0.;
+//					for(int j=0; j<nr; j++){
+//						c[j] = A(j,J);
+//						for(int k=0; k<u.size(); k++){
+//							c[j] += -u[k][j]*v[k][J];}
+//						c[j] = gamma*c[j];
+//						if( abs(c[j])>cmax && !visited_row[j] ){
+//							I=j; cmax=abs(c[j]);}
+//					}
+//					visited_col[J] = true;
+//					
+//					aux = abs(dprod(c,c)*dprod(r,r));
+//				}
+//				else{ cout << "ACA's loop broke" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
+//			}
+//			
+//			// old stopping criterion:
+//			//}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) );
+//			// (see stopping criterion in slide 26 of Stephanie Chaillat and Rjasanow-Steinbach)
+//			// si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
+//			// indeed, it's a sort of relative error
+//			
+//			rank = u.size();
+//		}
+		
+		
+		
+	}
 	
 	LowRankMatrix(const LowRankMatrix& m){
 		Param Parametre;
@@ -200,11 +313,11 @@ public:
 		return m.rank*( 1./Real(m.nr) + 1./Real(m.nc) );
 	}
 	
-//	void Append(const vectCplx& new_u, const vectCplx& new_v){
-//		assert(new_u.size()==nr); u.push_back(new_u);
-//		assert(new_v.size()==nc); v.push_back(new_v);
-//		rank++;
-//	}
+	//	void Append(const vectCplx& new_u, const vectCplx& new_v){
+	//		assert(new_u.size()==nr); u.push_back(new_u);
+	//		assert(new_v.size()==nc); v.push_back(new_v);
+	//		rank++;
+	//	}
 	
 	friend Real NormFrob(const LowRankMatrix& m){
 		const vector<vectCplx>& u = m.u;
@@ -272,7 +385,7 @@ public:
 	
 	friend Real squared_relative_error (const LowRankMatrix& m, const SubMatrix& subm){
 		Real norm= 0;
-        Real err = 0;
+		Real err = 0;
 		for (int j=0;j<m.nr;j++){
 			for (int k=0;k<m.nc;k++){
 				Cplx aux=subm(j,k);
@@ -284,11 +397,11 @@ public:
 			}
 		}
 		err =err/norm;
-        return err;
+		return err;
 	}
 	friend Real squared_absolute_error (const LowRankMatrix& m, const SubMatrix& subm){
-        Real err=0;
-        for (int j=0;j<m.nr;j++){
+		Real err=0;
+		for (int j=0;j<m.nr;j++){
 			for (int k=0;k<m.nc;k++){
 				Cplx aux=subm(j,k);
 				for (int l=0;l<m.u.size();l++){
@@ -297,7 +410,7 @@ public:
 				err+=pow(abs(aux),2);
 			}
 		}
-        return err;
+		return err;
 	}
 	
 };
