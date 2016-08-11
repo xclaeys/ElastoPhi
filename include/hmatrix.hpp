@@ -45,9 +45,9 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, int reqrank){
 		const vectInt& I = num_(t);
 		const vectInt& J = num_(s);
 		SubMatrix submat = SubMatrix(mat,I,J);
-		LowRankMatrix lrm(submat,I,J,reqrank);
+		LowRankMatrix lrm(submat,I,J,t,s,reqrank);
 		if(rank_of(lrm)!=-1){
-			FarFieldMat.push_back(LowRankMatrix(submat,I,J,reqrank));
+			FarFieldMat.push_back(lrm);
 			return;
 		}
 	}

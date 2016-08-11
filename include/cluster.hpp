@@ -70,6 +70,7 @@ public:
 	bool IsLeaf() const { if(son[0]==0){return true;} return false; }
 	void push_back(const int& j){num.push_back(j);}
 	
+	friend const vectR3&  pts_(const Cluster& t){return t.x;}
 	friend const Real&    rad_(const Cluster& t){return t.rad;}
 	friend const R3&      ctr_(const Cluster& t){return t.ctr;}
 	friend Cluster&       son_(const Cluster& t,const int& j){return *(t.son[j]);}
@@ -179,7 +180,7 @@ void Cluster::Build_Borm(){
 
 
 void Cluster::Build(){
-	
+	Param Parametres;
 	// Calcul centre du paquet
 	int nb_pt = num.size();
 	R3 xc = 0.;
@@ -236,7 +237,7 @@ void Cluster::Build(){
 	}
 	
 	// Recursivite
-	if(num.size()!=3){
+	if(num.size()!=Parametres.dim){
 		assert( son[0]!=0 );
 		assert( son[1]!=0 );
 		son[0]->Build();
@@ -279,15 +280,16 @@ void Cluster::Build(){
 //	
 //	}
 void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt){
+	Param Parametres;
     if(t.depth<visudep){
         assert( t.son[0]!=0 ); // check if visudep is too high!
         TraversalBuildLabel(*(t.son[0]),labelVisu,visudep,2*cnt);
         TraversalBuildLabel(*(t.son[1]),labelVisu,visudep,2*cnt+1);
     }
     else{
-        for(int i=0; i<(t.num).size()/3; i++)
+        for(int i=0; i<(t.num).size()/Parametres.dim; i++)
         {
-            labelVisu[ t.num[3*i]/3 ] = cnt-pow(2,visudep);
+            labelVisu[ t.num[Parametres.dim*i]/Parametres.dim ] = cnt-pow(2,visudep);
             
         }
     }
@@ -313,7 +315,7 @@ void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, 
     
     // Nombre d'elements
     infile >> NbElt;
-    assert(NbElt==t.x.size()/3);
+    assert(NbElt==t.x.size()/Parametres.dim);
     Elt.resize(NbElt);
     NbPt.resize(NbElt);
     
