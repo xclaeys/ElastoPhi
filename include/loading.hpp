@@ -27,7 +27,7 @@ using namespace std;
 
 class Param{
 public:
-	static int  dim;
+	static int  ndofperelt;
 	static Real eta;
 	static Real epsilon;
 	static string datapath;
@@ -45,7 +45,7 @@ public:
 // Allocation de la mémoire pour les valeurs statiques (obligatoire)
 Real Param::eta;
 Real Param::epsilon;
-int Param::dim;
+int Param::ndofperelt;
 string Param::datapath;
 string Param::outputpath;
 string Param::meshname;
@@ -115,12 +115,12 @@ Param::Param(Real eta0, Real epsilon0, string datapath0, string outputpath0, str
 	matrixname=matrixname0;
 	
 }
-Param::Param(int dim0){
-	dim=dim0;
+Param::Param(int ndofperelt0){
+	ndofperelt=ndofperelt0;
 }
 
 Param ParametreDefaut(1.0,1.e-2,"../data","../output","maillage1.txt","matrice1.txt");
-Param ParametreDefautDim(3);
+Param ParametreDefautNdofperelt(3);
 
 //==================================================//
 //
@@ -162,11 +162,11 @@ void LoadMatrix(const char* filename, Matrix& m){
 		
 		// Pour chaque ligne, stockage
 		// du bloc d'interaction
-		iss >> j0; j0 = Parametres.dim*(j0-1);
-		iss >> k0; k0 = Parametres.dim*(k0-1);
+		iss >> j0; j0 = Parametres.ndofperelt*(j0-1);
+		iss >> k0; k0 = Parametres.ndofperelt*(k0-1);
 		
-		for(int j=0; j<Parametres.dim; j++){
-			for(int k=0; k<Parametres.dim; k++){
+		for(int j=0; j<Parametres.ndofperelt; j++){
+			for(int k=0; k<Parametres.ndofperelt; k++){
 				iss >> val;
 				m(j0+j,k0+k) = val;
 			}
@@ -219,11 +219,11 @@ void LoadSpMatrix(const char* filename, SpMatrix& m){
 		
 		// Pour chaque ligne, stockage
 		// du bloc d'interaction
-		iss >> j0; j0 = Parametres.dim*(j0-1);
-		iss >> k0; k0 = Parametres.dim*(k0-1);
+		iss >> j0; j0 = Parametres.ndofperelt*(j0-1);
+		iss >> k0; k0 = Parametres.ndofperelt*(k0-1);
 		
-		for(int j=0; j<Parametres.dim; j++){
-			for(int k=0; k<Parametres.dim; k++){
+		for(int j=0; j<Parametres.ndofperelt; j++){
+			for(int k=0; k<Parametres.ndofperelt; k++){
 				iss >> val;
 				m.I_(NbCoef) = j0+j;
 				m.J_(NbCoef) = k0+k;
@@ -285,7 +285,7 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
 		
 		//Ajout de trois points identiques
 		//dans le nuage de points...
-		for(int j=0; j<Parametres.dim; j++){
+		for(int j=0; j<Parametres.ndofperelt; j++){
 			x.push_back(Ctr);}
 		
 		// Calcul du rayon champ
@@ -296,7 +296,7 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
 			Rad = norm(Ctr-Pt[j]);
 			if(Rad>Rmax){Rmax=Rad;}}
 		
-		for(int j=0; j<Parametres.dim; j++){
+		for(int j=0; j<Parametres.ndofperelt; j++){
 			r.push_back(Rmax);}
 		
 		// Separateur inter-element

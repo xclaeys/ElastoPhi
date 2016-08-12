@@ -68,19 +68,16 @@ public:
 		Cplx frob_aux=0;
 		
 		//// Choix de la première ligne
-//		Real dist=1e30;
-		int I=nr-1;
-//		for (int i =0;i<int(nr/Parametres.dim);i++){
-//			Real aux_dist= norm(pts_(t)[num_(t)[i*Parametres.dim]]-ctr_(s));
-//			if (dist>aux_dist){
-//				dist=aux_dist;
-//				I=i*Parametres.dim;
-//			}
-//				
-//		}
-		
-		
-		
+		Real dist=1e30;
+		int I=0;
+		for (int i =0;i<int(nr/Parametres.ndofperelt);i++){
+			Real aux_dist= norm(pts_(t)[num_(t)[i*Parametres.ndofperelt]]-ctr_(t));
+			if (dist>aux_dist){
+				dist=aux_dist;
+				I=i*Parametres.ndofperelt;
+			}
+				
+		}
 		
 		int J=0;
 		int q = 0;

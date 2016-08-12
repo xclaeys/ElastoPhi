@@ -62,8 +62,8 @@ public:
 //		NearFieldBall();
 	}
 	
-	Cluster(const vectR3& x0, const vectReal& r0, const int& j0, const unsigned int& dep): x(x0), r(r0), ctr(0.), rad(0.) {
-        son[0]=0;son[1]=0; num.push_back(j0); depth = dep;}
+	Cluster(const vectR3& x0, const vectReal& r0, const unsigned int& dep): x(x0), r(r0), ctr(0.), rad(0.) {
+        son[0]=0;son[1]=0; depth = dep;}
 	Cluster(const Cluster& ); // Pas de recopie
 	~Cluster(){if (son[0]!=0){ delete son[0];}if (son[1]!=0){ delete son[1];}};
 	void NearFieldBall();
@@ -93,15 +93,13 @@ void DisplayTree(const Cluster& cl){
 }
 
 void Cluster::Build_Borm(){
-	
+	Param Parametres;
 	// Calcul centre du paquet
 	int nb_pt = num.size();
 	R3 xc = 0.;
 	for(int j=0; j<nb_pt; j++){
 		xc += x[num[j]];}
 	xc = (1./Real(nb_pt))*xc;
-	
-//	ctr = xc;
 	
 	Real radmax=0.;
 	for(int j=0; j<nb_pt; j++){
@@ -111,11 +109,8 @@ void Cluster::Build_Borm(){
 	
 	// Calcul matrice de covariance
 	MatR3 cov; cov.setZero();
-//	rad=0.;
 	for(int j=0; j<nb_pt; j++){
 		R3 u = x[num[j]] - xc;
-		//		cout<<rad<<" "<<norm(u)<<" "<<max(rad,norm(u)) <<endl;
-//		rad=max(rad,norm(u)+r[num[j]]);
 		for(int p=0; p<3; p++){
 			for(int q=0; q<3; q++){
 				cov(p,q) += u[p]*u[q];
@@ -136,22 +131,22 @@ void Cluster::Build_Borm(){
 	w[2] = ev(2,l).real();
 	
 	// Construction des paquets enfants
-	if(radmax>1e-10){
+	if(num.size()!=Parametres.ndofperelt){
+		son[0] = new Cluster(x,r,depth+1);
+		son[1] = new Cluster(x,r,depth+1);
 		for(int j=0; j<nb_pt; j++){
 			R3 dx = x[num[j]] - xc;
 			if( (w,dx)>0 ){
-				if(son[0]==0){son[0] = new Cluster(x,r,num[j],depth+1);}
-				else{ son[0]->push_back(num[j]); }
+				son[0]->push_back(num[j]);
 			}
 			else{
-				if(son[1]==0){son[1] = new Cluster(x,r,num[j],depth+1);}
-				else{ son[1]->push_back(num[j]); }
+				son[1]->push_back(num[j]);
 			}
 		}
 	}
 	
 	// Recursivite
-	if(radmax>1e-10){
+	if(num.size()!=Parametres.ndofperelt){
 		assert( son[0]!=0 );
 		assert( son[1]!=0 );
 		son[0]->Build_Borm();
@@ -200,7 +195,6 @@ void Cluster::Build(){
 	rad=0.;
 	for(int j=0; j<nb_pt; j++){
 		R3 u = x[num[j]] - xc;
-		//		cout<<rad<<" "<<norm(u)<<" "<<max(rad,norm(u)) <<endl;
 		rad=max(rad,norm(u)+r[num[j]]);
 		for(int p=0; p<3; p++){
 			for(int q=0; q<3; q++){
@@ -222,22 +216,22 @@ void Cluster::Build(){
 	w[2] = ev(2,l).real();
 	
 	// Construction des paquets enfants
-	if(num.size()!=3){
+	if(num.size()!=Parametres.ndofperelt){
+		son[0] = new Cluster(x,r,depth+1);
+		son[1] = new Cluster(x,r,depth+1);
 		for(int j=0; j<nb_pt; j++){
 			R3 dx = x[num[j]] - xc;
 			if( (w,dx)>0 ){
-				if(son[0]==0){son[0] = new Cluster(x,r,num[j],depth+1);}
-				else{ son[0]->push_back(num[j]); }
+				son[0]->push_back(num[j]);
 			}
 			else{
-				if(son[1]==0){son[1] = new Cluster(x,r,num[j],depth+1);}
-				else{ son[1]->push_back(num[j]); }
+				son[1]->push_back(num[j]);
 			}
 		}
 	}
 	
 	// Recursivite
-	if(num.size()!=Parametres.dim){
+	if(num.size()!=Parametres.ndofperelt){
 		assert( son[0]!=0 );
 		assert( son[1]!=0 );
 		son[0]->Build();
@@ -247,10 +241,10 @@ void Cluster::Build(){
 		ctr=x[num[0]];
 		rad=r[num[0]];
 	}
-//	cout<<ctr<<" "<<rad<<endl;
 	
 }
 
+// Old code
 //void Cluster::NearFieldBall(){
 //	// Si deja construit
 //	if(rad>0){return;}
@@ -287,9 +281,9 @@ void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned in
         TraversalBuildLabel(*(t.son[1]),labelVisu,visudep,2*cnt+1);
     }
     else{
-        for(int i=0; i<(t.num).size()/Parametres.dim; i++)
+        for(int i=0; i<(t.num).size()/Parametres.ndofperelt; i++)
         {
-            labelVisu[ t.num[Parametres.dim*i]/Parametres.dim ] = cnt-pow(2,visudep);
+            labelVisu[ t.num[Parametres.ndofperelt*i]/Parametres.ndofperelt ] = cnt-pow(2,visudep);
             
         }
     }
@@ -299,7 +293,7 @@ void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned in
 void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, const unsigned int visudep){
     
     assert(t.depth==0); // on peut l'appeler juste pour la racine
-    
+    Param Parametres;
     vector<R3>  X;
     vector<N4>  Elt;
     vector<int> NbPt;
@@ -315,7 +309,7 @@ void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, 
     
     // Nombre d'elements
     infile >> NbElt;
-    assert(NbElt==t.x.size()/Parametres.dim);
+    assert(NbElt==t.x.size()/Parametres.ndofperelt);
     Elt.resize(NbElt);
     NbPt.resize(NbElt);
     
@@ -347,7 +341,6 @@ void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, 
     TraversalBuildLabel(t,labelVisu,visudep,1);
     
     // Ecriture fichier de sortie
-    Param Parametres;
     ofstream outfile;
     outfile.open(Parametres.outputpath+"/"+outputname);
     outfile << "$MeshFormat\n";
@@ -394,6 +387,7 @@ public:
 	friend const Cluster& tgt_(const Block& b){return *(b.t);}
 	friend const Cluster& src_(const Block& b){return *(b.s);}
 	bool IsAdmissible() const{
+		// Rjasanow - Steinbach (3.15) p111 Chap Approximation of Boundary Element Matrices
 		Param Parametres;
 		return 2*min(rad_(*t),rad_(*s)) < Parametres.eta*( norm(ctr_(*t)-ctr_(*s))-rad_(*t)-rad_(*s) );}
 	friend ostream& operator<<(ostream& os, const Block& b){
