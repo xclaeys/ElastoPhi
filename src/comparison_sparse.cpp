@@ -21,10 +21,6 @@
 
 using namespace std;
 
-/**************************************************************************//**
-									     *
-									     *****************************************************************************/
-
 int main(int argc, char* argv[]){
 	
 	
@@ -60,10 +56,10 @@ int main(int argc, char* argv[]){
 	vectR3   x;
 	Matrix   A;
 //	SpMatrix spA;
-	
-	tic();
+//	
+//	tic();
 //	LoadSpMatrix((Parametres.datapath+"/"+(split(Parametres.matrixname,'.')).at(0)+"Creuse.txt").c_str(),spA);
-	toc();
+//	toc();
 	
 	tic();
 	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
@@ -86,10 +82,10 @@ int main(int argc, char* argv[]){
 	MvProd(ua,A,u);
 	
 //	vectCplx uasp(nr);
-	tic();
+//	tic();
 //	MvProd(uasp,spA,u);
-	toc();
-	
+//	toc();
+//	
 //	Real errSp = norm(ua-uasp)/norm(ua);
 //	cout << "Matrix-vector product relative error with Sparse matrix: " << errSp << endl;
 	
@@ -97,19 +93,23 @@ int main(int argc, char* argv[]){
 	Real normA = NormFrob(A);
 	toc();
 	cout << "Frobenius norm of the dense matrix: " << normA << endl;
-	
-	//int foo [5] = { 16, 2, 77, 40, 12071 };
+    
+    // Vecteur renvoyant pour chaque dof l'indice de l'entite geometrique correspondante dans x
+    vectInt tab(nb_rows(A));
+    for (int j=0;j<x.size();j++){
+        tab[3*j]  = j;
+        tab[3*j+1]= j;
+        tab[3*j+2]= j;
+    }
 	
 	// Values of eta and epsilon
-	int neta = 5;
-	double eta[neta];
-	eta[0] = 5e-1; eta[1] = 1e-0; eta[2] = 1e1; eta[3] = 1e2; eta[4] = 1e3;// eta[5] = 4e-1; eta[6] = 3e-1; eta[7] = 2e-1; eta[8] = 1e-1;
-	int nepsilon = 3;
-	double epsilon[nepsilon];
-	epsilon[0] = -1; epsilon[1] = 1e-1; epsilon[2]=1e0;// epsilon[3] = 1e-1; epsilon[4] = 5e-2; epsilon[5] = 2e-2; epsilon[6] = 1e-2;
-	
+	const int neta = 1;
+    double eta [neta] = {5e-1};
+	const int nepsilon = 3;
+    double epsilon[nepsilon] = {-1, 1e0, 1e-1};
+    
 	// for output file
-	string filename=Parametres.outputpath+"/output_compression_11_08_2016"+Parametres.matrixname;
+	string filename=Parametres.outputpath+"/output_compression_12_08_2016"+Parametres.matrixname;
 	ofstream output(filename.c_str());
 	if (!output){
 		cerr<<"Output file cannot be created"<<endl;
@@ -131,9 +131,10 @@ int main(int argc, char* argv[]){
 			vector<double> times;
 			
 			tic();
-			HMatrix B(A,x,r,Parametres.epsilon==-1 ? 0 : -1);
-			toc(times);
-			
+            // Build the hierarchical matrix with compressed and dense blocks
+			HMatrix B(A,x,r,tab,Parametres.epsilon==-1 ? 0 : -1);
+            // if epsilon=-1 rank 0 blocks, otherwise aca compression with the given precision
+			toc(times);			
 			
 			vectCplx ub(nr);
 			tic();
@@ -160,7 +161,7 @@ int main(int argc, char* argv[]){
 //	for(int i=0; i<nb_coeff(spA); i++){
 //		A(spA.I_(i),spA.J_(i)) = 0; // now A = A-spA !! (to save memory)
 //	}
-	
+//	
 //	Real froberrSp = NormFrob(A)/normA;
 //	cout << "Relative error in Frobenius norm with Sparse Matrix: " << froberrSp << endl;
 	
