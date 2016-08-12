@@ -20,9 +20,9 @@
 using namespace std;
 
 /**************************************************************************//**
- * It converts the mesh file from the format given by Ibtihel to gmsh format (.msh)
- * and to medit format (.mesh) for visualization of the mesh
- * (To be run it requires the input file with the desidered parameters)
+* It converts the mesh file from the format given by Ibtihel to gmsh format (.msh)
+* and to medit format (.mesh) for visualization of the mesh
+* (To be run it requires the input file with the desidered parameters)
  *****************************************************************************/
 
 int main(int argc, char* argv[]){
@@ -55,19 +55,25 @@ int main(int argc, char* argv[]){
 	cout<<"##################################"<<endl;
  
 	////////////////========================================================////////////////
-    
-    vectReal r;
-    vectR3   x;
-    tic();
-    LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
-    toc();
-    tic();
-    Cluster t(x,r);
-    toc();
-    
-    for(int idepth=1; idepth<4; idepth++){
-        VisuPartitionedMesh(t, Parametres.datapath+"/"+Parametres.meshname, "VisuPart"+(split(Parametres.meshname,'.')).at(0)+"depth"+NbrToStr(idepth)+".msh", idepth);
-    }
-    
+	
+	vectReal r;
+	vectR3   x;
+	tic();
+	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
+	vectInt tab(Parametres.ndofperelt*x.size());
+	for (int j=0;j<x.size();j++){
+		tab[3*j]  = j;
+		tab[3*j+1]= j;
+		tab[3*j+2]= j;
+	}
+	toc();
+	tic();
+	Cluster t(x,r,tab);
+	toc();
+	
+	for(int idepth=1; idepth<4; idepth++){
+		VisuPartitionedMesh(t, Parametres.datapath+"/"+Parametres.meshname, "VisuPart"+(split(Parametres.meshname,'.')).at(0)+"depth"+NbrToStr(idepth)+".msh", idepth);
+	}
+	
 	
 }
