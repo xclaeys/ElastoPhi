@@ -64,7 +64,7 @@ int main(){
 ////////////////////////////////////////////////////////////////////////////////////////
 	// Parametres
 	Param Parametre(-1.,1e-1); // Pas de low rank matrices pour eta=-1
-	Cluster t(p1,r1,tab1); Cluster s(p2,r2,tab2);
+
 	HMatrix B1(A1,p1,r1,tab1,p2,r2,tab2);
 	HMatrix B2(A2,p1,r1,tab1,p1,r1,tab2);
 	HMatrix B3(A2,p1,r1,tab1);
