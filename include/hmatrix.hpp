@@ -18,6 +18,9 @@ private:
 	const Matrix& mat;
 	const vectR3& xt;
 	const vectR3& xs;
+	const vectInt& tabt;
+	const vectInt& tabs;
+	
 	
 	vector<LowRankMatrix> FarFieldMat;
 	vector<SubMatrix>     NearFieldMat;
@@ -26,8 +29,8 @@ private:
 	
 public:
 	
-	HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectR3&, const vectReal&); // To be used with two different clusters
-	HMatrix(const Matrix&, const vectR3&, const vectReal&, int reqrank=-1); // To be used with one cluster
+	HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectInt&, const vectR3&, const vectReal&, const vectInt&); // To be used with two different clusters
+	HMatrix(const Matrix&, const vectR3&, const vectReal&, const vectInt&, int reqrank=-1); // To be used with one cluster
 	//	friend void DisplayPartition(const HMatrix&, char const* const);
 	friend void MvProd(vectCplx&, const HMatrix&, const vectCplx&);
 	friend Real CompressionRate(const HMatrix&);
@@ -78,14 +81,14 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, int reqrank){
 }
 
 HMatrix::HMatrix(const Matrix& mat0,
-		 const vectR3& xt0, const vectReal& rt,
-		 const vectR3& xs0, const vectReal& rs):
+		 const vectR3& xt0, const vectReal& rt, const vectInt& tabt0,
+		 const vectR3& xs0, const vectReal& rs, const vectInt& tabs0):
 
-mat(mat0), xt(xt0), xs(xs0) {
-	assert( nb_rows(mat)==xt.size() && nb_cols(mat)==xs.size() );
+mat(mat0), xt(xt0), xs(xs0), tabt(tabt0), tabs(tabs0) {
+	assert( nb_rows(mat)==tabt.size() && nb_cols(mat)==tabs.size() );
 	
 	// Construction arbre des paquets
-	Cluster t(xt,rt); Cluster s(xs,rs);
+	Cluster t(xt,rt,tabt); Cluster s(xs,rs,tabs);
 	
 	// Construction arbre des blocs
 	BuildBlockTree(t,s);
@@ -93,13 +96,13 @@ mat(mat0), xt(xt0), xs(xs0) {
 }
 
 HMatrix::HMatrix(const Matrix& mat0,
-		 const vectR3& xt0, const vectReal& rt, int reqrank):
+		 const vectR3& xt0, const vectReal& rt, const vectInt& tabt0, int reqrank):
 
-mat(mat0), xt(xt0), xs(xt0) {
-	assert( nb_rows(mat)==xt.size() && nb_cols(mat)==xs.size() );
+mat(mat0), xt(xt0), xs(xt0), tabt(tabt0), tabs(tabt0) {
+	assert( nb_rows(mat)==tabt.size() && nb_cols(mat)==tabs.size() );
 	
 	// Construction arbre des paquets
-	Cluster t(xt,rt);
+	Cluster t(xt,rt,tabt);
 	
 	// Construction arbre des blocs
 	BuildBlockTree(t,t,reqrank);
@@ -110,7 +113,7 @@ mat(mat0), xt(xt0), xs(xt0) {
 Real CompressionRate(const HMatrix& hmat){
 	
 	Real comp = 0.;
-	Real size = ( (hmat.xt).size() )*( (hmat.xs).size() );
+	Real size = ( (hmat.tabt).size() )*( (hmat.tabs).size() );
 	const vector<LowRankMatrix>& FarFieldMat  = hmat.FarFieldMat;
 	const vector<SubMatrix>&     NearFieldMat = hmat.NearFieldMat;
 	

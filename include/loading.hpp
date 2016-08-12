@@ -283,10 +283,8 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
 			file >> poubelle; file>>Pt[j];
 			Ctr+= (1./Real(NbPt))*Pt[j];}
 		
-		//Ajout de trois points identiques
-		//dans le nuage de points...
-		for(int j=0; j<Parametres.ndofperelt; j++){
-			x.push_back(Ctr);}
+		// Ajout du point
+		x.push_back(Ctr);
 		
 		// Calcul du rayon champ
 		// proche associe a l'element
@@ -296,8 +294,7 @@ void LoadPoints(const char* filename, vectR3& x, vectReal& r){
 			Rad = norm(Ctr-Pt[j]);
 			if(Rad>Rmax){Rmax=Rad;}}
 		
-		for(int j=0; j<Parametres.ndofperelt; j++){
-			r.push_back(Rmax);}
+		r.push_back(Rmax);
 		
 		// Separateur inter-element
 		if(e<NbElt-1){file >> poubelle;}

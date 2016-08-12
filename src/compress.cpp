@@ -56,9 +56,9 @@ int main(int argc, char* argv[]){
 	cout<<"Matrix name : "+Parametres.matrixname<<endl;
 	cout<<"##################################"<<endl;
  
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Build Hmatrix 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////    Build Hmatrix 	////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
 	vector<double> times;
 	vectReal r;
 	vectR3   x;
@@ -66,17 +66,23 @@ int main(int argc, char* argv[]){
 	tic();
 	LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
 	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
+	vectInt tab(nb_rows(A));
+	for (int j=0;j<x.size();j++){
+		tab[3*j]  = j;
+		tab[3*j+1]= j;
+		tab[3*j+2]= j;
+	}
 	toc(times);
 	tic();
-	HMatrix B(A,x,r);
+	HMatrix B(A,x,r,tab,0);
 	toc(times);
 	tic();
-	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
+//	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
 	toc();
 	
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Test MvProd 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////    Test MvProd 	////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
 	
 	// Vecteur
 	int nr  = nb_rows(A);
@@ -96,28 +102,28 @@ int main(int argc, char* argv[]){
 	
 	cout<<"Erreur : "<<err<<endl;
 	cout<<"Compression :"<<compression<<endl;
-    
-//    // Ecriture dans un fichier avec append:
-//    ////////////////////////////////////////////////////////////////////////////////////////
-//    ////////////////////////////////    Fichier de sortie 	////////////////////////////////
-//    ////////////////////////////////////////////////////////////////////////////////////////
-//    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-//    ifstream infile(filename);
-//    ofstream output;
-//    output.open(filename,ios::app);
-//    if (!output){
-//        cerr<<"Output file cannot be created"<<endl;
-//        exit(1);
-//    }
-//    else{
-//        if (!infile.good()){
-//            output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
-//        }
-//        else{
-//            
-//        }
-//        output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
-//    }
-//    output.close();
 	
+	// Ecriture dans un fichier avec append:
+	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////    Fichier de sortie 	////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////
+//	string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
+//	ifstream infile(filename);
+//	ofstream output;
+//	output.open(filename,ios::app);
+//	if (!output){
+//		cerr<<"Output file cannot be created"<<endl;
+//		exit(1);
+//	}
+//	else{
+//		if (!infile.good()){
+//			output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
+//		}
+//		else{
+//			
+//		}
+//		output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
+//	}
+//	output.close();
 }
+

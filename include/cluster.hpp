@@ -35,10 +35,11 @@ typedef EigenSolver::EigenvalueType   EigenValue;
 class Cluster{
 	
 private:
-	const vectR3&   x;       // Nuage complet des points
-	const vectReal& r;       // Rayon de champs proche pour chaque point
+	const vectR3&     x;     // Nuage complet des points
+	const vectReal&   r;     // Rayon de champs proche pour chaque point
+	const vectInt&  tab;	 // Vecteur renvoyant pour chaque dof l'indice de l'entite geometrique correspondante dans x
 	
-	vectInt         num;     // Indices des noeuds du nuage
+	vectInt         num;     // Indices des dofs
 	
 	Cluster*        son[2];  // Paquets enfants
 	R3              ctr;     // Centre du paquet
@@ -50,10 +51,10 @@ private:
 	void Build();
 	
 public:
-	Cluster(const vectR3& x0, const vectReal& r0): x(x0), r(r0), ctr(0.), rad(0.) {
+	Cluster(const vectR3& x0, const vectReal& r0, const vectInt& tab0): x(x0), r(r0), tab(tab0), ctr(0.), rad(0.) {
 		son[0]=0;son[1]=0;
 		depth = 0; // ce constructeur est appele' juste pour la racine
-		for(int j=0; j<x.size(); j++){num.push_back(j);}
+		for(int j=0; j<tab.size(); j++){num.push_back(j);}
 		// Nouvel algorithme qui calcule le barycentre et le rayon max pour le nuage de points du cluster :
 //		Build();
 		
@@ -62,7 +63,7 @@ public:
 //		NearFieldBall();
 	}
 	
-	Cluster(const vectR3& x0, const vectReal& r0, const unsigned int& dep): x(x0), r(r0), ctr(0.), rad(0.) {
+	Cluster(const vectR3& x0, const vectReal& r0, const vectInt& tab0, const unsigned int& dep): x(x0), r(r0), tab(tab0), ctr(0.), rad(0.) {
         son[0]=0;son[1]=0; depth = dep;}
 	Cluster(const Cluster& ); // Pas de recopie
 	~Cluster(){if (son[0]!=0){ delete son[0];}if (son[1]!=0){ delete son[1];}};
@@ -85,32 +86,26 @@ public:
 	
 };
 
-void DisplayTree(const Cluster& cl){
-	cout << cl << endl;
-	if(!cl.IsLeaf()){
-		DisplayTree(son_(cl,0));
-		DisplayTree(son_(cl,1));}
-}
+//void DisplayTree(const Cluster& cl){
+//	cout << cl << endl;
+//	if(!cl.IsLeaf()){
+//		DisplayTree(son_(cl,0));
+//		DisplayTree(son_(cl,1));}
+//}
 
 void Cluster::Build_Borm(){
 	Param Parametres;
 	// Calcul centre du paquet
-	int nb_pt = num.size();
+	int nb_dof = num.size();
 	R3 xc = 0.;
-	for(int j=0; j<nb_pt; j++){
-		xc += x[num[j]];}
-	xc = (1./Real(nb_pt))*xc;
-	
-	Real radmax=0.;
-	for(int j=0; j<nb_pt; j++){
-		
-	if( radmax<norm(xc-x[num[j]]) ){
-		radmax=norm(xc-x[num[j]]);} }
+	for(int j=0; j<nb_dof; j++){
+		xc += x[tab[num[j]]];}
+	xc = (1./Real(nb_dof))*xc;
 	
 	// Calcul matrice de covariance
 	MatR3 cov; cov.setZero();
-	for(int j=0; j<nb_pt; j++){
-		R3 u = x[num[j]] - xc;
+	for(int j=0; j<nb_dof; j++){
+		R3 u = x[tab[num[j]]] - xc;
 		for(int p=0; p<3; p++){
 			for(int q=0; q<3; q++){
 				cov(p,q) += u[p]*u[q];
@@ -132,10 +127,10 @@ void Cluster::Build_Borm(){
 	
 	// Construction des paquets enfants
 	if(num.size()!=Parametres.ndofperelt){
-		son[0] = new Cluster(x,r,depth+1);
-		son[1] = new Cluster(x,r,depth+1);
-		for(int j=0; j<nb_pt; j++){
-			R3 dx = x[num[j]] - xc;
+		son[0] = new Cluster(x,r,tab,depth+1);
+		son[1] = new Cluster(x,r,tab,depth+1);
+		for(int j=0; j<nb_dof; j++){
+			R3 dx = x[tab[num[j]]] - xc;
 			if( (w,dx)>0 ){
 				son[0]->push_back(num[j]);
 			}
@@ -146,7 +141,7 @@ void Cluster::Build_Borm(){
 	}
 	
 	// Recursivite
-	if(num.size()!=Parametres.ndofperelt){
+	if(num.size()!=Parametres.ndofperelt){ // On utilise le fait qu'on a toujours ndofperelt dofs par element geometrique
 		assert( son[0]!=0 );
 		assert( son[1]!=0 );
 		son[0]->Build_Borm();
@@ -155,8 +150,8 @@ void Cluster::Build_Borm(){
 	
 	// Feuille de l'arbre
 	if(son[0]==0){
-		ctr=x[num[0]];
-		rad=r[num[0]];
+		ctr=x[tab[num[0]]];
+		rad=r[tab[num[0]]];
 	}
 	else {
 		// Centre et rayon champ proche
@@ -180,22 +175,22 @@ void Cluster::Build(){
 	int nb_pt = num.size();
 	R3 xc = 0.;
 	for(int j=0; j<nb_pt; j++){
-		xc += x[num[j]];}
+		xc += x[tab[num[j]]];}
 	xc = (1./Real(nb_pt))*xc;
 	
 	ctr = xc;
 	
 //	Real radmax=0.;
 //	for(int j=0; j<nb_pt; j++){
-//		if( radmax<norm(xc-x[num[j]]) ){
-//			radmax=norm(xc-x[num[j]]);} }
+//		if( radmax<norm(xc-x[tab[num[j]]]) ){
+//			radmax=norm(xc-x[tab[num[j]]]);} }
 	
 	// Calcul matrice de covariance
 	MatR3 cov; cov.setZero();
 	rad=0.;
 	for(int j=0; j<nb_pt; j++){
-		R3 u = x[num[j]] - xc;
-		rad=max(rad,norm(u)+r[num[j]]);
+		R3 u = x[tab[num[j]]] - xc;
+		rad=max(rad,norm(u)+r[tab[num[j]]]);
 		for(int p=0; p<3; p++){
 			for(int q=0; q<3; q++){
 				cov(p,q) += u[p]*u[q];
@@ -217,10 +212,10 @@ void Cluster::Build(){
 	
 	// Construction des paquets enfants
 	if(num.size()!=Parametres.ndofperelt){
-		son[0] = new Cluster(x,r,depth+1);
-		son[1] = new Cluster(x,r,depth+1);
+		son[0] = new Cluster(x,r,tab,depth+1);
+		son[1] = new Cluster(x,r,tab,depth+1);
 		for(int j=0; j<nb_pt; j++){
-			R3 dx = x[num[j]] - xc;
+			R3 dx = x[tab[num[j]]] - xc;
 			if( (w,dx)>0 ){
 				son[0]->push_back(num[j]);
 			}
@@ -231,15 +226,15 @@ void Cluster::Build(){
 	}
 	
 	// Recursivite
-	if(num.size()!=Parametres.ndofperelt){
+	if(num.size()!=Parametres.ndofperelt){ // On utilise le fait qu'on a toujours ndofperelt dofs par element geometrique
 		assert( son[0]!=0 );
 		assert( son[1]!=0 );
 		son[0]->Build();
 		son[1]->Build();
 	}
 	else{
-		ctr=x[num[0]];
-		rad=r[num[0]];
+		ctr=x[tab[num[0]]];
+		rad=r[tab[num[0]]];
 	}
 	
 }
@@ -273,6 +268,8 @@ void Cluster::Build(){
 ////	cout<<ctr<<" "<<rad<<endl;
 //	
 //	}
+
+// On utilise le fait qu'on a toujours ndofperelt dofs par element geometrique
 void TraversalBuildLabel(const Cluster& t, vectInt& labelVisu, const unsigned int visudep, const unsigned int cnt){
 	Param Parametres;
     if(t.depth<visudep){
