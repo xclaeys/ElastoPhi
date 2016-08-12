@@ -16,28 +16,32 @@ int main(){
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////    Build a matrix A 	////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
-
+	Param Parametres1(1); // ndofperelt
 	int nr = 100;
 	// p1: random points in a unit disk, plane z=z1
 	srand (1);
 	double z1 = 1;
 	vectR3 p1(nr);
 	vectReal r1(nr);
+	vectInt tab1(nr);
 	for(int j=0; j<nr; j++){
 		double rho = ((double) rand() / (double)(RAND_MAX)); // (double) otherwise integer division!
 		double theta = ((double) rand() / (double)(RAND_MAX));
 		p1[j][0] = sqrt(rho)*cos(2*M_PI*theta); p1[j][1] = sqrt(rho)*sin(2*M_PI*theta); p1[j][2] = z1;
 		r1[j]=1.e-16;
+		tab1[j]=j;
 	}
 	// p2: random points in a unit disk, plane z=z2
 	double z2 = 10;
 	vectR3 p2(nr);
 	vectReal r2(nr);
+	vectInt tab2(nr);
 	for(int j=0; j<nr; j++){
 		double rho = ((double) rand() / (RAND_MAX)); // (double) otherwise integer division!
 		double theta = ((double) rand() / (RAND_MAX));
 		p2[j][0] = sqrt(rho)*cos(2*M_PI*theta); p2[j][1] = sqrt(rho)*sin(2*M_PI*theta); p2[j][2] = z2;
 		r2[j]=1.e-16;
+		tab2[j]=j;
 	}
 	
 	Matrix A1(nr,nr);
@@ -60,10 +64,10 @@ int main(){
 ////////////////////////////////////////////////////////////////////////////////////////
 	// Parametres
 	Param Parametre(-1.,1e-1); // Pas de low rank matrices pour eta=-1
-	
-	HMatrix B1(A1,p1,r1,p2,r2);
-	HMatrix B2(A2,p1,r1,p1,r1);
-	HMatrix B3(A2,p1,r1);
+
+	HMatrix B1(A1,p1,r1,tab1,p2,r2,tab2);
+	HMatrix B2(A2,p1,r1,tab1,p1,r1,tab2);
+	HMatrix B3(A2,p1,r1,tab1);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
