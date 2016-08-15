@@ -50,16 +50,19 @@
    ===================
    
 * Realiser une routine permettant de visualiser le taux de compression
-   local suivant la position dans la matrice 
+   local suivant la position dans la matrice => visumatrix.cpp
    
 * Trouver un moyen plus intelligent de gérer les rayons d'action des
-   degrés de liberté qui définissent le champ proche
+   degrés de liberté qui définissent le champ proche => dans le loadpoints
    
 * Modifier cluster.hpp pour gerer les cas ou deux noeuds du nuage
-   coincident mais sont associes a des indices differents
+   coincident mais sont associes a des indices differents => fait en
+ différenciant les points géométriques et les dofs 
    
 * Rediger une documentation de chacune des classe de la librairie
    
+* Une classe abstraite dont toutes les autres classes abstraites héritent pour
+ gérer les paramètres
    ===================
    QUESTION IBTIHEL
    ===================

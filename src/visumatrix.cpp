@@ -57,9 +57,8 @@ int main(int argc, char* argv[]){
 	cout<<"##################################"<<endl;
  
 	//////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////    Build Hmatrix 	////////////////////////////////
+	//////////////////////////////    Build Hmatrix 	//////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
-	vector<double> times;
 	vectReal r;
 	vectR3   x;
 	Matrix   A;
@@ -72,58 +71,16 @@ int main(int argc, char* argv[]){
 		tab[3*j+1]= j;
 		tab[3*j+2]= j;
 	}
-	toc(times);
+	toc();
 	tic();
-	HMatrix B(A,x,r,tab,0);
-	toc(times);
+	HMatrix B(A,x,r,tab);
+	toc();
 	tic();
-//	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
+	//////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////    Create Output 	//////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
 	toc();
 	
-	//////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////    Test MvProd 	////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////
-	
-	// Vecteur
-	int nr  = nb_rows(A);
-	vectCplx u(nr);
-	int NbSpl = 1000;
-	double du = 5./double(NbSpl);
-	srand (1);
-	for(int j=0; j<nr; j++){
-		int n = rand()%(NbSpl+1);
-		u[j] = n*du;}
-	
-	vectCplx ua(nr),ub(nr);
-	MvProd(ua,A,u);
-	MvProd(ub,B,u);
-	Real err = norm(ua-ub)/norm(ua);
-	Real compression=CompressionRate(B);
-	
-	cout<<"Erreur : "<<err<<endl;
-	cout<<"Compression :"<<compression<<endl;
-	
-	// Ecriture dans un fichier avec append:
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Fichier de sortie 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
-//	string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-//	ifstream infile(filename);
-//	ofstream output;
-//	output.open(filename,ios::app);
-//	if (!output){
-//		cerr<<"Output file cannot be created"<<endl;
-//		exit(1);
-//	}
-//	else{
-//		if (!infile.good()){
-//			output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
-//		}
-//		else{
-//			
-//		}
-//		output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
-//	}
-//	output.close();
 }
 

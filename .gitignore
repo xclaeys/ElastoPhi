@@ -2,8 +2,12 @@
 build*/
 bin/
 data/
+output/output_err*
 output/output_local*
 output/*.msh
 output/*.mesh
 output/graphe_*
 *.pyc
+
+install
+input*.txt

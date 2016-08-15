@@ -94,8 +94,8 @@ int main(int argc, char* argv[]){
     epsilon[0] = 1e+0; epsilon[1] = 5e-1; epsilon[2] = 1e-1; epsilon[3] = 1e-2;
     
     // for output file
-    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-    //string filename=Parametres.outputpath+"/output_compression_PROVA_"+Parametres.matrixname;
+    //string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
+    string filename=Parametres.outputpath+"/output_compression_NEWst_"+Parametres.matrixname;
     ofstream output(filename.c_str());
     if (!output){
         cerr<<"Output file cannot be created"<<endl;
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]){
             vector<double> times;
             
             tic();
-            HMatrix B(A,x,r,x,r); // Build the hierarchical matrix with compressed and dense blocks
+            HMatrix B(A,x,r); // Build the hierarchical matrix with compressed and dense blocks
             toc(times);
             
             vectCplx ub(nr);

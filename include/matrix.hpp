@@ -152,6 +152,8 @@ private:
 	typedef Eigen::Matrix<Cplx, Dynamic, Dynamic>  DenseMatrix;
 	typedef Eigen::JacobiSVD<DenseMatrix>          SVDType;
 	typedef SVDType::SingularValuesType            SgValType;
+	typedef SVDType::MatrixUType		       UMatrixType;
+	typedef SVDType::MatrixVType		       VMatrixType;
 	
 	
 	DenseMatrix  mat;
@@ -359,6 +361,45 @@ public:
 		return s;
 	}
 	
+	friend void PartialSVD(const Matrix& A, vector<vectCplx>& u ,vector<vectCplx>& v, int k){
+		assert(k<=min(A.nr,A.nc));
+		SVDType svd(A.mat,Eigen::ComputeThinU | Eigen::ComputeThinV );
+		const SgValType& sv = svd.singularValues();
+		
+		const UMatrixType& uu = svd.matrixU();
+		const VMatrixType& vv = svd.matrixV();
+//		cout<<A.nr<<" "<<A.nc<<endl;
+//		cout<<uu.size()<<" "<<vv.size()<<endl;
+//		cout<<uu.rows()<<" "<<vv.cols()<<endl;
+//		cout<<uu.rows()<<" "<<vv.cols()<<endl;
+		
+		
+		for (int i=0;i<k;i++){
+			vector<Cplx> uuu;
+			vector<Cplx> vvv;
+			for (int j=0;j<A.nr;j++){
+				uuu.push_back(uu(j,i)*sv[i]);
+			}
+			for (int j=0;j<A.nc;j++){
+				vvv.push_back(vv(j,i));
+			}
+			u.push_back(uuu);
+			v.push_back(vvv);
+			
+		}
+	}
+    
+    friend Real NormFrob (const Matrix& A){
+        Real norm=0;
+        for (int j=0;j<A.nr;j++){
+            for (int k=0;k<A.nc;k++){
+                norm = norm + pow(abs(A(j,k)),2);
+            }
+        }
+        return sqrt(norm);
+    }
+
+	
 	
 };
 
@@ -430,6 +471,15 @@ public:
 				lhs[j]+= m.mat(m.ir[j],m.ic[k])*rhs[k];
 			}
 		}
+	}
+	friend Real NormFrob (const SubMatrix& A){
+		Real norm=0;
+		for (int j=0;j<A.ir.size();j++){
+			for (int k=0;k<A.ic.size();k++){
+				norm = norm + pow(abs(A(j,k)),2);
+			}
+		}
+		return sqrt(norm);
 	}
 	
 };
