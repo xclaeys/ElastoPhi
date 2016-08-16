@@ -31,6 +31,7 @@ markers=["^","o",".","v"]
 (dist,rank)   = classique.lecture(filename,0,1)
 (err1,err2)   = classique.lecture(filename,2,3)
 
+
 Dist  = []
 Rank  = []
 Err1  = []
@@ -66,9 +67,9 @@ for i in range(0,len(Dist)):
 	line2={"linestyle":"--","linewidth":3,"linecolor":colors[ncolor]}
 	marker={"markerstyle":"None","markersize":10,"fillstyle":"full"}
 
-	Courbes_err1.append(donnee.Ligne(nom=r"$ACA - distance=$"+str(Dist[i]),ordonnee=Err1[i],abscisse=Rank[i],line=line1,marker=marker))
+	Courbes_err1.append(donnee.Ligne(nom=r"ACA - distance="+str(Dist[i]),ordonnee=Err1[i],abscisse=Rank[i],line=line1,marker=marker))
 
-	Courbes_err2.append(donnee.Ligne(nom=r"$SVD - distance=$"+str(Dist[i]),ordonnee=Err2[i],abscisse=Rank[i],line=line2,marker=marker))
+	Courbes_err2.append(donnee.Ligne(nom=r"SVD - distance="+str(Dist[i]),ordonnee=Err2[i],abscisse=Rank[i],line=line2,marker=marker))
 
 
 	ncolor+=1
@@ -77,7 +78,7 @@ xlim=[min(Rank[0])*0.75,max(Rank[0])*1.25]
 ylim_erro=[ymin_err*0.75,ymax_err*1.25]
 
 
-xlabel={"label":"$Rank$","fontsize":20}
+xlabel={"label":"Rank","fontsize":20}
 ylabel_erro={"label":"Relative error","fontsize":20}
 
 
