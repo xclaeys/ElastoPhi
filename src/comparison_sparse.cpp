@@ -22,15 +22,15 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-	
-	
-	////////////////========================================================////////////////
-	////////////////////////////////========  Input ========////////////////////////////////
-	
-	// Check the number of parameters
-	if (argc < 2) {
-		// Tell the user how to run the program
-		cerr << "Usage: " << argv[0] << " input name" << endl;
+  
+  
+  ////////////////========================================================////////////////
+  ////////////////////////////////========  Input ========////////////////////////////////
+  
+  // Check the number of parameters
+  if (argc < 2) {
+    // Tell the user how to run the program
+    cerr << "Usage: " << argv[0] << " input name" << endl;
 		/* "Usage messages" are a conventional way of telling the user
 		 * how to run a program if they enter the command incorrectly.
 		 */
@@ -102,10 +102,10 @@ int main(int argc, char* argv[]){
         tab[3*j+2]= j;
     }
 	
-	// Values of eta and epsilon
-	const int neta = 1;
+    // Values of eta and epsilon
+    const int neta = 1;
     double eta [neta] = {5e-1};
-	const int nepsilon = 3;
+    const int nepsilon = 3;
     double epsilon[nepsilon] = {-1, 1e0, 1e-1};
     
 	// for output file
