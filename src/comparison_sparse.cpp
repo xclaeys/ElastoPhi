@@ -55,11 +55,11 @@ int main(int argc, char* argv[]){
 	vectReal r;
 	vectR3   x;
 	Matrix   A;
-//	SpMatrix spA;
-//	
-//	tic();
-//	LoadSpMatrix((Parametres.datapath+"/"+(split(Parametres.matrixname,'.')).at(0)+"Creuse.txt").c_str(),spA);
-//	toc();
+	SpMatrix spA;
+	
+	tic();
+	LoadSpMatrix((Parametres.datapath+"/"+(split(Parametres.matrixname,'.')).at(0)+"Creuse.txt").c_str(),spA);
+	toc();
 	
 	tic();
 	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
@@ -81,13 +81,13 @@ int main(int argc, char* argv[]){
 	vectCplx ua(nr);
 	MvProd(ua,A,u);
 	
-//	vectCplx uasp(nr);
-//	tic();
-//	MvProd(uasp,spA,u);
-//	toc();
-//	
-//	Real errSp = norm(ua-uasp)/norm(ua);
-//	cout << "Matrix-vector product relative error with Sparse matrix: " << errSp << endl;
+	vectCplx uasp(nr);
+	tic();
+	MvProd(uasp,spA,u);
+	toc();
+	
+	Real errSp = norm(ua-uasp)/norm(ua);
+	cout << "Matrix-vector product relative error with Sparse matrix: " << errSp << endl;
 	
 	tic();
 	Real normA = NormFrob(A);
@@ -158,11 +158,11 @@ int main(int argc, char* argv[]){
 	output.close();
 	
 	
-//	for(int i=0; i<nb_coeff(spA); i++){
-//		A(spA.I_(i),spA.J_(i)) = 0; // now A = A-spA !! (to save memory)
-//	}
-//	
-//	Real froberrSp = NormFrob(A)/normA;
-//	cout << "Relative error in Frobenius norm with Sparse Matrix: " << froberrSp << endl;
+	for(int i=0; i<nb_coeff(spA); i++){
+		A(spA.I_(i),spA.J_(i)) = 0; // now A = A-spA !! (to save memory)
+	}
+	
+	Real froberrSp = NormFrob(A)/normA;
+	cout << "Relative error in Frobenius norm with Sparse Matrix: " << froberrSp << endl;
 	
 }
