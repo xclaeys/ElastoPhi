@@ -15,8 +15,9 @@ using namespace std;
 int main(){
 	
 	// Parametres
-	Param Parametres(1.,1.e-2); // eta (only for hmatrix), ACA epsilon
-	Param Parametres1(1); // ndofperelt
+	SetEta(1.);
+	SetEpsilon(1e-2); // eta (only for hmatrix), ACA epsilon
+	SetNdofPerElt(1); // ndofperelt
 	srand (1);
 	// we set a constant seed for rand because we want always the same result if we run the check many times
 	// (two different initializations with the same seed will generate the same succession of results in the subsequent calls to rand)
