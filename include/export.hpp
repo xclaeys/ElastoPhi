@@ -6,7 +6,7 @@
 #include <string>
 #include <stdlib.h>
 #include "matrix.hpp"
-
+#include "parametres.hpp"
 
 
 //==================================================//
@@ -73,7 +73,7 @@ void ExportMEDIT(string inputname, string outputname){
 	infile.close();
 	
 	// Ecriture fichier de sortie
-	Param Parametres;
+	Parametres Parametres;
 	ofstream outfile;
 	outfile.open((Parametres.outputpath+"/"+outputname).c_str());
 	outfile << "MeshVersionFormatted 1\n";
@@ -182,7 +182,7 @@ void ExportGMSH(string inputname, string outputname){
 	
 	
 	// Ecriture fichier de sortie
-	Param Parametres;
+	Parametres Parametres;
 	ofstream outfile;
 	outfile.open((Parametres.outputpath+"/"+outputname).c_str());
 	outfile << "$MeshFormat\n";
