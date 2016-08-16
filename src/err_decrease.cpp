@@ -23,35 +23,6 @@ using namespace std;
 int main(int argc, char* argv[]){
 	
 	
-	//	////////////////========================================================////////////////
-	//	////////////////////////////////========  Input ========////////////////////////////////
-	//
-	//	// Check the number of parameters
-	//	if (argc < 2) {
-	//		// Tell the user how to run the program
-	//		cerr << "Usage: " << argv[0] << " input name" << endl;
-	//		/* "Usage messages" are a conventional way of telling the user
-	//		 * how to run a program if they enter the command incorrectly.
-	//		 */
-	//		return 1;
-	//	}
-	//
-	//	// Load the inputs
-	//	string inputname = argv[1];
-	//	Param Parametres(inputname);
-	//
-	//	cout<<"############# Inputs #############"<<endl;
-	//	cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
-	//	cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
-	//	cout<<"Data path : "+Parametres.datapath<<endl;
-	//	cout<<"Output path : "+Parametres.outputpath<<endl;
-	//	cout<<"Mesh name : "+Parametres.meshname<<endl;
-	//	cout<<"Matrix name : "+Parametres.matrixname<<endl;
-	//	cout<<"##################################"<<endl;
-	
-	
-	
-	
 	srand (10000);
 	// we set a constant seed for rand because we want always the same result if we run the check many times
 	// (two different initializations with the same seed will generate the same succession of results in the subsequent calls to rand)
@@ -105,7 +76,7 @@ int main(int argc, char* argv[]){
 	Param Parametre_name(inputname);
 	Param Parametre_coef(1e-1,1e-1); // eta (only for hmatrix), ACA epsilon
 	string filename=Parametre_name.outputpath+"/output_err_decrease.txt";
-	ofstream output(filename);
+	ofstream output(filename.c_str());
 //	output.open(filename,ios::app);
 	if (!output){
 		cerr<<"Output file cannot be created"<<endl;
@@ -128,7 +99,7 @@ int main(int argc, char* argv[]){
 		
 		SubMatrix subm(A,Ir,Ic); // A viewed as a SubMatrix
 		Cluster t(p1,r1,tab1); Cluster s(p2,r2,tab2);
-		
+		cout<<rad_(t)<<" "<<rad_(s)<<endl;
 		for (int i=1;i<50;i++){
 		
 			tic();
@@ -149,74 +120,6 @@ int main(int argc, char* argv[]){
 		}
 	}
 	output.close();
-	
-	
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Build Hmatrix 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
-//	vector<double> times;
-	//	vectReal r;
-	//	vectR3   x;
-	//	Matrix   A;
-	//	tic();
-	//	LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
-	//	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
-	//	toc(times);
-	//	tic();
-	//	HMatrix B(A,x,r);
-	//	toc(times);
-	
-	
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Test MvProd 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
-	//	tic();
-	//	Real err=0;
-	//	LowRankMatrix lrm = GetLowRankMatrix(B, 0);
-	//	SubMatrix    subm = SubMatrix(A,ir_(lrm),ic_(lrm));
-	//	squared_absolute_error(err,lrm,subm);
-	//	toc();
-	
-	//	// Vecteur
-	//	int nr  = nb_rows(A);
-	//	vectCplx u(nr);
-	//	int NbSpl = 1000;
-	//	double du = 5./double(NbSpl);
-	//	srand (1);
-	//	for(int j=0; j<nr; j++){
-	//		int n = rand()%(NbSpl+1);
-	//		u[j] = n*du;}
-	//
-	//	vectCplx ua(nr),ub(nr);
-	//	MvProd(ua,A,u);
-	//	MvProd(ub,B,u);
-	//	Real err = norm(ua-ub)/norm(ua);
-	//	Real compression=CompressionRate(B);
-	//
-	//	cout<<"Erreur : "<<err<<endl;
-	//	cout<<"Compression :"<<compression<<endl;
-	
-	//    // Ecriture dans un fichier avec append:
-	//    ////////////////////////////////////////////////////////////////////////////////////////
-	//    ////////////////////////////////    Fichier de sortie 	////////////////////////////////
-	//    ////////////////////////////////////////////////////////////////////////////////////////
-	//    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-	//    ifstream infile(filename);
-	//    ofstream output;
-	//    output.open(filename,ios::app);
-	//    if (!output){
-	//        cerr<<"Output file cannot be created"<<endl;
-	//        exit(1);
-	//    }
-	//    else{
-	//        if (!infile.good()){
-	//            output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
-	//        }
-	//        else{
-	//
-	//        }
-	//        output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
-	//    }
-	//    output.close();
+
 	
 }

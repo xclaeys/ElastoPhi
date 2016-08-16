@@ -410,31 +410,31 @@ public:
 
 class SubMatrix{
 	
-	const Matrix&  mat;
+	const Matrix*  mat;
 	vectInt ir;
 	vectInt ic;
 	int nr,nc;
 	
 public:
-	
-	SubMatrix(const Matrix& mat0, const vectInt& ir0, const vectInt& ic0):
-	mat(mat0), ir(ir0), ic(ic0), nr(ir0.size()), nc(ic0.size()) {}
-	
-	SubMatrix(const SubMatrix& m): mat(m.mat){
-		ir=m.ir;
-		ic=m.ic;
-		nr=m.nr;
-		nc=m.nc;
-	}
-	
-	const Cplx& operator()(const int& j, const int& k) const {
-		return mat(ir[j],ic[k]);}
-	
+  
+  SubMatrix(const Matrix& mat0, const vectInt& ir0, const vectInt& ic0):
+    mat(&mat0), ir(ir0), ic(ic0), nr(ir0.size()), nc(ic0.size()) {}
+  
+  SubMatrix(const SubMatrix& m): mat(m.mat){
+    ir=m.ir;
+    ic=m.ic;
+    nr=m.nr;
+    nc=m.nc;
+  }
+  
+  const Cplx& operator()(const int& j, const int& k) const {
+    return (*mat)(ir[j],ic[k]);}
+  
 	vectCplx operator*(const vectCplx& u){
 		vectCplx v(nr,0.);
 		for(int j=0; j<nr; j++){
 			for(int k=0; k<nc; k++){
-				v[j]+= mat(ir[j],ic[k])*u[k];
+			  v[j]+= (*mat)(ir[j],ic[k])*u[k];
 			}
 		}
 		return v;}
@@ -450,10 +450,10 @@ public:
 	
 	friend const vectInt& ir_(const SubMatrix& A){ return A.ir;}
 	
-	friend const vectInt& ic_(const SubMatrix& A){ return A.ic;}
-	
-	friend const Matrix& mat_(const SubMatrix& A){ return A.mat;}
-	
+  friend const vectInt& ic_(const SubMatrix& A){ return A.ic;}
+  
+  friend const Matrix& mat_(const SubMatrix& A){ return *(A.mat);}
+  
 	friend vectCplx col(const SubMatrix& A, const int& k){
 		vectCplx u(A.nr,0.);
 		for(int j=0; j<A.nr; j++){u[j]=A(j,k);}
@@ -468,7 +468,7 @@ public:
 	friend void MvProd(LhsType& lhs, const SubMatrix& m, const RhsType& rhs){
 		for(int j=0; j<m.nr; j++){
 			for(int k=0; k<m.nc; k++){
-				lhs[j]+= m.mat(m.ir[j],m.ic[k])*rhs[k];
+			  lhs[j]+= (*m.mat)(m.ir[j],m.ic[k])*rhs[k];
 			}
 		}
 	}
@@ -481,7 +481,11 @@ public:
 		}
 		return sqrt(norm);
 	}
-	
+
+
+
+  
+  
 };
 
 
