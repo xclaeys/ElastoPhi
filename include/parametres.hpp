@@ -37,6 +37,8 @@ public:
 	friend string GetMatrixPath();
 	friend string GetMeshPath();
 	friend string GetOutputPath();
+	friend string GetMatrixName();
+	friend string GetDataPath();
 	
 	Parametres_IO (); // Constructeur par defaut
 	Parametres_IO (string , string, string , string); // Valeurs données à la main par défaut
@@ -59,8 +61,14 @@ Parametres_IO::Parametres_IO(string datapath0, string outputpath0, string meshna
 	matrixname=matrixname0;
 }
 
+string GetDataPath(){
+	return Parametres_IO::datapath;
+}
 string GetMatrixPath(){
 	return Parametres_IO::datapath+"/"+Parametres_IO::matrixname;
+}
+string GetMatrixName(){
+	return Parametres_IO::matrixname;
 }
 string GetMeshPath(){
 	return Parametres_IO::datapath+"/"+Parametres_IO::meshname;
