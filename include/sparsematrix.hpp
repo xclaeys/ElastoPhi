@@ -177,7 +177,7 @@ public:
      */
     friend Real CompressionRate(const SpMatrix& A){
         Real comp;
-        comp = A.I.size()/(A.nr*A.nc); // number of non zero coefficients/(nb_rows*nb_columns)
+        comp = ((double) A.I.size())/((double)(A.nr*A.nc)); // number of non zero coefficients/(nb_rows*nb_columns)
         return (1-comp);
     }
     
