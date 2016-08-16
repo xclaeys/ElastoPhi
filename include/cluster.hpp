@@ -54,6 +54,8 @@ public:
 	Cluster(const vectR3& x0, const vectReal& r0, const vectInt& tab0): x(x0), r(r0), tab(tab0), ctr(0.), rad(0.) {
 		son[0]=0;son[1]=0;
 		depth = 0; // ce constructeur est appele' juste pour la racine
+        Param Parametres;
+        assert(tab.size()==x.size()*Parametres.ndofperelt);
 		for(int j=0; j<tab.size(); j++){num.push_back(j);}
 		// Nouvel algorithme qui calcule le barycentre et le rayon max pour le nuage de points du cluster :
 //		Build();
