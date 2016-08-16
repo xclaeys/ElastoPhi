@@ -74,7 +74,7 @@ for i in range(0,len(Dist)):
 
 	ncolor+=1
 
-xlim=[min(Rank[0])*0.75,max(Rank[0])*1.25]
+xlim=[min(Rank[0])*0.75,max(Rank[0])*1.01]
 ylim_erro=[ymin_err*0.75,ymax_err*1.25]
 
 
@@ -83,7 +83,7 @@ ylabel_erro={"label":"Relative error","fontsize":20}
 
 
 # titre={"titre":"Test","fontsize":20,"loc":"center"}
-legende={"loc":"upper right","bbox_to_anchor":None,"ncol":1,"fontsize":12}
+legende={"loc":"upper left","bbox_to_anchor":(1.01,1),"ncol":1,"fontsize":12}
 
 Figure_erro=figure.Graphe1D(id=0,legende=legende,xlim=xlim,ylim=ylim_erro,xlabel=xlabel,ylabel=ylabel_erro,yscale="log",axis="off")
 
