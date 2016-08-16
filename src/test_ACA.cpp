@@ -15,18 +15,20 @@ using namespace std;
 
 int main(){
     
-    double epsilon[4];
+    const int nepsilon = 4;
+    double epsilon[nepsilon];
     epsilon[0] = 1; epsilon[1] = 1e-1; epsilon[2] = 1e-2; epsilon[3] = 1e-3;
-    double distance[4];
+    const int ndistance = 4;
+    double distance[ndistance];
     distance[0] = 2; distance[1] = 5; distance[2] = 10; distance[3] = 20;
     
-    for(int ieps=0; ieps<4; ieps++)
+    for(int ieps=0; ieps<nepsilon; ieps++)
     {
         // Parametres
         Param Parametre(1.,epsilon[ieps]); // eta (only for hmatrix), ACA epsilon
         cout << "-> Epsilon of ACA: " << epsilon[ieps] << endl;
         
-        for(int idist=0; idist<4; idist++)
+        for(int idist=0; idist<ndistance; idist++)
         {
             cout << "Distance between the clusters: " << distance[idist] << endl;
             
@@ -41,6 +43,8 @@ int main(){
             // p1: points in a unit disk of the plane z=z1
             double z1 = 1;
             vectR3 p1(nr);
+            vectReal r1(nr);
+            vectInt tab1(nr);
             for(int j=0; j<nr; j++){
                 Ir[j] = j;
                 Ic[j] = j;
@@ -48,14 +52,20 @@ int main(){
                 double theta = ((double) rand() / (double)(RAND_MAX));
                 p1[j][0] = sqrt(rho)*cos(2*M_PI*theta); p1[j][1] = sqrt(rho)*sin(2*M_PI*theta); p1[j][2] = z1;
                 // sqrt(rho) otherwise the points would be concentrated in the center of the disk
+                r1[j]=0.;
+                tab1[j]=j;
             }
             // p2: points in a unit disk of the plane z=z2
             double z2 = 1+distance[idist];
             vectR3 p2(nr);
+            vectReal r2(nr);
+            vectInt tab2(nr);
             for(int j=0; j<nr; j++){
                 double rho = ((double) rand() / (RAND_MAX)); // (double) otherwise integer division!
                 double theta = ((double) rand() / (RAND_MAX));
                 p2[j][0] = sqrt(rho)*cos(2*M_PI*theta); p2[j][1] = sqrt(rho)*sin(2*M_PI*theta); p2[j][2] = z2;
+                r2[j]=0.;
+                tab2[j]=j;
             }
             Matrix A(nr,nr);
             for(int j=0; j<nr; j++){
@@ -65,7 +75,9 @@ int main(){
             }
             
             SubMatrix Abis(A,Ir,Ic); // A viewed as a SubMatrix
-            LowRankMatrix B(Abis,Ir,Ic); // construct a low rank matrix B applying ACA to matrix A
+            Param Parametre_dim(1); // !!!
+            Cluster t(p1,r1,tab1); Cluster s(p2,r2,tab2);
+            LowRankMatrix B(Abis,Ir,Ic,t,s); // construct a low rank matrix B applying ACA to matrix A
             
             // Vecteur
             vectCplx u(nr);
