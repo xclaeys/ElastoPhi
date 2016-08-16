@@ -171,6 +171,17 @@ public:
 	friend int nb_coeff(const SpMatrix& A){ return A.I.size();}
     
     
+    //! ### Compute the compression rate
+    /*!
+     1 - number of non zero coefficients/(nb_rows*nb_columns)
+     */
+    friend Real CompressionRate(const SpMatrix& A){
+        Real comp;
+        comp = A.I.size()/(A.nr*A.nc); // number of non zero coefficients/(nb_rows*nb_columns)
+        return (1-comp);
+    }
+    
+    
 };
 
 
