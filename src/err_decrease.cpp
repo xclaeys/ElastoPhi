@@ -73,9 +73,11 @@ int main(int argc, char* argv[]){
 	// Parametres
 	// Load the inputs
 	string inputname = argv[1];
-	Param Parametre_name(inputname);
-	Param Parametre_coef(1e-1,1e-1); // eta (only for hmatrix), ACA epsilon
-	string filename=Parametre_name.outputpath+"/output_err_decrease.txt";
+	LoadParamIO(inputname);
+	SetNdofPerElt(1);
+	SetEta(1e-1);
+	SetEpsilon(1e-1); // eta (only for hmatrix), ACA epsilon
+	string filename=GetOutputPath()+"/output_err_decrease.txt";
 	ofstream output(filename.c_str());
 //	output.open(filename,ios::app);
 	if (!output){
@@ -83,7 +85,6 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
-	Param Parametre_dim(1);
 	double dist=1;
 	for (int j=0;j<10;j++){
 		dist +=0.5;

@@ -70,6 +70,9 @@ string GetMatrixPath(){
 string GetMatrixName(){
 	return Parametres_IO::matrixname;
 }
+string GetMeshName(){
+	return Parametres_IO::meshname;
+}
 string GetMeshPath(){
 	return Parametres_IO::datapath+"/"+Parametres_IO::meshname;
 }

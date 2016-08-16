@@ -10,6 +10,7 @@
 #include "loading.hpp"
 #include "export.hpp"
 #include "user.hpp"
+#include "parametres.hpp"
 
 
 #include <stdio.h>
@@ -43,15 +44,11 @@ int main(int argc, char* argv[]){
 	
 	// Load the inputs
 	string inputname = argv[1];
-	Param Parametres(inputname);
+	LoadParamIO(inputname);
  
 	cout<<"############# Inputs #############"<<endl;
-	cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
-	cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
-	cout<<"Data path : "+Parametres.datapath<<endl;
-	cout<<"Output path : "+Parametres.outputpath<<endl;
-	cout<<"Mesh name : "+Parametres.meshname<<endl;
-	cout<<"Matrix name : "+Parametres.matrixname<<endl;
+	cout<<"Output path : "+GetOutputPath()<<endl;
+	cout<<"Mesh path : "+GetMeshPath()<<endl;
 	cout<<"##################################"<<endl;
  
 	////////////////========================================================////////////////
@@ -59,8 +56,8 @@ int main(int argc, char* argv[]){
 	vectReal r;
 	vectR3   x;
 	tic();
-	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
-	vectInt tab(Parametres.ndofperelt*x.size());
+	LoadPoints((GetMeshPath()).c_str(),x,r);
+	vectInt tab(GetNdofPerElt()*x.size());
 	for (int j=0;j<x.size();j++){
 		tab[3*j]  = j;
 		tab[3*j+1]= j;
@@ -72,7 +69,7 @@ int main(int argc, char* argv[]){
 	toc();
 	
 	for(int idepth=1; idepth<4; idepth++){
-		VisuPartitionedMesh(t, Parametres.datapath+"/"+Parametres.meshname, "VisuPart"+(split(Parametres.meshname,'.')).at(0)+"depth"+NbrToStr(idepth)+".msh", idepth);
+		VisuPartitionedMesh(t, GetDataPath()+"/"+GetMeshName(), "VisuPart"+(split(GetMeshName(),'.')).at(0)+"depth"+NbrToStr(idepth)+".msh", idepth);
 	}
 	
 	
