@@ -109,7 +109,7 @@ mat(mat0), xt(xt0), xs(xt0), tabt(tabt0), tabs(tabt0) {
 	
 }
 
-
+// 1- !!!
 Real CompressionRate(const HMatrix& hmat){
 	
 	Real comp = 0.;
@@ -130,7 +130,7 @@ Real CompressionRate(const HMatrix& hmat){
 		comp += nr*nc/size;
 	}
 	
-	return comp;
+	return 1-comp;
 	
 }
 

@@ -335,8 +335,9 @@ public:
 			u[j] = m.u[j]; v[j] = m.v[j];}
 	}
 	
+    // 1- !!!
 	friend Real CompressionRate(const LowRankMatrix& m){
-		return m.rank*( 1./Real(m.nr) + 1./Real(m.nc) );
+		return (1 - ( m.rank*( 1./Real(m.nr) + 1./Real(m.nc)) ));
 	}
 	
 	//	void Append(const vectCplx& new_u, const vectCplx& new_v){
@@ -493,8 +494,9 @@ public:
 			u[j] = m.u[j]; v[j] = m.v[j];}
 	}
 	
+    // 1- !!!
 	friend Real CompressionRate(const LowRankMatrixSVD& m){
-		return m.rank*( 1./Real(m.nr) + 1./Real(m.nc) );
+		return (1 - ( m.rank*( 1./Real(m.nr) + 1./Real(m.nc)) ));
 	}
 	
 	//	void Append(const vectCplx& new_u, const vectCplx& new_v){
