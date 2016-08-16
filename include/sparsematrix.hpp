@@ -13,29 +13,20 @@
 //      DECLARATIONS DE TYPE      //
 //================================//
 using namespace std;
-//typedef pair<int,int>            Int2;
 
-typedef vector<Cplx>    vectCplx;
+//typedef vector<Cplx>    vectCplx;
 
 //=================================================================//
 //                         CLASS SPARSE MATRIX
 /******************************************************************//**
-* This class is a wrapper for the SparseMatrix class of
-*  the [Eigen3](http://eigen.tuxfamily.org/dox/) library....
+* Class for sparse matrices (in coordinate list format).
+* Its member objects are:
+*   - I: vector of the row indices,
+*   - J: vector of the column indices,
+*   - K: vector of the (complex) coefficients of the matrix,
+*   - nr: the number of rows,
+*   - nc: the number of columns.
 *********************************************************************/
-
-//The simplest way to create a sparse matrix while guaranteeing good performance is thus to first build a list of so-called triplets, and then convert it to a SparseMatrix.
-//typedef Eigen::Triplet<double> T;
-//std::vector<T> tripletList;
-//tripletList.reserve(estimation_of_entries);
-//for(...)
-//{
-//    // ...
-//    tripletList.push_back(T(i,j,v_ij));
-//}
-//SparseMatrixType mat(rows,cols);
-//mat.setFromTriplets(tripletList.begin(), tripletList.end());
-//// mat is ready to go!
 
 class SpMatrix{
 	
@@ -50,14 +41,16 @@ public:
 	
 	//! ### Default constructor
 	/*!
-	 Initialise the matrix to the size 0*0
+	 Initializes the matrix to the size 0*0.
   */
 	SpMatrix(): nr(0), nc(0){}
 	
 	
 	//! ### Another constructor
 	/*!
-	 Initialise the matrix with _nrp_ rows and _ncp_ columns, Ip, Jp, Kp
+	 Initializes the matrix with _nrp_ rows and _ncp_ columns,
+     _Ip_ as vector of the row indices, _Jp_ as vector of the column indices, 
+     _Kp_ as vector of the coefficients of the matrix.
   */
 	SpMatrix(const vector<int>& Ip, const vector<int>& Jp, vector<Cplx>& Kp, const int& nrp, const int& ncp):
     I(Ip), J(Jp), K(Kp), nr(nrp), nc(ncp) {}
@@ -68,28 +61,17 @@ public:
   */
 	SpMatrix(const SpMatrix& A):
 	I(A.I), J(A.J), K(A.K), nr(A.nr), nc(A.nc){}
-		
-	
-	//! ### Access operator
-	/*!
-	 If _A_ is the instance calling the operator
-	 _A(j,k)_ returns the entry of _A_ located
-	 jth row and kth column.
-  */
-    /*
-	Cplx& operator()(const int& j, const int& k){
-		return mat.coeffRef(j,k);}
-	*/
     
-	//! ### Assignement operator with matrix input argument
+    
+	//! ### Assignement operator with a sparse matrix input argument
 	/*!
-	 Copies the value of the entries of the input _A_
-	 (which is a matrix) argument into the entries of
+	 Copies the _I_, _J_, _K_ of the input _A_ argument
+	 (which is a sparse matrix) into the vectors of
 	 calling instance.
   */
 	void operator=(const SpMatrix& A){
 		assert( nr==A.nr && nc==A.nc);
-        I = A.I; J = A.J;  K = A.K;}
+        I = A.I; J = A.J; K = A.K;}
 	
     
 	//! ### Matrix-vector product
@@ -103,6 +85,7 @@ public:
         for(int j=0; j<ncoef; j++)
                 v[I[j]]+= K[j]*u[J[j]];
         return v;}
+    
 	
 	//! ### Matrix-vector product
 	/*!
@@ -114,8 +97,6 @@ public:
 	 
 	 The left and right operands (_lhs_ and _rhs_) are templated
 	 and can then be of any type (not necessarily of type vectCplx).
-	 The only requirement is that an overload of the parentesis-based
-	 access operator be available for the operands.
   */
 	template <typename LhsType, typename RhsType>
 	friend void MvProd(LhsType& lhs, const SpMatrix& m, const RhsType& rhs){
@@ -129,7 +110,8 @@ public:
     /*!
      Changes the size of the matrix so that
      the number of rows is set to _nbr_ and
-     the number of columns is set to _nbc_ and ...
+     the number of columns is set to _nbc_ and 
+     the sizes of the 3 member vectors are set to _nbcoef_.
      */
     void resize(const int nbr, const int nbc, const int nbcoef){
         assert(nbcoef<=nbr*nbc);
@@ -137,48 +119,59 @@ public:
         I.resize(nbcoef); J.resize(nbcoef); K.resize(nbcoef);
     }
     
+    
+    //! ### Access to row indices
+    /*!
+     Returns the _i_th row index of the input argument _A_.
+     */
     int& I_(const int i){
         assert(i<I.size());
         return I[i];
     }
     
+    
+    //! ### Access to column indices
+    /*!
+     Returns the _i_th column index of the input argument _A_.
+     */
     int& J_(const int i){
         assert(i<J.size());
         return J[i];
     }
     
+    
+    //! ### Access to coefficients
+    /*!
+     Returns the _i_th coefficients inside _K_ of the input argument _A_.
+     */
     Cplx& K_(const int i){
         assert(i<K.size());
         return K[i];
     }
 	
-    
-//	friend ostream& operator<<(ostream& os, const SpMatrix& m){
-//		return os << m...;}
-	
 	
 	//! ### Access to number of rows
 	/*!
-	 Returns the number of rows of the input argument _A_
+	 Returns the number of rows of the input argument _A_.
   */
 	friend const int& nb_rows(const SpMatrix& A){ return A.nr;}
+    
 	
-	//! ### Access to number of columnss
+	//! ### Access to number of columns
 	/*!
-	 Returns the number of columns of the input argument _A_
+	 Returns the number of columns of the input argument _A_.
   */
 	friend const int& nb_cols(const SpMatrix& A){ return A.nc;}
 	
     
     //! ### Access to number of non zero coefficients
     /*!
-     Returns the number of non zero coefficients of the input argument _A_
+     Returns the number of non zero coefficients of the input argument _A_.
      */
 	friend int nb_coeff(const SpMatrix& A){ return A.I.size();}
+    
+    
 };
-
-
-
 
 
 #endif
