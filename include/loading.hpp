@@ -90,12 +90,12 @@ Param::Param(string inputname){
 				}
 			}
 		}
-		ifstream Matrixname(datapath+"/"+matrixname);
+		ifstream Matrixname((datapath+"/"+matrixname).c_str());
 		if (!Matrixname){
 			cerr << "Matrix file does not exist" << endl;
 			exit(1);
 		}
-		ifstream Meshname(datapath+"/"+meshname);
+		ifstream Meshname((datapath+"/"+meshname).c_str());
 		if (!Meshname){
 			cerr << "Mesh file does not exist" << endl;
 			exit(1);
