@@ -22,15 +22,15 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
-  
-  
-  ////////////////========================================================////////////////
-  ////////////////////////////////========  Input ========////////////////////////////////
-  
-  // Check the number of parameters
-  if (argc < 2) {
-    // Tell the user how to run the program
-    cerr << "Usage: " << argv[0] << " input name" << endl;
+	
+	
+	////////////////========================================================////////////////
+	////////////////////////////////========  Input ========////////////////////////////////
+	
+	// Check the number of parameters
+	if (argc < 2) {
+		// Tell the user how to run the program
+		cerr << "Usage: " << argv[0] << " input name" << endl;
 		/* "Usage messages" are a conventional way of telling the user
 		 * how to run a program if they enter the command incorrectly.
 		 */
@@ -39,16 +39,15 @@ int main(int argc, char* argv[]){
 	
 	// Load the inputs
 	string inputname = argv[1];
-	Param Parametres(inputname);
- 
+	LoadParamIO(inputname);
+	
+	
 	cout<<"############# Inputs #############"<<endl;
-	//cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
-	//cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
-	cout<<"Data path : "+Parametres.datapath<<endl;
-	cout<<"Output path : "+Parametres.outputpath<<endl;
-	cout<<"Mesh name : "+Parametres.meshname<<endl;
-	cout<<"Matrix name : "+Parametres.matrixname<<endl;
+	cout<<"Output path : "+GetOutputPath()<<endl;
+	cout<<"Mesh path : "+GetMeshPath()<<endl;
+	cout<<"Matrix path : "+GetMatrixPath()<<endl;
 	cout<<"##################################"<<endl;
+	
 	
 	vector<double> times2;
 	
@@ -58,14 +57,14 @@ int main(int argc, char* argv[]){
 	SpMatrix spA;
 	
 	tic();
-	LoadSpMatrix((Parametres.datapath+"/"+(split(Parametres.matrixname,'.')).at(0)+"Creuse.txt").c_str(),spA);
+	LoadSpMatrix(split(GetMatrixPath(),'.')+"Creuse.txt").c_str(),spA);
 	toc();
 	
 	tic();
-	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
+	LoadPoints(GetMeshPath().c_str(),x,r);
 	toc();
 	tic();
-	LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
+	LoadMatrix(GetMatrixPath().c_str(),A);
 	toc();
 	
 	// Vecteur pour le produit matrice vecteur
@@ -93,23 +92,23 @@ int main(int argc, char* argv[]){
 	Real normA = NormFrob(A);
 	toc();
 	cout << "Frobenius norm of the dense matrix: " << normA << endl;
-    
-    // Vecteur renvoyant pour chaque dof l'indice de l'entite geometrique correspondante dans x
-    vectInt tab(nb_rows(A));
-    for (int j=0;j<x.size();j++){
-        tab[3*j]  = j;
-        tab[3*j+1]= j;
-        tab[3*j+2]= j;
-    }
 	
-    // Values of eta and epsilon
-    const int neta = 1;
-    double eta [neta] = {5e-1};
-    const int nepsilon = 3;
-    double epsilon[nepsilon] = {-1, 1e0, 1e-1};
-    
+	// Vecteur renvoyant pour chaque dof l'indice de l'entite geometrique correspondante dans x
+	vectInt tab(nb_rows(A));
+	for (int j=0;j<x.size();j++){
+		tab[3*j]  = j;
+		tab[3*j+1]= j;
+		tab[3*j+2]= j;
+	}
+	
+	// Values of eta and epsilon
+	const int neta = 1;
+	double eta [neta] = {5e-1};
+	const int nepsilon = 3;
+	double epsilon[nepsilon] = {-1, 1e0, 1e-1};
+	
 	// for output file
-	string filename=Parametres.outputpath+"/output_compression_16_08_2016"+Parametres.matrixname;
+	string filename=GetOutputPath()+"/output_compression_16_08_2016"+GetMatrixName();
 	ofstream output(filename.c_str());
 	if (!output){
 		cerr<<"Output file cannot be created"<<endl;
@@ -124,17 +123,18 @@ int main(int argc, char* argv[]){
 		for(int ieta=0; ieta<neta; ieta++)
 		{
 			cout << "ieta: " << ieta << endl;
-			Param Parametre(eta[ieta],epsilon[iepsilon]);
-			cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
-			cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
+			SetEta(eta[ieta]);
+			SetEpsilon(epsilon[iepsilon]);
+			cout<<"Eta : "+NbrToStr(GetEta())<<endl;
+			cout<<"Epsilon : "+NbrToStr(GetEpsilon())<<endl;
 			
 			vector<double> times;
 			
 			tic();
-            // Build the hierarchical matrix with compressed and dense blocks
-			HMatrix B(A,x,r,tab,Parametres.epsilon==-1 ? 0 : -1);
-            // if epsilon=-1 rank 0 blocks, otherwise aca compression with the given precision
-			toc(times);			
+			// Build the hierarchical matrix with compressed and dense blocks
+			HMatrix B(A,x,r,tab,GetEpsilon()==-1 ? 0 : -1);
+			// if epsilon=-1 rank 0 blocks, otherwise aca compression with the given precision
+			toc(times);
 			
 			vectCplx ub(nr);
 			tic();
@@ -151,7 +151,7 @@ int main(int argc, char* argv[]){
 			cout << "Relative error in Frobenius norm with HMatrix: " << froberrH << endl;
 			
 			// write in output file
-			output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<errH<<" "<<froberrH<<endl;
+			output<<GetEta()<<" "<<GetEpsilon()<<" "<<compression<<" "<<errH<<" "<<froberrH<<endl;
 			//cout<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<errH<<" "<<froberrH<<endl;
 		}
 	}
