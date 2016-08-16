@@ -177,7 +177,7 @@ int main(int argc, char* argv[]){
         exit(1);
     }
     output2<<"Compression "<<"Erreur_MvProd "<<"Erreur_Frob"<<endl;
-    output<<compressionSp<<" "<<errSp<<" "<<froberrSp<<endl;
-
+    output2<<compressionSp<<" "<<errSp<<" "<<froberrSp<<endl;
+    output2.close();
 	
 }
