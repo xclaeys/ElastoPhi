@@ -339,7 +339,7 @@ void VisuPartitionedMesh(const Cluster& t, string inputname, string outputname, 
     
     // Ecriture fichier de sortie
     ofstream outfile;
-    outfile.open(Parametres.outputpath+"/"+outputname);
+    outfile.open((Parametres.outputpath+"/"+outputname).c_str());
     outfile << "$MeshFormat\n";
     outfile << "2.2 0 8\n";
     outfile << "$EndMeshFormat\n";
