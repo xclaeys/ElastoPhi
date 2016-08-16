@@ -138,9 +138,9 @@ void fill(SubVectCplx& u, const Cplx& v){
 *  The number of rows and columns can be changed after initialisation.
 *
 *  Elements of this class store
-*     - mat: an instance of an Eigen3 matrix
-*     - nr:  the number of rows
-*     - nc:  the number of columns
+*     - mat: an instance of an Eigen3 matrix,
+*     - nr:  the number of rows,
+*     - nc:  the number of columns.
 *
 *********************************************************************/
 
@@ -164,15 +164,15 @@ public:
 	
 	//! ### Default constructor
 	/*!
-	 Initialise the matrix to the size 0*0
+	 Initializes the matrix to the size 0*0.
   */
 	Matrix(): mat(0,0), nr(0), nc(0){}
 	
 	
 	//! ### Another constructor
 	/*!
-	 Initialise the matrix with _nbr_ rows and _nbc_ columns,
-	 and fills the matrix with zeros
+	 Initializes the matrix with _nbr_ rows and _nbc_ columns,
+	 and fills the matrix with zeros.
   */
 	Matrix(const int& nbr, const int& nbc):
 	mat(nbr,nbc), nr(nbr), nc(nbc){}
@@ -180,12 +180,11 @@ public:
 	
 	//! ### Copy constructor
 	/*!
-	 Initialise the matrix with _nbr_ rows and _nbc_ columns,
-	 and fills the matrix with zeros
   */
 	Matrix(const Matrix& A):
 	mat(A.mat),nr(A.nr), nc(A.nc){}
 	
+    
 	//! ### Templated copy constructor
 	/*!
 	 Does the same as the copy constructor
@@ -225,6 +224,7 @@ public:
   */
 	const Cplx& operator()(const int& j, const int& k) const {
 		return mat(j,k);}
+    
 	
 	//! ### Assignement operator with matrix input argument
 	/*!
@@ -235,24 +235,26 @@ public:
 	void operator=(const Matrix& A){
 		assert( nr==A.nr && nc==A.nc);
 		mat = A.mat;}
+    
 	
 	//! ### Assignement operator with scalar input argument
 	/*!
 	 Sets the values of the entries of the calling instance
-	 to the input value _z_
+	 to the input value _z_.
   */
 	void operator=(const Cplx& z){
 		for(int j=0; j<nr; j++){
 			for(int k=0; k<nc; k++){
 				mat(j,k)=z;}}
 	}
+    
 	
 	//! ### Matrix-vector product
 	/*!
 	 Naive self-contained implementation of matrix-vector product
 	 for dense matrices. The input parameter _u_ is the input vector
 	 (i.e. the right operand). This operator does not rely on the
-	 matrix-vector operator obtained via the library eigen3
+	 matrix-vector operator obtained via the library eigen3.
   */
 	vectCplx operator*(const vectCplx& u){
 		vectCplx v(nr,0.);
@@ -262,12 +264,13 @@ public:
 			}
 		}
 		return v;}
+    
 	
 	//! ### Modifies the size of the matrix
 	/*!
 	 Changes the size of the matrix so that
 	 the number of rows is set to _nbr_ and
-	 the number of columns is set to _nbc_
+	 the number of columns is set to _nbc_.
   */
 	void resize(const int nbr, const int nbc){
 		mat.resize(nbr,nbc); nr = nbr; nc = nbc;}
@@ -284,7 +287,7 @@ public:
 	 The left and right operands (_lhs_ and _rhs_) are templated
 	 and can then be of any type (not necessarily of type vectCplx).
 	 The only requirement is that an overload of the parentesis-based
-	 access operator be available for the operands.
+	 access operator is available for the operands.
   */
 	template <typename LhsType, typename RhsType>
 	friend void MvProd(LhsType& lhs, const Matrix& m, const RhsType& rhs){
@@ -295,45 +298,49 @@ public:
 		}
 	}
 	
+    
 	friend ostream& operator<<(ostream& os, const Matrix& m){
 		return os << m.mat;}
 	
 	
 	//! ### Access to number of rows
 	/*!
-	 Returns the number of rows of the input argument _A_
+	 Returns the number of rows of the input argument _A_.
   */
 	friend const int& nb_rows(const Matrix& A){ return A.nr;}
+    
 	
-	//! ### Access to number of columnss
+	//! ### Access to number of columns
 	/*!
-	 Returns the number of columns of the input argument _A_
+	 Returns the number of columns of the input argument _A_.
   */
 	friend const int& nb_cols(const Matrix& A){ return A.nc;}
 	
 	
 	//! ### Extraction of a column
 	/*!
-	 Returns, as a vector, the column numbered _k_ ofthe matrix _A_
+	 Returns, as a vector, the column numbered _k_ of the matrix _A_.
   */
 	friend vectCplx col(const Matrix& A, const int& k){
 		vectCplx u(A.nr,0.);
 		for(int j=0; j<A.nr; j++){u[j]=A(j,k);}
 		return u;}
+    
 	
 	//! ### Extraction of a row
 	/*!
-	 Returns, as a vector, the row numbered _j_ ofthe matrix  _A_
+	 Returns, as a vector, the row numbered _j_ of the matrix  _A_.
   */
 	friend vectCplx row(const Matrix& A, const int& j){
 		vectCplx u(A.nc,0.);
 		for(int k=0; k<A.nc; k++){u[k]=A(j,k);}
 		return u;}
+    
 	
 	//! ### Looking for the entry of maximal modulus
 	/*!
 	 Returns the number of row and column of the entry
-	 of maximal modulus in the matrix _A_
+	 of maximal modulus in the matrix _A_.
   */
 	friend Int2 argmax(const Matrix& A){
 		int jj=0,kk=0; Real Amax=0.;
@@ -351,7 +358,7 @@ public:
 	//! ### Computation of singular values
 	/*!
 	 Returns a vector of Real containing the singular values
-	 of the input matrix _A_ in decreasing order
+	 of the input matrix _A_ in decreasing order.
   */
 	friend vectReal SVD(const Matrix& A){
 		SVDType svd(A.mat);
@@ -360,6 +367,13 @@ public:
 		for(int j=0; j<sv.size(); j++){s[j]=sv[j];}
 		return s;
 	}
+    
+    
+    //! ### Computation of singular value decomposition (SVD) up to a certain rank
+    /*!
+     Computes and stores inside _u_ and _v_ the singular value decomposition
+     of the input matrix _A_ up to rank _k_.
+     */
 	
 	friend void PartialSVD(const Matrix& A, vector<vectCplx>& u ,vector<vectCplx>& v, int k){
 		assert(k<=min(A.nr,A.nc));
@@ -368,11 +382,6 @@ public:
 		
 		const UMatrixType& uu = svd.matrixU();
 		const VMatrixType& vv = svd.matrixV();
-//		cout<<A.nr<<" "<<A.nc<<endl;
-//		cout<<uu.size()<<" "<<vv.size()<<endl;
-//		cout<<uu.rows()<<" "<<vv.cols()<<endl;
-//		cout<<uu.rows()<<" "<<vv.cols()<<endl;
-		
 		
 		for (int i=0;i<k;i++){
 			vector<Cplx> uuu;
@@ -389,6 +398,12 @@ public:
 		}
 	}
     
+    
+    //! ### Computation of the Frobenius norm
+    /*!
+     Computes the Frobenius norm of the input matrix _A_.
+     */
+    
     friend Real NormFrob (const Matrix& A){
         Real norm=0;
         for (int j=0;j<A.nr;j++){
@@ -398,7 +413,6 @@ public:
         }
         return sqrt(norm);
     }
-
 	
 	
 };

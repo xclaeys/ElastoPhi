@@ -31,7 +31,7 @@
 //
 //=================================//
 
-class LowRankMatrix{
+class LowRankMatrix: public Parametres{
 	
 private:
 	int rank, nr, nc;
@@ -54,7 +54,6 @@ public:
 	//    PARTIAL PIVOT ACA    //
 	//=========================//
 	LowRankMatrix(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0, const Cluster& t, const Cluster& s, int reqrank=-1){
-		Param Parametres;
 		nr = nb_rows(A);
 		nc = nb_cols(A);
 		ir=ir0;
@@ -70,11 +69,11 @@ public:
 		//// Choix de la première ligne
 		Real dist=1e30;
 		int I=0;
-		for (int i =0;i<int(nr/Parametres.ndofperelt);i++){
-			Real aux_dist= norm(pts_(t)[num_(t)[i*Parametres.ndofperelt]]-ctr_(t));
+		for (int i =0;i<int(nr/ndofperelt);i++){
+			Real aux_dist= norm(pts_(t)[num_(t)[i*ndofperelt]]-ctr_(t));
 			if (dist>aux_dist){
 				dist=aux_dist;
-				I=i*Parametres.ndofperelt;
+				I=i*ndofperelt;
 			}
 				
 		}
@@ -139,7 +138,7 @@ public:
 			
 			// (see Bebendorf stopping criterion (3.58) pag 141)
 			while ( ((reqrank > 0) && (q < reqrank) ) ||
-			       ( (reqrank < 0) && ( sqrt(aux/frob)>Parametres.epsilon ) ) ) {
+			       ( (reqrank < 0) && ( sqrt(aux/frob)>epsilon ) ) ) {
 				
 				if (q >= min(nr,nc) )
 					break;
@@ -321,7 +320,6 @@ public:
 	}
 	
 	LowRankMatrix(const LowRankMatrix& m){
-		Param Parametre;
 		ir=m.ir;
 		ic=m.ic;
 		nr=m.nr; nc=m.nc; rank = m.rank;
@@ -480,7 +478,6 @@ public:
 	
 	
 	LowRankMatrixSVD(const LowRankMatrixSVD& m){
-		Param Parametre;
 		ir=m.ir;
 		ic=m.ic;
 		nr=m.nr; nc=m.nc; rank = m.rank;

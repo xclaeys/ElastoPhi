@@ -11,7 +11,7 @@
 //     MATRICE HIERARCHIQUE      //
 //===============================//
 
-class HMatrix{
+class HMatrix: public Parametres{
 	
 private:
 	
@@ -135,8 +135,7 @@ Real CompressionRate(const HMatrix& hmat){
 }
 
 void Output(const HMatrix& hmat, string filename){
-	Param Parametres;
-	string path=Parametres.outputpath+"/"+filename;
+	string path=GetOutputPath()+"/"+filename;
 	
 	ofstream outputfile(path.c_str());
 	
