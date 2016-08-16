@@ -109,7 +109,7 @@ int main(int argc, char* argv[]){
     double epsilon[nepsilon] = {-1, 1e0, 1e-1};
     
 	// for output file
-	string filename=Parametres.outputpath+"/output_compression_12_08_2016"+Parametres.matrixname;
+	string filename=Parametres.outputpath+"/output_compression_16_08_2016"+Parametres.matrixname;
 	ofstream output(filename.c_str());
 	if (!output){
 		cerr<<"Output file cannot be created"<<endl;

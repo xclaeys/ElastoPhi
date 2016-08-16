@@ -85,17 +85,26 @@ int main(int argc, char* argv[]){
     vectCplx ua(nr);
     MvProd(ua,A,u);
     
+    // Vecteur renvoyant pour chaque dof l'indice de l'entite geometrique correspondante dans x
+    vectInt tab(nb_rows(A));
+    for (int j=0;j<x.size();j++){
+        tab[3*j]  = j;
+        tab[3*j+1]= j;
+        tab[3*j+2]= j;
+    }
+    
     // Values of eta and epsilon
     int neta = 4;
     double eta[neta];
     eta[0] = 1e+1; eta[1] = 1e+0; eta[2] = 1e-1; eta[3] = 1e-2;
+    //eta[0] = 1e+1; eta[1] = 8e-1; eta[2] = 1e-1; eta[3] = 1e-2;
     int nepsilon = 4;
     double epsilon[nepsilon];
     epsilon[0] = 1e+0; epsilon[1] = 5e-1; epsilon[2] = 1e-1; epsilon[3] = 1e-2;
     
     // for output file
-    //string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-    string filename=Parametres.outputpath+"/output_compression_NEWst_"+Parametres.matrixname;
+    string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
+    //string filename=Parametres.outputpath+"/output_compression_CondAdmMin08_"+Parametres.matrixname;
     ofstream output(filename.c_str());
     if (!output){
         cerr<<"Output file cannot be created"<<endl;
@@ -115,7 +124,7 @@ int main(int argc, char* argv[]){
             vector<double> times;
             
             tic();
-            HMatrix B(A,x,r); // Build the hierarchical matrix with compressed and dense blocks
+            HMatrix B(A,x,r,tab); // Build the hierarchical matrix with compressed and dense blocks
             toc(times);
             
             vectCplx ub(nr);
