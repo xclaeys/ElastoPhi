@@ -75,8 +75,6 @@ int main(int argc, char* argv[]){
 	string inputname = argv[1];
 	LoadParamIO(inputname);
 	SetNdofPerElt(1);
-	SetEta(1e-1);
-	SetEpsilon(1e-1); // eta (only for hmatrix), ACA epsilon
 	string filename=GetOutputPath()+"/output_err_decrease.txt";
 	ofstream output(filename.c_str());
 //	output.open(filename,ios::app);
@@ -107,13 +105,13 @@ int main(int argc, char* argv[]){
 			LowRankMatrix lrm(subm,Ir,Ic,t,s,i);
 			toc();
 			tic();
-//			LowRankMatrixSVD lrmsvd(subm,Ir,Ic,i); // construct a low rank matrix B applying ACA to matrix A
+			LowRankMatrixSVD lrmsvd(subm,Ir,Ic,i); // construct a low rank matrix B applying ACA to matrix A
 			toc();
 			tic();
 			Real err=0;
 			Real err_SVD=0;
 			err=squared_relative_error(lrm,subm);
-//			err_SVD=squared_relative_error(lrmsvd,subm);
+			err_SVD=squared_relative_error(lrmsvd,subm);
 //			cout<<z2-z1<<" "<<i<<" "<<err<<endl;
 			output <<dist<<" "<<i<<" "<<err<<" "<<err_SVD<<endl;
 			
