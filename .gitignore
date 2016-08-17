@@ -4,10 +4,11 @@ bin/
 data/
 output/output_err*
 output/output_local*
+output/visu_*
 output/*.msh
 output/*.mesh
 output/graphe_*
 *.pyc
 
-install
+scripts/*
 input*.txt
