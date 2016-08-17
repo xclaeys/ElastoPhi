@@ -69,7 +69,7 @@ int main(int argc, char* argv[]){
 	toc();
 	
 	for(int idepth=1; idepth<4; idepth++){
-		VisuPartitionedMesh(t, GetDataPath()+"/"+GetMeshName(), "VisuPart"+(split(GetMeshName(),'.')).at(0)+"depth"+NbrToStr(idepth)+".msh", idepth);
+		VisuPartitionedMesh(t, GetDataPath()+"/"+GetMeshName(), "visu_cluster_"+(split(GetMeshName(),'.')).at(0)+"depth"+NbrToStr(idepth)+".msh", idepth);
 	}
 	
 	

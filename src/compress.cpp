@@ -22,11 +22,14 @@
 using namespace std;
 
 /**************************************************************************//**
- * It builds the hierarchical matrix with compressed and dense blocks and
- * computes the consistency error for the matrix vector product.
- * It also produces an output file to visualize the compression of the matrix. TO BE WRITTEN
- * (To be run it requires the input file with the desidered parameters)
- *****************************************************************************/
+* It builds the hierarchical matrix with compressed and dense blocks,
+* computes the consistency error for a matrix vector product and
+* the relative error in Frobenius norm with respect to the dense matrix.
+* It also produces an output file to visualize the compression of the matrix
+* (use graphes_output_local_compression.py in postprocessing folder).
+*
+* (To be run it requires the input file with the desidered parameters)
+*****************************************************************************/
 
 int main(int argc, char* argv[]){
 	
@@ -53,14 +56,14 @@ int main(int argc, char* argv[]){
 	cout<<"Eta : "+NbrToStr(GetEta())<<endl;
 	cout<<"Epsilon : "+NbrToStr(GetEpsilon())<<endl;
 	cout<<"Output path : "+GetOutputPath()<<endl;
-	cout<<"Mesh name : "+GetMeshPath()<<endl;
-	cout<<"Matrix name : "+GetMatrixPath()<<endl;
+	cout<<"Mesh path : "+GetMeshPath()<<endl;
+	cout<<"Matrix path : "+GetMatrixPath()<<endl;
 	cout<<"##################################"<<endl;
  
 	//////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////    Build Hmatrix 	////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
-	vector<double> times;
+	//vector<double> times;
 	vectReal r;
 	vectR3   x;
 	Matrix   A;
@@ -73,16 +76,14 @@ int main(int argc, char* argv[]){
 		tab[3*j+1]= j;
 		tab[3*j+2]= j;
 	}
-	toc(times);
+	toc();
 	tic();
-	HMatrix B(A,x,r,tab,0);
-	toc(times);
-	tic();
-//	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
+	HMatrix B(A,x,r,tab);
 	toc();
 	
+	
 	//////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////    Test MvProd 	////////////////////////////////
+	//////////////////////////////     Errors 	//////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
 	
 	// Vecteur
@@ -101,30 +102,22 @@ int main(int argc, char* argv[]){
 	Real err = norm(ua-ub)/norm(ua);
 	Real compression=CompressionRate(B);
 	
-	cout<<"Erreur : "<<err<<endl;
-	cout<<"Compression :"<<compression<<endl;
+	cout<<"Matrix-vector product relative error : "<<err<<endl;
+	cout<<"Compression rate: "<<compression<<endl;
 	
-	// Ecriture dans un fichier avec append:
-	////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////    Fichier de sortie 	////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////
-//	string filename=Parametres.outputpath+"/output_compression_"+Parametres.matrixname;
-//	ifstream infile(filename);
-//	ofstream output;
-//	output.open(filename,ios::app);
-//	if (!output){
-//		cerr<<"Output file cannot be created"<<endl;
-//		exit(1);
-//	}
-//	else{
-//		if (!infile.good()){
-//			output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur"<<endl;
-//		}
-//		else{
-//			
-//		}
-//		output<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<err<<endl;
-//	}
-//	output.close();
+	Real normA = NormFrob(A);
+	//cout << "Frobenius norm of the dense matrix: " << normA << endl;
+	
+	Real froberrH = sqrt(squared_absolute_error(B,A))/normA;
+	cout << "Relative error in Frobenius norm: " << froberrH << endl;
+
+	//////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////      Output 	//////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////
+	
+	tic();
+	Output(B, "output_local_comp_"+NbrToStr(GetEta())+"_"+NbrToStr(GetEpsilon())+"_"+GetMatrixName()); // to visualize the compression of the matrix
+	toc();
+	
 }
 
