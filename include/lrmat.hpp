@@ -53,6 +53,8 @@ public:
 	//=========================//
 	//    PARTIAL PIVOT ACA    //
 	//=========================//
+    // If reqrank=-1 (default value), we use the precision given by epsilon for the stopping criterion;
+    // otherwise, we use the required rank for the stopping criterion (!: at the end the rank could be lower)
 	LowRankMatrix(const SubMatrix& A, const vectInt& ir0, const vectInt& ic0, const Cluster& t, const Cluster& s, int reqrank=-1){
 		nr = nb_rows(A);
 		nc = nb_cols(A);
@@ -66,7 +68,7 @@ public:
 		Real aux  = 0.;
 		Cplx frob_aux=0;
 		
-		//// Choix de la première ligne
+		//// Choice of the first row (see paragraph 3.4.3 page 151 Bebendorf)
 		Real dist=1e30;
 		int I=0;
 		for (int i =0;i<int(nr/ndofperelt);i++){
@@ -75,7 +77,6 @@ public:
 				dist=aux_dist;
 				I=i*ndofperelt;
 			}
-				
 		}
 		
 		int J=0;
@@ -83,8 +84,8 @@ public:
 		if(reqrank == 0){
 			rank = 0; // approximate with a zero matrix
 		}
-		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
-			rank=-5;
+		else if ( (nr+nc)>=(nr*nc) ){ // even rank 1 is not advantageous
+			rank=-5; // just a flag for BuildBlockTree (the block won't be treated as a FarField block)
 		}
 		else{
 			vectCplx r(nc),c(nr);
@@ -116,14 +117,12 @@ public:
 				}
 				visited_col[J] = true;
 				
-				aux = abs(dprod(c,c)*dprod(r,r));
-				
 				// We accept the cross
 				q++;
 				//====================//
 				// Estimateur d'erreur
 				frob_aux = 0.;
-				//aux = abs(dprod(c,c)*dprod(r,r)); // (already computed to evaluate the test)
+				aux = abs(dprod(c,c)*dprod(r,r));
 				// aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
 				for(int j=0; j<u.size(); j++){
 					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
@@ -136,17 +135,18 @@ public:
 			}
 			else{cout << "There is a zero row in the starting submatrix and ACA didn't work" << endl;}
 			
-			// (see Bebendorf stopping criterion (3.58) pag 141)
+			// Stopping criterion of slide 26 of Stephanie Chaillat and Rjasanow-Steinbach
+            // (if epsilon>=1, it always stops to rank 1 since frob=aux)
 			while ( ((reqrank > 0) && (q < reqrank) ) ||
 			       ( (reqrank < 0) && ( sqrt(aux/frob)>epsilon ) ) ) {
 				
 				if (q >= min(nr,nc) )
 					break;
-				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
-					if (reqrank <0){ // On a pas fixé le rang
-						rank=-5;
+				if ( (q+1)*(nr +nc) > (nr*nc) ){ // one rank more is not advantageous
+					if (reqrank <0){ // If we didn't required a rank, i.e. we required a precision with epsilon
+						rank=-5;  // a flag for BuildBlockTree to say that the block won't be treated as a FarField block
 					}
-					break;
+					break; // If we required a rank, we keep the computed ACA approximation (of lower rank)
 				}
 				// Compute another cross
 				//==================//
@@ -176,18 +176,17 @@ public:
 					visited_col[J] = true;
 					
 					aux = abs(dprod(c,c)*dprod(r,r));
+                    // aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
 				}
-				else{ cout << "ACA's loop broke" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
+				else{ cout << "ACA's loop terminated" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
 				// We accept the cross
 				q++;
 				//====================//
 				// Estimateur d'erreur
 				frob_aux = 0.;
-				//aux = abs(dprod(c,c)*dprod(r,r)); // (already computed to evaluate the test)
-				// aux: terme quadratiques du developpement du carre' de la norme de Frobenius de la matrice low rank
 				for(int j=0; j<u.size(); j++){
 					frob_aux += dprod(r,v[j])*dprod(c,u[j]);}
-				// frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
+                // frob_aux: termes croises du developpement du carre' de la norme de Frobenius de la matrice low rank
 				frob += aux + 2*frob_aux.real(); // frob: Frobenius norm of the low rank matrix
 				//==================//
 				// Nouvelle croix
@@ -195,20 +194,14 @@ public:
 				v.push_back(r);
 			}
 			
-			// stopping criterion:
-			//}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) );
-			// (see stopping criterion in slide 26 of Stephanie Chaillat and Rjasanow-Steinbach)
-			// si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
-			// indeed, it's a sort of relative error
-			
 			rank = u.size();
 		}
 
-		
+// Use this for Bebendorf stopping criterion (3.58) pag 141 (not very flexible):
 //		if(reqrank == 0)
 //			rank = 0; // approximate with a zero matrix
-//		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
-//			rank=-5;
+//		else if ( (nr+nc)>=(nr*nc) ){ // even rank 1 is not advantageous
+//			rank=-5; // just a flag for BuildBlockTree (the block won't be treated as a FarField block)
 //		} else{
 //			vectCplx r(nc),c(nr);
 //			
@@ -268,11 +261,11 @@ public:
 //				
 //				if (q >= min(nr,nc) )
 //					break;
-//				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
-//					if (reqrank <0){ // On a pas fixé le rang
-//						rank=-5;
+//				if ( (q+1)*(nr +nc) > (nr*nc) ){ // one rank more is not advantageous
+//					if (reqrank <0){ // If we didn't required a rank, i.e. we required a precision with epsilon
+//						rank=-5; // a flag for BuildBlockTree to say that the block won't be treated as a FarField block
 //					}
-//					break;
+//					break; // If we required a rank, we keep the computed ACA approximation (of lower rank)
 //				}
 //				// Compute another cross
 //				//==================//
@@ -303,14 +296,8 @@ public:
 //					
 //					aux = abs(dprod(c,c)*dprod(r,r));
 //				}
-//				else{ cout << "ACA's loop broke" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
+//				else{ cout << "ACA's loop terminated" << endl; break; } // terminate algorithm with exact rank q (not full-rank submatrix)
 //			}
-//			
-//			// old stopping criterion:
-//			//}while(sqrt(aux/frob)>Parametres.epsilon && q < min(nr,nc) );
-//			// (see stopping criterion in slide 26 of Stephanie Chaillat and Rjasanow-Steinbach)
-//			// si epsilon >=1, always 1 iteration because aux=frob since frob_aux = 0!
-//			// indeed, it's a sort of relative error
 //			
 //			rank = u.size();
 //		}

@@ -49,10 +49,12 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, int reqrank){
 		const vectInt& J = num_(s);
 		SubMatrix submat = SubMatrix(mat,I,J);
 		LowRankMatrix lrm(submat,I,J,t,s,reqrank);
-		if(rank_of(lrm)!=-5){
-			FarFieldMat.push_back(lrm);
-			return;
+		if(rank_of(lrm)!=-5){ // If the flag (given by the lrmatrix constructor) is different from -5
+			FarFieldMat.push_back(lrm); // we keep the computed ACA approximation of the block
+			return; // and we terminate this step of the recursion
 		}
+        // otherwise, we go on with the decomposition of the block (indeed there isn't a else!);
+        // rank_of(lrm)=-5 happens when the required precision given by epsilon can't be reached with an advantageous rank (not advantageous in terms of the complexity of the matrix-vector product)
 	}
 	if( s.IsLeaf() ){
 		if( t.IsLeaf() ){
