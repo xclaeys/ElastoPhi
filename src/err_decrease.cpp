@@ -20,6 +20,13 @@
 
 using namespace std;
 
+/**************************************************************************//**
+* It creates two clusters of points contained in two unit balls. Then it computes
+* interactions \f$ 1/ || x-y|| \f$ between the two clusters for different distances
+* between the two balls. And finally, it computes the error of
+* the associated Low Rank matrix using ACA and SVD for the different distances
+*****************************************************************************/
+
 int main(int argc, char* argv[]){
 	
 	
