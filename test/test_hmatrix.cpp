@@ -89,7 +89,7 @@ int main(){
 	MvProd(ub,B1,u);
 	Real err = norm(ua-ub)/norm(ua);
 	
-	assert(abs(CompressionRate(B1)-1)<1e-10);
+	assert(abs(CompressionRate(B1))<1e-10);
 	assert(err<1e-16);
 	
 	MvProd(ua,B2,u);

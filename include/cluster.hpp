@@ -74,6 +74,7 @@ public:
 	void push_back(const int& j){num.push_back(j);}
 	
 	friend const vectR3&  pts_(const Cluster& t){return t.x;}
+    friend const vectInt& tab_(const Cluster& t){return t.tab;}
 	friend const Real&    rad_(const Cluster& t){return t.rad;}
 	friend const R3&      ctr_(const Cluster& t){return t.ctr;}
 	friend Cluster&       son_(const Cluster& t,const int& j){return *(t.son[j]);}

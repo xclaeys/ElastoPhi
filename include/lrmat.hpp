@@ -72,7 +72,7 @@ public:
 		Real dist=1e30;
 		int I=0;
 		for (int i =0;i<int(nr/ndofperelt);i++){
-			Real aux_dist= norm(pts_(t)[num_(t)[i*ndofperelt]]-ctr_(t));
+			Real aux_dist= norm(pts_(t)[tab_(t)[num_(t)[i*ndofperelt]]]-ctr_(t));
 			if (dist>aux_dist){
 				dist=aux_dist;
 				I=i*ndofperelt;
