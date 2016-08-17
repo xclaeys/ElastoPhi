@@ -85,7 +85,7 @@ ylabel_erro={"label":"Relative error","fontsize":20}
 # titre={"titre":"Test","fontsize":20,"loc":"center"}
 legende={"loc":"upper left","bbox_to_anchor":(1.01,1),"ncol":1,"fontsize":12}
 
-Figure_erro=figure.Graphe1D(id=0,legende=legende,xlim=xlim,ylim=ylim_erro,xlabel=xlabel,ylabel=ylabel_erro,yscale="log",axis="off")
+Figure_erro=figure.Graphe1D(id=0,legende=legende,xlim=xlim,ylim=ylim_erro,xlabel=xlabel,ylabel=ylabel_erro,yscale="log",axis="off",format="pdf")
 
 
 
