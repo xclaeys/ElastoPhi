@@ -30,8 +30,8 @@ nmarker=0
 
 
 
-nc = 45
-nr = 45
+nc = 15*3
+nr = 15*3
 surface = np.ones((nr,nc))
 classique.lecturesurface(filename,surface)
 
