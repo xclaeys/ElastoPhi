@@ -1,0 +1,49 @@
+\section*{Introduction}
+
+This document aims at presenting the work achieved for project Elasto$\Phi$ during the CEMRACS summer school  
+that took place at the Centre de Rencontres Mathématiques (CIRM) at Luminy from  July the 24th to 
+August the 25th, 2016. This project originated from mathematical challenges encountered by IFP Energies Nouvelles (IFPEN)
+that was interested in solving an elastostatic problem in an infinite homogeneous background medium containing crack 
+network with highly complex geometrical structure, see the pictures below. 
+
+\begin{figure}[h!]
+%\centerline{\includegraphics[width=0.4\linewidth]{../images/fig1.pdf}}
+\end{figure}
+
+
+\noindent 
+This problem was reformulated as boundary integral equation posed at the surface of cracks, and 
+discretized by means of Galerkin procedure based on piecewise constant functions, which is commonly known as 
+Boundary Element Method (BEM). The fully non-local structure of boundary integral operators leads to  
+densly populated matrices. As a consequence if the matrix of the problem is of size $N$, 
+then any matrix-vector product (which is the most elementary building block of any iterative linear solver)
+requires at least $\mathcal{O}(N^{2})$ operations.
+
+\quad\\
+As in most industrial applications, for the problems considered by IFPEN this situation is not acceptable: 
+computational complexity of $N^{2}$ makes it impossible to perform a matrix-vector product for $N$ larger than
+say $10^{6}$: this would be too costly in terms of time and memory storage. At the same time, the  applications 
+considered by IFPEN typically require $N$ to be of this order.
+
+\quad\\
+To deal with this difficulty, IFPEN developped  an heuristic method consisting in forcing coefficients of the 
+BEM matrix to zero whenever this coefficient corresponds to the interaction between sufficiently distant points 
+of the crack network. With this procedure, the matrix of the problem is approximated by a sparsified matrix that 
+allows matrix-vector products with $\mathcal{O}(N)$ complexity. But this strategy also induce substantial consistency 
+error: measured in Frobenius norm, the perturbation on the matrix is typically  40\% large.
+
+\quad\\
+On the other hand, current literature on boundary integral equation nowadays offers a panel of refined 
+complexity reduction techniques: fast multipole methods, hierarchical matrix strategies, and the like.   
+
+
+
+
+
+
+
+
+
+
+
+
