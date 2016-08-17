@@ -45,15 +45,15 @@ int main(int argc, char* argv[]){
 	
 	// Load the inputs
 	string inputname = argv[1];
-	Param Parametres(inputname);
+	LoadParamIO(inputname);
+	LoadParam(inputname);
  
 	cout<<"############# Inputs #############"<<endl;
-	cout<<"Eta : "+NbrToStr(Parametres.eta)<<endl;
-	cout<<"Epsilon : "+NbrToStr(Parametres.epsilon)<<endl;
-	cout<<"Data path : "+Parametres.datapath<<endl;
-	cout<<"Output path : "+Parametres.outputpath<<endl;
-	cout<<"Mesh name : "+Parametres.meshname<<endl;
-	cout<<"Matrix name : "+Parametres.matrixname<<endl;
+	cout<<"Eta : "+NbrToStr(GetEta())<<endl;
+	cout<<"Epsilon : "+NbrToStr(GetEpsilon())<<endl;
+	cout<<"Output path : "+GetOutputPath()<<endl;
+	cout<<"Mesh path : "+GetMeshName()<<endl;
+	cout<<"Matrix path : "+GetMatrixName()<<endl;
 	cout<<"##################################"<<endl;
  
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -63,8 +63,8 @@ int main(int argc, char* argv[]){
 	vectR3   x;
 	Matrix   A;
 	tic();
-	LoadMatrix((Parametres.datapath+"/"+Parametres.matrixname).c_str(),A);
-	LoadPoints((Parametres.datapath+"/"+Parametres.meshname).c_str(),x,r);
+	LoadMatrix((GetMatrixPath()).c_str(),A);
+	LoadPoints((GetMeshPath()).c_str(),x,r);
 	vectInt tab(nb_rows(A));
 	for (int j=0;j<x.size();j++){
 		tab[3*j]  = j;
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]){
 	//////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////    Create Output 	//////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
-	Output(B, "output_local_comp_"+NbrToStr(Parametres.eta)+"_"+NbrToStr(Parametres.epsilon)+"_"+Parametres.matrixname); // to visualize the compression of the matrix
+	Output(B, "output_local_comp_"+NbrToStr(GetEta())+"_"+NbrToStr(GetEpsilon())+"_"+GetMatrixName()); // to visualize the compression of the matrix
 	toc();
 	
 }

@@ -73,9 +73,8 @@ void ExportMEDIT(string inputname, string outputname){
 	infile.close();
 	
 	// Ecriture fichier de sortie
-	Parametres Parametres;
 	ofstream outfile;
-	outfile.open((Parametres.outputpath+"/"+outputname).c_str());
+	outfile.open((GetOutputPath()+"/"+outputname).c_str());
 	outfile << "MeshVersionFormatted 1\n";
 	outfile << "Dimension 3\n";
 	outfile << "Vertices\n";
@@ -182,9 +181,8 @@ void ExportGMSH(string inputname, string outputname){
 	
 	
 	// Ecriture fichier de sortie
-	Parametres Parametres;
 	ofstream outfile;
-	outfile.open((Parametres.outputpath+"/"+outputname).c_str());
+	outfile.open((GetOutputPath()+"/"+outputname).c_str());
 	outfile << "$MeshFormat\n";
 	outfile << "2.2 0 8\n";
 	outfile << "$EndMeshFormat\n";

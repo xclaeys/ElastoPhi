@@ -84,7 +84,7 @@ public:
 			rank = 0; // approximate with a zero matrix
 		}
 		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
-			rank=-1;
+			rank=-5;
 		}
 		else{
 			vectCplx r(nc),c(nr);
@@ -144,7 +144,7 @@ public:
 					break;
 				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
 					if (reqrank <0){ // On a pas fixé le rang
-						rank=-1;
+						rank=-5;
 					}
 					break;
 				}
@@ -208,7 +208,7 @@ public:
 //		if(reqrank == 0)
 //			rank = 0; // approximate with a zero matrix
 //		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
-//			rank=-1;
+//			rank=-5;
 //		} else{
 //			vectCplx r(nc),c(nr);
 //			
@@ -270,7 +270,7 @@ public:
 //					break;
 //				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
 //					if (reqrank <0){ // On a pas fixé le rang
-//						rank=-1;
+//						rank=-5;
 //					}
 //					break;
 //				}
@@ -335,8 +335,9 @@ public:
 			u[j] = m.u[j]; v[j] = m.v[j];}
 	}
 	
+    // 1- !!!
 	friend Real CompressionRate(const LowRankMatrix& m){
-		return m.rank*( 1./Real(m.nr) + 1./Real(m.nc) );
+		return (1 - ( m.rank*( 1./Real(m.nr) + 1./Real(m.nc)) ));
 	}
 	
 	//	void Append(const vectCplx& new_u, const vectCplx& new_v){
@@ -493,8 +494,9 @@ public:
 			u[j] = m.u[j]; v[j] = m.v[j];}
 	}
 	
+    // 1- !!!
 	friend Real CompressionRate(const LowRankMatrixSVD& m){
-		return m.rank*( 1./Real(m.nr) + 1./Real(m.nc) );
+		return (1 - ( m.rank*( 1./Real(m.nr) + 1./Real(m.nc)) ));
 	}
 	
 	//	void Append(const vectCplx& new_u, const vectCplx& new_v){

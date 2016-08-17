@@ -49,7 +49,7 @@ void HMatrix::BuildBlockTree(const Cluster& t, const Cluster& s, int reqrank){
 		const vectInt& J = num_(s);
 		SubMatrix submat = SubMatrix(mat,I,J);
 		LowRankMatrix lrm(submat,I,J,t,s,reqrank);
-		if(rank_of(lrm)!=-1){
+		if(rank_of(lrm)!=-5){
 			FarFieldMat.push_back(lrm);
 			return;
 		}
@@ -109,7 +109,7 @@ mat(mat0), xt(xt0), xs(xt0), tabt(tabt0), tabs(tabt0) {
 	
 }
 
-
+// 1- !!!
 Real CompressionRate(const HMatrix& hmat){
 	
 	Real comp = 0.;
@@ -130,7 +130,7 @@ Real CompressionRate(const HMatrix& hmat){
 		comp += nr*nc/size;
 	}
 	
-	return comp;
+	return 1-comp;
 	
 }
 
