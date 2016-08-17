@@ -84,7 +84,7 @@ public:
 			rank = 0; // approximate with a zero matrix
 		}
 		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
-			rank=-1;
+			rank=-5;
 		}
 		else{
 			vectCplx r(nc),c(nr);
@@ -144,7 +144,7 @@ public:
 					break;
 				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
 					if (reqrank <0){ // On a pas fixé le rang
-						rank=-1;
+						rank=-5;
 					}
 					break;
 				}
@@ -208,7 +208,7 @@ public:
 //		if(reqrank == 0)
 //			rank = 0; // approximate with a zero matrix
 //		else if ( (nr+nc)>=(nr*nc) ){ // On ne peut meme pas faire un rang
-//			rank=-1;
+//			rank=-5;
 //		} else{
 //			vectCplx r(nc),c(nr);
 //			
@@ -270,7 +270,7 @@ public:
 //					break;
 //				if ( (q+1)*(nr +nc) > (nr*nc) ){ // Cela ne vaut pas le coup de faire un rang en plus
 //					if (reqrank <0){ // On a pas fixé le rang
-//						rank=-1;
+//						rank=-5;
 //					}
 //					break;
 //				}
