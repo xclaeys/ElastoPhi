@@ -21,9 +21,9 @@
 using namespace std;
 
 /**************************************************************************//**
-* It converts the mesh file from the format given by Ibtihel to gmsh format (.msh)
-* and to medit format (.mesh) for visualization of the mesh
-* (To be run it requires the input file with the desidered parameters)
+* It reads the mesh file from the format given by Ibtihel to gmsh format (.msh)
+* and adds a tag to color the different clusters at level 1, 2 and 3 of the 
+* cluster tree.
  *****************************************************************************/
 
 int main(int argc, char* argv[]){
