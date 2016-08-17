@@ -35,6 +35,7 @@ void LoadMatrix(const char* filename, Matrix& m){
 	ifstream file; file.open(filename);
 	if(!file.good()){
 		cout << "LoadMatrix in loading.hpp: error opening the matrix file" << endl;
+        cout << filename << endl;
 		abort();}
 	
 	// Lecture parametres
@@ -91,7 +92,8 @@ void LoadSpMatrix(const char* filename, SpMatrix& m){
 	// Ouverture fichier
 	ifstream file; file.open(filename);
 	if(!file.good()){
-		cout << "LoadMatrix in loading.hpp: error opening the matrix file" << endl;
+		cout << "LoadSpMatrix in loading.hpp: error opening the matrix file" << endl;
+        cout << filename << endl;
 		abort();}
 	
 	// Lecture nombre de lignes et de colonnes
