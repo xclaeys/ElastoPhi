@@ -20,6 +20,13 @@
 
 using namespace std;
 
+/**************************************************************************//**
+* It creates two clusters of points contained in two unit balls. Then it computes
+* interactions \f$ 1/ || x-y|| \f$ between the two clusters for different distances
+* between the two balls. And finally, it computes the error of
+* the associated Low Rank matrix using ACA and SVD for the different distances
+*****************************************************************************/
+
 int main(int argc, char* argv[]){
 	
 	
@@ -83,7 +90,7 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
-	double dist=1;
+	double dist=0;
 	for (int j=0;j<10;j++){
 		dist +=0.5;
 		for(int j=0; j<nr; j++){
@@ -98,7 +105,6 @@ int main(int argc, char* argv[]){
 		
 		SubMatrix subm(A,Ir,Ic); // A viewed as a SubMatrix
 		Cluster t(p1,r1,tab1); Cluster s(p2,r2,tab2);
-		cout<<rad_(t)<<" "<<rad_(s)<<endl;
 		for (int i=1;i<50;i++){
 		
 			tic();

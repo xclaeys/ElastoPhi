@@ -25,8 +25,6 @@ using namespace std;
 * It builds the hierarchical matrix with compressed and dense blocks,
 * computes the consistency error for a matrix vector product and
 * the relative error in Frobenius norm with respect to the dense matrix.
-* It also produces an output file to visualize the compression of the matrix
-* (use graphes_output_local_compression.py in postprocessing folder).
 *
 * (To be run it requires the input file with the desidered parameters)
 *****************************************************************************/
@@ -111,13 +109,5 @@ int main(int argc, char* argv[]){
 	Real froberrH = sqrt(squared_absolute_error(B,A))/normA;
 	cout << "Relative error in Frobenius norm: " << froberrH << endl;
 
-	//////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////      Output 	//////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////
-	
-	tic();
-	Output(B, "output_local_comp_"+NbrToStr(GetEta())+"_"+NbrToStr(GetEpsilon())+"_"+GetMatrixName()); // to visualize the compression of the matrix
-	toc();
-	
 }
 

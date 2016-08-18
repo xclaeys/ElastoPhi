@@ -21,11 +21,12 @@
 using namespace std;
 
 /**************************************************************************//**
- * It builds the hierarchical matrix with compressed and dense blocks and
- * computes the consistency error for the matrix vector product.
- * It also produces an output file to visualize the compression of the matrix. TO BE WRITTEN
- * (To be run it requires the input file with the desidered parameters)
- *****************************************************************************/
+* It builds the hierarchical matrix with compressed and dense blocks,
+* and produces an output file to visualize the compression of the matrix
+* (use graphes_output_local_compression.py in postprocessing folder).
+*
+* (To be run it requires the input file with the desidered parameters)
+*****************************************************************************/
 
 int main(int argc, char* argv[]){
 	
