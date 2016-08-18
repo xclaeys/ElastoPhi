@@ -137,7 +137,8 @@ Real CompressionRate(const HMatrix& hmat){
 }
 
 void Output(const HMatrix& hmat, string filename){
-	string path=GetOutputPath()+"/"+filename;
+	//string path=GetOutputPath()+"/"+filename;
+    string path=filename;
 	
 	ofstream outputfile(path.c_str());
 	

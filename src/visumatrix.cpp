@@ -77,10 +77,18 @@ int main(int argc, char* argv[]){
 	HMatrix B(A,x,r,tab);
 	toc();
 	tic();
+    
 	//////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////    Create Output 	//////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
-	Output(B, "output_local_comp_"+NbrToStr(GetEta())+"_"+NbrToStr(GetEpsilon())+"_"+GetMatrixName()); // to visualize the compression of the matrix
+    
+    //Output(B, GetOutputPath()+"/output_local_comp_"+NbrToStr(GetEta())+"_"+NbrToStr(GetEpsilon())+"_"+GetMatrixName()); // to visualize the compression of the matrix
+    
+    string outputSubfolderpathname = GetOutputPath()+"/output_"+split(GetMatrixName(),'.').at(0);
+    system(("mkdir "+outputSubfolderpathname).c_str()); // create the outputh subdirectory
+    
+    Output(B, outputSubfolderpathname+"/output_local_comp_"+NbrToStr(GetEta())+"_"+NbrToStr(GetEpsilon())+"_"+GetMatrixName()); // to visualize the compression of the matrix
+    
 	toc();
 	
 }
