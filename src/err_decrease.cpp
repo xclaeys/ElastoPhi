@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
-	double dist=1;
+	double dist=0;
 	for (int j=0;j<10;j++){
 		dist +=0.5;
 		for(int j=0; j<nr; j++){
@@ -105,7 +105,6 @@ int main(int argc, char* argv[]){
 		
 		SubMatrix subm(A,Ir,Ic); // A viewed as a SubMatrix
 		Cluster t(p1,r1,tab1); Cluster s(p2,r2,tab2);
-		cout<<rad_(t)<<" "<<rad_(s)<<endl;
 		for (int i=1;i<50;i++){
 		
 			tic();
