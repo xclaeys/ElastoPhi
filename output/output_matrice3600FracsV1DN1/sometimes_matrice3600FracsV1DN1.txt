@@ -1,0 +1,13 @@
+matrice3600FracsV1DN1
+
+Time in seconds
+
+read dense matrix 136 s
+
+max with eta=0.1
+build hmatrix 10 s
+mvprod 3 s
+
+max with eta=10
+build hmatrix 5 s
+mvprod 0.27 s
