@@ -12,12 +12,24 @@ Files of the CEMRACS project ElastoPhi
 
 Note : -DCMAKE_BUILD_TYPE=debug or release
 
-## Visualization
-To use the executable created by visualization.cpp, give an input file with:
-- Mesh_name : ... 
-- Matrix_name : ...
-- Output_path : ...
-- Data_path
+## Input files
+Some executables require an input file with:
+Eta : ...
+Epsilon : ...
+Data_path : ... 
+Output_path : ...
+Mesh_name : ...
+Matrix_name : ...
+Some executables don't necessarily require all these parameters. 
+
+Example of input file:
+Eta : 1
+Epsilon : 0.9
+Data_path : data 
+Output_path : output
+Mesh_name : maillage1994Fracs.txt
+Matrix_name : matrice1994Fracs.txt
+
 
 ## Postprocessing
 To generate the plots of the multi-compress results, in postprocessing directory do:
