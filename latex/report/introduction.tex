@@ -7,7 +7,8 @@ for the numerical solution of an elastostatic problem in an infinite homogeneous
 networks with highly complex geometrical structure, see the pictures below. 
 
 \begin{figure}[h!]
-\centerline{\includegraphics[width=0.4\linewidth]{../images/fig1.pdf}}
+%\centerline{\includegraphics[width=0.4\linewidth]{../images/fig1.pdf}}
+\vspace{5cm}
 \end{figure}
 
 
@@ -26,7 +27,7 @@ say $10^{6}$: this would be too costly in terms of time and memory storage. At t
 considered by IFPEN typically require $N$ to be of this order.
 
 \quad\\
-To deal with this difficulty, IFPEN developped  an heuristic method consisting in forcing coefficients of the 
+To deal with this difficulty, IFPEN developped a heuristic method consisting in forcing coefficients of the 
 BEM matrix to zero whenever this coefficient corresponds to the interaction between sufficiently distant points 
 of the crack network. With this procedure, the matrix of the problem is approximated by a sparsified matrix that 
 allows matrix-vector products with $\mathcal{O}(N)$ complexity. But this strategy also induce substantial consistency 
@@ -129,9 +130,9 @@ $$
 for some constant $C>0$ independent of $k$. Moreover, which is probably the most interesting feature of this method, 
 the cost of computing $\widetilde{\mA}_{k}$ is $\mathcal{O}(kn)$. This cost is thus quasi-linear provided that the singular 
 values  decrease exponentially. The detailed analysis of the ACA algorithm is out of the scope of this report. We only 
-give the algorithm it self.
+give the algorithm it self.\\
 
-\begin{algorithm}
+\begin{algorithm}\label{AlgoACA}
   \caption{Partially Pivoted ACA}
   Initialise $j_{*}$\\
   $r=0$\\
@@ -155,10 +156,55 @@ give the algorithm it self.
   \}
 \end{algorithm}
 
+\noindent 
+In our pseudo-code notation, for any vector $\bfw\in \C^{n}$, the number $\bfw(j)$  refers to the $j$th entry of $\bfw$. 
+Likewise for $\mA\in \C^{n\times n}$, the number $\mA(:,k)$ refers to the $k$th column, and $\mA(j,:)$ refers to the $j$th
+row.
+
+\quad\\
+At the beginning of Algorithm \ref{AlgoACA}, there is an initialisation step for the choice of the index of the first $j_{*}$. 
+For this initialisation, one could take $j_{*} = 1$. Other choices may speed up the convergence of the algorithm. Such heuristics 
+are problem dependent. Algorithm \ref{AlgoACA} also involves a stopping criterion based on an error estimator. During the Elasto$\Phi$ 
+project, we took 
+$$
+\begin{array}{l}
+\textbf{Stopping criterion:}\\ 
+\vert \bfu_{r}\vert_{2}\vert \bfv_{r}\vert_{2}\leq  \epsilon\Vert \sum_{\ell = 1}^{r}\bfu_{\ell}\cdot\bfv_{\ell}^{T}\Vert_{\mrm{F}}\\[10pt]
+\textrm{where}\quad \Vert \sum_{\ell = 1}^{r}\bfu_{\ell}\cdot\bfv_{\ell}^{T}\Vert_{\mrm{F}}^{2} = \sum_{j=1}^{r}\sum_{k=1}^{r}
+(\overline{\bfu}_{j}^{T}\bfu_{k})(\overline{\bfv}_{k}^{T}\bfv_{j})
+\end{array}
+$$
+
+\section{The matrix under consideration}
+
+We now shall give some more detail about the matrices under consideration during the Elasto$\Phi$ project. 
+As previously mentionned, these matrices stemmed from a Galerkin discretization of a boundary integral 
+equation. Assume that $\Gamma$ is a surface embedded in $\R^{3}$ that is the union of a collection 
+$(\tau_{j})_{j=1}^{N}$ of flat triangles and quadrangles
+$$
+\Gamma = \mathop{\cup}_{j=1}^{N}\tau_{j}\;,\quad\quad \tau_{j} = \textrm{triangle or quadrangle}.
+$$
+The elements $\tau_{j}$ might very intersect each other, which makes $\Gamma$ a potentially very rough surface.
+Let us briefly describe the bilinear form associated to the variational formulation under consideration for 
+the Galerkinn discretisation. We need to introduce the Green kernel of the problem that is given by the explicit formula 
+$$
+\mathscr{G}(\bx) = \frac{1}{8\pi E}\frac{1+\rho}{1-\rho}\Big( \frac{3-4\rho}{\vert \bx\vert}\mrm{Id}  +\frac{\bx\cdot\bx^{T}}{\vert \bx\vert^{3}}\Big)
+$$
+It is fundamental to observe, and to keep in mind, that this function is singular at $\bx = 0$. In this expression, $\rho$ 
+refers to the Poisson ratio, and $E$ is the elasticity module. Next, for each element $\tau_{j}$, let  $\bn_{j}$ refer to a vector field 
+normal at $\tau_{j}$ , and for any vector field $\bu:\Gamma\to \R^{3}$, define the trace operator
+$$
+\begin{array}{l}
+\dsp{ \mathscr{T}_{j}(\bu) = \lambda\bn_{j}\div(\bu)\vert_{\tau_{j}}+2\mu\,(\bn_{j}\cdot\nabla)\bu\vert_{\tau_{j}} + \mu\bn_{j}\times\curl(\bu)\vert_{\tau_{j}} }\\[10pt]
+\dsp{ \lambda = \frac{E\rho}{(1+\mu)(1-2\rho)},\quad \mu = \frac{E}{2(1+\rho)}}
+\end{array}
+$$
 
 
-
-
-
-
- 
+$$
+\begin{array}{l}
+\dsp{ a(\bu,\bv) = \sum_{j=1}^{N}\sum_{k=1}^{N}\int_{\tau_{j}\times\tau_{k}}\frac{\mu}{4\pi\vert\bx-\by\vert}
+\sum_{\ell=1,2,3}\mathscr{R}_{\ell}(\bu)^{T}\mathscr{R}_{\ell}(\bv)}\\
+\textcolor{white}{ a(\bu,\bv) = \sum_{j=1}^{N}\sum_{k=1}^{N}\int_{\tau_{j}\times\tau_{k}} }
+\end{array}
+$$ 
