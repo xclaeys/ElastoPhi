@@ -40,3 +40,5 @@ input*.txt
 *converted-to.pdf
 *tex.backup
 *.tdo
+*.nav
+*.snm
