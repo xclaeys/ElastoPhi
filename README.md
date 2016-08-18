@@ -13,7 +13,7 @@ Files of the CEMRACS project ElastoPhi
 Note : -DCMAKE_BUILD_TYPE=debug or release
 
 ## Input files
-Some executables require an input file with:
+Some executables require an input file with:  
 Eta : ...  
 Epsilon : ...  
 Data_path : ...  
@@ -22,7 +22,7 @@ Mesh_name : ...
 Matrix_name : ...  
 Some executables don't necessarily require all these parameters. 
 
-Example of input file:
+Example of input file:  
 Eta : 1  
 Epsilon : 0.9  
 Data_path : data  
