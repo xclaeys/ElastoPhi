@@ -20,18 +20,25 @@ class Figure:
 	- ylim = [int,int]"""
 
 
-	def __init__(self,id=0,titre=None,xlabel=None,ylabel=None,xticks=None,yticks=None,format="eps",xlim=None,ylim=None,xscale=None,yscale=None,axis=""): # Constructeur
+	def __init__(self,id=0,titre=None,xlabel=None,ylabel=None,xticks=None,yticks=None
+			,format="eps",xlim=None,ylim=None,xscale=None,yscale=None,axis=""): # Constructeur
 		self.titre=titre
+
 		self.xlabel=xlabel
 		self.ylabel=ylabel
+
 		self.xticks=xticks
 		self.yticks=yticks
+
 		self.id=id
 		self.format=format
+
 		self.xlim=xlim
 		self.ylim=ylim
+
 		self.xscale=xscale
 		self.yscale=yscale
+
 		self.axis=axis
 
 	def __str__(self):
@@ -84,6 +91,13 @@ class Figure:
 		if not self.axis=="":
 			plt.axis(self.axis)
 
+	def Annotations(self, annotation_text=None, annotation_pos=None, annotation_opt=None,
+					annotation_color=None):
+		plt.figure(self.id)
+		if not annotation_text==None:
+			for label, x, y in zip(annotation_text, annotation_pos[0], annotation_pos[1]):
+				plt.annotate(label, xy= (x, y) ,xycoords='data',
+            	xytext=annotation_opt, textcoords='offset points',color=annotation_color)
 
 	def Noaxes(self):
 		frame1.axes.get_xaxis().set_visible(False)
@@ -214,3 +228,59 @@ class Graphe2D(Figure):
 		plt.imshow(self.surface_masquee,interpolation=self.interpolation,origin=self.origin,cmap=self.cmap,extent=self.donnee.xextent)
 		self.OptionsFigure()
 		plt.colorbar()
+
+
+#----------------------------------------------------------------------------------------#
+#----------------------------------------------------------------------------------------#
+
+
+class ScatterPlot(Figure):
+	"""Classe définissant un graphe caractérisé par :
+	- titre : string
+	- xlabel : dict[label,fontsize]
+	- ylabel : dict[label,fontsize]
+	- des ticks	: fontsize
+	- id : int
+	- format : string
+	- xlim = [int,int]
+	- ylim = [int,int]
+	- donnee : liste de Courbes
+	- legende : dict[loc,bbox_to_anchor,ncol,fontsize]
+	"""
+
+	def __init__(self,id=0,titre=None,xlabel=None,ylabel=None,xticks=None,yticks=None,
+						format="eps",xlim=None,ylim=None,xscale=None,yscale=None,axis="",legende=None): # Constructeur
+		Figure.__init__(self,id,titre,xlabel,ylabel,xticks,yticks,format,xlim,ylim,xscale,yscale,axis)
+		self.legende=legende
+		self.donnee=[]
+
+	# A appeler après avoir tracé les courbes
+	def OptionsFigure(self):
+		Figure.OptionsFigure(self)
+
+	def AjoutNuage(self,nuage):
+		self.donnee.append(nuage)
+		# if courbe.nom==None:
+		# 	courbe.nom="Courbe n°"+len(self.donnee)
+		# if courbe.line==None:
+		# 	#  linestyle '-' | '--' | '-.' | ':' | 'None' | ' ' | ''
+		# 	#  linecolor b g r c m y k w
+		# 	courbe.line={"linestyle":"s","linewidth":2,"linecolor":"b"}
+		# if courbe.marker==None:
+		# 	# fillstyle ('full', 'left', 'right', 'bottom', 'top', 'none')
+		# 	# markerstyle {0: 'tickleft', 1: 'tickright', 2: 'tickup', 3: 'tickdown', ',': 'pixel', '8': 'octagon', 6: 'caretup', '<': 'triangle_left', '*': 'star', 's': 'square', '1': 'tri_down', 'v': 'triangle_down', 'o': 'circle', '2': 'tri_up', '^': 'triangle_up', '.': 'point', 7: 'caretdown', '4': 'tri_right', '3': 'tri_left', ' ': 'nothing', 'h': 'hexagon1', 5: 'caretright', 'd': 'thin_diamond', 'H': 'hexagon2', '|': 'vline', 'x': 'x', '>': 'triangle_right', 'p': 'pentagon', '_': 'hline', 'D': 'diamond', None: 'nothing', '': 'nothing', '+': 'plus', 'None': 'nothing', 4: 'caretleft'}
+		# 	courbe.marker={"markerstyle":".","markersize":15,"fillstyle":"full"}
+
+	def TraceScatterPlot(self):
+		plt.figure(self.id)
+
+		legends=[]
+		for elt in self.donnee:
+			plt.scatter(elt.abscisse,elt.ordonnee,marker=elt.marker,s=elt.shape,c=elt.color)
+			legends.append(elt.nom)
+
+		if self.legende!=None:
+			plt.legend(legends,loc=self.legende["loc"],bbox_to_anchor=self.legende["bbox_to_anchor"],ncol=self.legende["ncol"],
+						fancybox=True, shadow=False,fontsize=self.legende["fontsize"],scatterpoints=1,title=r"values of $\varepsilon$ with")
+
+		self.OptionsFigure()

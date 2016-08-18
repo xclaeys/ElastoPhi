@@ -3,7 +3,7 @@ import Vue.Figure as figure
 import Vue.Donnee as donnee
 import Lecture.FonctionLectureClassique as classique
 import numpy as np
-import sys 
+import sys
 
 ########################################################################################
 #-------------------------------          Input            -----------------------------
@@ -53,28 +53,28 @@ ymax_efr =0
 
 offset = 9
 for i in range(0,7):
-	Eta.append(eta[compt+0:compt+offset]) 
+	Eta.append(eta[compt+0:compt+offset])
 	Eps.append(eps[compt+0])
 	Com.append(com[compt+0:compt+offset])
 	Emv.append(emv[compt+0:compt+offset])
 	Efr.append(efr[compt+0:compt+offset])
-	
+
 	ymax_com=max(ymax_com,max(com[compt+0:compt+offset]))
 	ymax_emv=max(ymax_emv,max(emv[compt+0:compt+offset]))
 	ymax_efr=max(ymax_efr,max(efr[compt+0:compt+offset]))
-	
+
 	compt+=offset
-	
-	
+
+
 
 for i in range(0,len(Eps)):
 	line={"linestyle":"--","linewidth":3,"linecolor":colors[ncolor]}
 	marker={"markerstyle":markers[1],"markersize":10,"fillstyle":"full"}
-	
+
 	Courbes_com.append(donnee.Ligne(nom=r"$\varepsilon=$"+str(Eps[i]),ordonnee=Com[i],abscisse=Eta[0],line=line,marker=marker))
 	Courbes_emv.append(donnee.Ligne(nom=r"$\varepsilon=$"+str(Eps[i]),ordonnee=Emv[i],abscisse=Eta[0],line=line,marker=marker))
 	Courbes_efr.append(donnee.Ligne(nom=r"$\varepsilon=$"+str(Eps[i]),ordonnee=Efr[i],abscisse=Eta[0],line=line,marker=marker))
-		
+
 	ncolor+=1
 	nmarker+=1
 
@@ -99,13 +99,13 @@ Figure_efr=figure.Graphe1D(id=2,legende=legende,xlim=xlim,ylim=ylim_efr,xlabel=x
 
 for courbe in Courbes_com:
 	Figure_com.AjoutCourbe(courbe)
-	
+
 for courbe in Courbes_emv:
 	Figure_emv.AjoutCourbe(courbe)
-	
+
 for courbe in Courbes_efr:
 	Figure_efr.AjoutCourbe(courbe)
-	
+
 Figure_emv.TraceGraphe1D()
 Figure_emv.EnregistreFigure(outputname_emv)
 
@@ -118,5 +118,3 @@ Figure_efr.EnregistreFigure(outputname_efr)
 Figure_com.FermeFigure()
 Figure_emv.FermeFigure()
 Figure_efr.FermeFigure()
-
-
