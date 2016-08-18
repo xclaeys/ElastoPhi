@@ -1,0 +1,105 @@
+############# Inputs #############
+Eta : 0.5
+Epsilon : 1
+Output path : ../../../output
+Mesh path : ../../../data/maillage3600FracsV1DN1.txt
+Matrix path : ../../../data/matrice3600FracsV1DN1.txt
+##################################
+Time elapsed: 135.135
+Time elapsed: 9.36455
+norm(u) 89511.8
+norm(ua) 1.06011e+15
+norm(ua-ub) 3.93628e+11
+Matrix-vector product relative error : 0.00037131
+Compression rate: 0.658432
+Frobenius norm of the dense matrix: 4.87948e+06
+Relative error in Frobenius norm: 0.00538626
+Program ended with exit code: 0
+
+
+############# Inputs #############
+Eta : 0.5
+Epsilon : 1
+Output path : ../../../output
+Mesh path : ../../../data/maillage2700FracsV1D1.txt
+Matrix path : ../../../data/matrice2700FracsV1D1.txt
+##################################
+Time elapsed: 78.2116
+Time elapsed: 4.47416
+norm(u) 67443.2
+norm(ua) 4.13511e+14
+norm(ua-ub) 2.40646e+11
+Matrix-vector product relative error : 0.000581957
+Compression rate: 0.665854
+Frobenius norm of the dense matrix: 3.79008e+06
+Relative error in Frobenius norm: 0.00560646
+Program ended with exit code: 0
+
+
+############# Inputs #############
+Eta : 0.5
+Epsilon : 1
+Output path : ../../../output
+Mesh path : ../../../data/maillage1994Fracs.txt
+Matrix path : ../../../data/matrice1994Fracs.txt
+##################################
+Time elapsed: 39.0258
+Time elapsed: 4.79958
+norm(u) 49829.3
+norm(ua) 6.58341e+16
+norm(ua-ub) 2.21842e+13
+norm(uasp) 5.24871e+16
+Matrix-vector product relative error : 0.000336971
+Compression rate: 0.49076
+Frobenius norm of the dense matrix: 9.00353e+07
+Relative error in Frobenius norm: 0.00550579
+Program ended with exit code: 0
+
+
+############# Inputs #############
+Eta : 0.5
+Epsilon : 1
+Output path : ../../../output
+Mesh path : ../../../data/maillage3600FracsV1DN1.txt
+Matrix path : ../../../data/matrice3600FracsV1DN1.txt
+##################################
+Time elapsed: 2.15828
+Time elapsed: 135.013
+Time elapsed: 9.54538
+norm(u) 89511.8
+norm(ua) 1.06011e+15
+norm(ua-ub) 3.93628e+11
+Matrix-vector product relative error : 0.00037131
+Compression rate: 0.658432
+Frobenius norm of the dense matrix: 4.87948e+06
+Relative error in Frobenius norm: 0.00538626
+Time elapsed: 0.064981
+Matrix-vector product relative error with Sparse matrix: 285.357
+norm(uasp) 3.38551e+17
+norm(ua-uasp) 3.02509e+17
+Program ended with exit code: 0
+
+
+############# Inputs #############
+Output path : ../../../output
+Mesh path : ../../../data/maillage3600FracsV3DN3.txt
+Matrix path : ../../../data/matrice3600FracsV3DN3.txt
+##################################
+Frobenius norm of the dense matrix: 6.06094e+07
+norm(u) 89511.8
+norm(ua) 7.76751e+16
+norm(uasp) 5.96501e+16
+norm(ua-uasp) 4.12941e+15
+Program ended with exit code: 0
+
+
+############# Inputs #############
+Output path : ../../../output
+Mesh path : ../../../data/maillage5364FracsTriangles.txt
+Matrix path : ../../../data/matrice5364FracsTriangles.txt
+##################################
+norm(u) 133303
+norm(ua) 1.61468e+15
+norm(uasp) 3.71686e+15
+norm(ua-uasp) 2.34095e+15
+Program ended with exit code: 0
