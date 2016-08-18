@@ -20,6 +20,20 @@
 
 using namespace std;
 
+/**************************************************************************//**
+* It builds the hierarchical matrix with compressed and dense blocks
+* for different values of the parameters eta (of the admissibility test) and
+* epsilon (of the ACA compression).
+* It computes the relative error for a matrix-vector product and
+* the relative error in Frobenius norm with respect to the dense matrix,
+* for the various hierarchical matrix AND for the sparse matrix given by Ibtihel.
+* In the output file for the hierarchical matrices, each line displays the values of eta, epsilon,
+* the compression factor, the relative matrix-vector product error,
+* the relative error in Frobenius norm, the time (in seconds)
+* to build the HMatrix and the time for the matrix-vector product.
+* (To be run it requires the input file with the desidered mesh/matrix names and paths)
+*****************************************************************************/
+
 int main(int argc, char* argv[]){
 	
 	
