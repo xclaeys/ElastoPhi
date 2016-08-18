@@ -46,6 +46,8 @@ int main(int argc, char* argv[]){
 	cout<<"Matrix path : "+GetMatrixPath()<<endl;
 	cout<<"##################################"<<endl;
 	
+    string outputSubfolderpathname = GetOutputPath()+"/output_"+split(GetMatrixName(),'.').at(0);
+    system(("mkdir "+outputSubfolderpathname).c_str()); // create the outputh subdirectory
 	
 	vector<double> times2;
 	
@@ -92,13 +94,15 @@ int main(int argc, char* argv[]){
 	}
 	
 	// Values of eta and epsilon
-	const int neta = 1;
-	double eta [neta] = {5e-1};
-	const int nepsilon = 3;
-	double epsilon[nepsilon] = {-1, 1e0, 1e-1};
+	const int neta = 3;
+	double eta [neta] = {1e1, 1e0, 1e-1};
+    const int nepsilon = 6;
+    double epsilon[nepsilon] = {-1, 1e0, 9e-1, 5e-1, 1e-1, 1e-2};
+    //{-1, 1e0, 7e-1, 5e-1, 3e-1, 1e-1, 7e-2, 5e-2, 3e-2, 1e-2, 9e-1};
 	
 	// for output file
-	string filename=GetOutputPath()+"/output_compression_16_08_2016"+GetMatrixName();
+	//string filename=GetOutputPath()+"/output_compression_18_08_2016"+GetMatrixName();
+    string filename=outputSubfolderpathname+"/output_compression_18_08_2016"+GetMatrixName();
 	ofstream output(filename.c_str());
 	if (!output){
 		cerr<<"Output file cannot be created"<<endl;
@@ -106,13 +110,18 @@ int main(int argc, char* argv[]){
 	}
 	output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur_MvProd "<<"Erreur_Frob"<<endl;
 	
-	for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
-	{
-		cout << "iepsilon: " << iepsilon << endl;
-		
-		for(int ieta=0; ieta<neta; ieta++)
-		{
-			cout << "ieta: " << ieta << endl;
+//	for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
+//	{
+//		cout << "iepsilon: " << iepsilon << endl;
+    for(int ieta=0; ieta<neta; ieta++)
+    {
+        cout << "ieta: " << ieta << endl;
+        for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
+        {
+            cout << "iepsilon: " << iepsilon << endl;
+//		for(int ieta=0; ieta<neta; ieta++)
+//		{
+//			cout << "ieta: " << ieta << endl;
 			SetEta(eta[ieta]);
 			SetEpsilon(epsilon[iepsilon]);
 			cout<<"Eta : "+NbrToStr(GetEta())<<endl;
@@ -170,7 +179,8 @@ int main(int argc, char* argv[]){
     
     
     // for output file of sparse matrix
-    string filename2=GetOutputPath()+"/output_sparseMatrix_16_08_2016"+GetMatrixName();
+    //string filename2=GetOutputPath()+"/output_sparseMatrix_18_08_2016"+GetMatrixName();
+    string filename2=outputSubfolderpathname+"/output_sparseMatrix_18_08_2016"+GetMatrixName();
     ofstream output2(filename2.c_str());
     if (!output2){
         cerr<<"Output file cannot be created"<<endl;
