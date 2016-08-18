@@ -1,0 +1,2 @@
+Compression Erreur_MvProd Erreur_Frob
+0.99144 0.0570311 0.164367

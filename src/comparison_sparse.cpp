@@ -49,8 +49,6 @@ int main(int argc, char* argv[]){
     string outputSubfolderpathname = GetOutputPath()+"/output_"+split(GetMatrixName(),'.').at(0);
     system(("mkdir "+outputSubfolderpathname).c_str()); // create the outputh subdirectory
 	
-	vector<double> times2;
-	
 	vectReal r;
 	vectR3   x;
 	Matrix   A;
@@ -108,7 +106,8 @@ int main(int argc, char* argv[]){
 		cerr<<"Output file cannot be created"<<endl;
 		exit(1);
 	}
-	output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur_MvProd "<<"Erreur_Frob"<<endl;
+	//output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur_MvProd "<<"Erreur_Frob"<<endl;
+    output<< "Eta "<<"Epsilon "<<"Compression "<<"Erreur_MvProd "<<"Erreur_Frob "<<"Time_hmatrix "<<"Time_MvProd"<<endl;
 	
 //	for(int iepsilon=0; iepsilon<nepsilon; iepsilon++)
 //	{
@@ -150,8 +149,8 @@ int main(int argc, char* argv[]){
 			cout << "Relative error in Frobenius norm with HMatrix: " << froberrH << endl;
 			
 			// write in output file
-			output<<GetEta()<<" "<<GetEpsilon()<<" "<<compressionH<<" "<<errH<<" "<<froberrH<<endl;
-			//cout<<Parametres.eta<<" "<<Parametres.epsilon<<" "<<compression<<" "<<errH<<" "<<froberrH<<endl;
+			//output<<GetEta()<<" "<<GetEpsilon()<<" "<<compressionH<<" "<<errH<<" "<<froberrH<<endl;
+            output<<GetEta()<<" "<<GetEpsilon()<<" "<<compressionH<<" "<<errH<<" "<<froberrH<<" "<<times[0]<<" "<<times[1]<<endl;
 		}
 	}
 	output.close();
@@ -189,5 +188,11 @@ int main(int argc, char* argv[]){
     output2<<"Compression "<<"Erreur_MvProd "<<"Erreur_Frob"<<endl;
     output2<<compressionSp<<" "<<errSp<<" "<<froberrSp<<endl;
     output2.close();
+    
+    
+    cout <<"norm(u) "<< norm(u)<< endl;
+    cout <<"norm(ua) "<< norm(ua)<< endl;
+    cout <<"norm(uasp) "<< norm(uasp)<< endl;
+    cout <<"norm(ua-uasp) "<< norm(ua-uasp)<< endl;
 	
 }
