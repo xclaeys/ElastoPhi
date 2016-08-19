@@ -6,7 +6,10 @@
 \usepackage{algorithm,algorithmic}
 \usepackage[utf8]{inputenc} 
 \usepackage[T1]{fontenc} 
-\usepackage[colorlinks]{hyperref}
+\definecolor{bleu_sombre}{rgb}{0,0,0.4}
+\definecolor{vert_sombre}{rgb}{0,0.3,0}
+\definecolor{rouge_sombre}{rgb}{0.3,0,0}
+\usepackage[colorlinks,linkcolor=bleu_sombre,citecolor=rouge_sombre,urlcolor=vert_sombre,breaklinks]{hyperref}
 
 \include{macros}
 
@@ -19,5 +22,8 @@
 \input{lowrank}
 \input{matrix}
 \input{partitionblocks}
+
+\bibliographystyle{plain} 
+\bibliography{elastophi-report.bib} 
 
 \end{document}
