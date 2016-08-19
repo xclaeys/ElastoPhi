@@ -1,0 +1,66 @@
+% !TEX spellcheck = en_US
+
+% !TEX root = elastophi-report.tex
+
+
+\section{The matrix under consideration}\label{sec:GalerkinMatrix}
+
+We now shall give some more details about the matrices under consideration during the Elasto$\Phi$ project. 
+As previously mentioned, these matrices stemmed from a Galerkin discretization of a boundary integral 
+equation. Assume that $\Gamma$ is a surface embedded in $\R^{3}$ that is the union of a collection 
+$\mathcal{T} = \{\tau_{j}\}_{j=1}^{N}$ of flat triangles and quadrangles
+$$
+\Gamma = \mathop{\bigcup}_{j=1}^{N}\tau_{j}\;,\quad\quad \tau_{j} = \textrm{triangle or quadrangle}.
+$$
+The elements $\tau_{j}$ might intersect each other, which makes $\Gamma$ a potentially very rough surface.
+Let us briefly describe the bilinear form associated with the variational formulation under consideration for 
+the Galerkin discretization. We need to introduce the Green kernel of the problem, that is given by the explicit formula 
+$$
+\mathscr{G}(\bx) = \frac{1}{8\pi E}\frac{1+\rho}{1-\rho}\biggl( \frac{3-4\rho}{\vert \bx\vert}\mrm{Id}  +\frac{\bx\cdot\bx^{T}}{\vert \bx\vert^{3}}\biggr).
+$$
+It is fundamental to observe, and to keep in mind, that this function is singular at $\bx = 0$. In this expression, $\rho$ 
+refers to the Poisson ratio, and $E$ is the elasticity module. Next, for each element $\tau$, let  $\bn_{\tau}$ refer to a vector field 
+normal to $\tau$, and for any vector field $\bu\colon\Gamma\to \R^{3}$, define the trace operator
+$$
+\begin{array}{l}
+\dsp{ \mathscr{R}_{\tau}(\bu) = \lambda\bn_{\tau}\div(\bu)+2\mu\,(\bn_{\tau}\cdot\nabla)\bu + \mu\bn_{\tau}\times\curl(\bu), }\\[10pt]
+\dsp{ \textrm{with}\quad \lambda := \frac{E\rho}{(1+\mu)(1-2\rho)},\quad \mu := \frac{E}{2(1+\rho)}}.
+\end{array}
+$$
+The variational formulation associated with the problem under consideration typically consists in finding $\bu\in \mH^{1/2}_{00}(\Gamma)^{3}$ 
+such that $a(\bu,\bv) = f(\bv)$ for all $\bv\in \mH^{1/2}_{00}(\Gamma)^{3}$, where $\mH^{1/2}_{00}(\Gamma):=\Pi_{\tau\in\mathcal{T}}\mH^{1/2}_{00}(\tau)^{3}$
+and the bilinear form is given by
+\begin{equation}\label{VariationnalFormulation}
+\begin{array}{l}
+\dsp{ a(\bu,\bv) = \sum_{\tau\in\mathcal{T}}\sum_{\tau'}\int_{\tau\times\tau'}\mathscr{R}_{\tau}^{\by}(\mathscr{R}_{\tau'}^{\bx}\mathscr{G}(\bx-\by)) \bu(\bx)\bv(\by) d\sigma(\bx) d\sigma(\by).  }
+\end{array}
+\end{equation}
+In this formula the operator $\mathscr{R}_{\tau}^{\bx}$ is the operator $\mathscr{R}_{\tau}$ applied with respect the $\bx$ variable. The operator $\mathscr{R}_{\tau'}^{\by}$ 
+is defined accordingly. Formula  (\ref{VariationnalFormulation}) is rather abstract. Another, more explicit expression of this operator can be obtained, 
+see e.g.~\cite{??}, but this is pointless for the present report. The only important thing here is that the integral kernel coming into play in this integral 
+operator is singular at $\bx = \by$ (which is possible only if $\tau\cap \tau'\neq \emptyset$), and it is regular otherwise. In particular, if $\tau$ and $\tau'$
+are distant from each other, then the operator associated with $a(\;,\;)$ is regularizing, and it will induce matrices with exponentially decreasing singular values.
+Now let us describe how the bilinear form (\ref{VariationnalFormulation}) is discretized. Each space $\mH^{1/2}_{00}(\tau)^{3}$ is approximated with a three dimensional 
+space 
+$$
+\mH_{h}(\tau)\simeq \mH^{1/2}_{00}(\tau)^{3}\quad \mrm{dim}(\mH_{h}(\tau)) = 3\quad \textrm{for each}\;\;\tau\in \mathcal{T}.
+$$ 
+Next the global variational space is obtained by a simple cartesian product $\mH_{h}(\Gamma) = \Pi_{\tau\in \mathcal{T}}\mH_{h}(\tau)$.
+Finally the discrete variational formulation writes: find $\bu_{h}\in \mH_{h}(\Gamma)$ such that 
+\begin{equation}\label{discreteVF}
+a(\bu_{h},\bv_{h}) = f(\bv_{h})\quad \bv_{h}\in \mH_{h}(\Gamma).
+\end{equation}
+Following the classical Galerkin discretization procedure, a matrix is derived from (\ref{discreteVF}) simply by specifying a basis for 
+$\mH_{h}(\Gamma)$. In the present case, such a basis is specified as follows. Denote $\bpsi_{3j-2}(\bx), \bpsi_{3j-1}(\bx),\bpsi_{3j}(\bx)$ 
+three vector fields  generating $\mH_{h}(\tau_{j})$ (recall that $\mrm{dim}(\mH_{h}(\tau_{j}) )= 3$ by hypothesis). Then we have 
+$$
+\mH_{h}(\Gamma) = \mathop{\mrm{span}}_{j=1\dots 3N}\{\bpsi_{j}\}.
+$$
+Of course, here, each $\bpsi_{3j-q}$ with $q=0,1,2$ is regarded as a function defined on $\Gamma$ that is supported 
+only on $\tau_{j}$. Then the matrices that we had to deal with during Project Elatso$\Phi$ are defined as 
+$\mA = (\mA_{j,k})_{j,k=1\dots 3N}$ where 
+\begin{equation}\label{GalerkinMatrix}
+\mA_{j,k}:=a(\bpsi_{j},\bpsi_{k}),\quad j,k = 1\dots 3N.
+\end{equation}
+
+
