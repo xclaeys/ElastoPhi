@@ -7,8 +7,8 @@ for the numerical solution of an elastostatic problem in an infinite homogeneous
 networks with highly complex geometrical structure, see the pictures below. 
 
 \begin{figure}[h!]
-\centerline{\includegraphics[width=0.4\linewidth]{../images/fig1.pdf}}
-%\vspace{5cm}
+%\centerline{\includegraphics[width=0.4\linewidth]{../images/fig1.pdf}}
+\vspace{5cm}
 \end{figure}
 
 
@@ -265,7 +265,7 @@ where $\mathscr{B}$ is a partition of $\llbr 1,3N\rrbr\times \llbr 1,3N\rrbr$ in
 $\mA_{b}$ is admissible. Indeed with such a decomposition, one may consider $\mA' = \mA_{\mrm{sp}} + \sum_{t\times s\in \mathscr{B}} \mA_{b}'$
 as a good approximation for $\mA$, where each $\mA_{b}'$ is obtained from $\mA_{b}$ after application of the ACA compression 
 procedure described in Section \ref{sec:LowRankApprox}. In this manner, keeping $\mathcal{O}(1)$ terms (i.e. a few terms) from each 
-ACA compression procedure the cost of a matrix-vector product is now $\mathcal{O}(N\log N)$.
+ACA compression the overall cost of a matrix-vector product is now $\mathcal{O}(N\log N)$.
 
 
 
@@ -280,7 +280,7 @@ For a ball $\mB_{s}\subset \R^{3}$, define $s = \{j = \llbr 1,3N\rrbr\;\vert \;\
 For another ball $\mB_{t}\subset \R^{3}$, define $t\subset \{ 1,\dots,3N\}$ accordingly.  
 The more $\mB_{s}$ and $\mB_{t}$ are far from each other, the faster the singular values of $\mA_{t,s}$ will decrease. 
 
-The distance between $\mB_{t}$ and $\mB_{s}$ that may considered as sufficient depends on the radius of these balls. 
+The distance between $\mB_{t}$ and $\mB_{s}$ that may be considered as sufficient depends on the radius of these balls. 
 Such a criterion shall be refered later on as \textit{admissibility criterion}. Current literature provides various 
 admissibility criterion. It should be considered as problem dependent. For the project Elasto$\Phi$, we considered the 
 following admissibility criterion
