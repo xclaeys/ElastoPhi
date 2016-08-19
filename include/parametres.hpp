@@ -105,21 +105,21 @@ void LoadParamIO(string inputname){
 				}
 				else if (line.at(0)=="Mesh_name"){
 					Parametres_IO::meshname=line.back();
+					ifstream Meshname((Parametres_IO::datapath+"/"+Parametres_IO::meshname).c_str());
+					if (!Meshname){
+						cerr << "Mesh file does not exist" << endl;
+						exit(1);
+					}
 				}
 				else if (line.at(0)=="Matrix_name"){
 					Parametres_IO::matrixname=line.back();
+					ifstream Matrixname((Parametres_IO::datapath+"/"+Parametres_IO::matrixname).c_str());
+					if (!Matrixname){
+						cerr << "Matrix file does not exist" << endl;
+						exit(1);
+					}
 				}
 			}
-		}
-		ifstream Matrixname((Parametres_IO::datapath+"/"+Parametres_IO::matrixname).c_str());
-		if (!Matrixname){
-			cerr << "Matrix file does not exist" << endl;
-			exit(1);
-		}
-		ifstream Meshname((Parametres_IO::datapath+"/"+Parametres_IO::meshname).c_str());
-		if (!Meshname){
-			cerr << "Mesh file does not exist" << endl;
-			exit(1);
 		}
 	}
 }
