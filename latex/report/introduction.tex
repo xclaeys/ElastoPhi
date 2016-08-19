@@ -8,12 +8,12 @@ This document aims at presenting the work achieved for project Elasto$\Phi$ duri
 that took place at the Centre International de Rencontres Math\'ematiques (CIRM) at Luminy from July 24th to 
 August 25th, 2016. This project originated from mathematical challenges encountered by IFP Energies Nouvelles (IFPEN)
 for the numerical solution of an elastostatic problem in an infinite homogeneous background medium containing crack 
-networks with highly complex geometrical structure, see Figure~\ref{}. 
+networks with highly complex geometrical structure, see Figure~\ref{fig:structureExamples}. 
 
-%\begin{figure}[h!]
-%\centerline{\includegraphics[width=0.4\linewidth]{../images/fig1.pdf}}
-%%\vspace{5cm}
-%\end{figure}
+\begin{figure}[hb]
+\centering\includegraphics[width=0.4\textwidth]{../images/visu_maillage5364FracsTriangles.png} \qquad 
+\includegraphics[width=0.3\textwidth]{../images/visu_maillage1994Fracs.png}
+\caption{Examples of crack networks.}\label{fig:structureExamples}\end{figure}
 
 \bigskip
 This problem was reformulated as boundary integral equation posed at the surface of cracks, and 
@@ -172,48 +172,47 @@ row.
 At the beginning of Algorithm \ref{AlgoACA}, there is an initialization step for the choice of the index of the first $j_{*}$. 
 For this initialization, one could take $j_{*} = 1$. Other choices may speed up the convergence of the algorithm. Such heuristics 
 are problem dependent. Algorithm \ref{AlgoACA} also involves a stopping criterion based on an error estimator. During the Elasto$\Phi$ 
-project, we took 
+project, we took the stopping criterion given in \cite{...Rjasanow-Steinbach}
 $$
 \begin{array}{l}
 \textbf{Stopping criterion:}\\ 
 \vert \bfu_{r}\vert_{2}\vert \bfv_{r}\vert_{2}\leq  \varepsilon\Vert \sum_{\ell = 1}^{r}\bfu_{\ell}\cdot\bfv_{\ell}^{T}\Vert_{\mrm{F}}\\[10pt]
 \textrm{where}\quad \Vert \sum_{\ell = 1}^{r}\bfu_{\ell}\cdot\bfv_{\ell}^{T}\Vert_{\mrm{F}}^{2} = \sum_{j=1}^{r}\sum_{k=1}^{r}
-(\overline{\bfu}_{j}^{T}\bfu_{k})(\overline{\bfv}_{k}^{T}\bfv_{j}).
+(\overline{\bfu}_{j}^{T}\bfu_{k})(\overline{\bfv}_{j}^{T}\bfv_{k}).
 \end{array}
 $$
+\textcolor{red}{
 In this stopping criterion, the value $\varepsilon>0$ is a fitting parameter whose choice depends on the degree of consistency 
 that one wishes. Due to the requirements of IFPEN in terms of consistency, we typically chose values 
 $\varepsilon = 1e-1$ or $1e-2$.
-
-
-
+}
 
 
 \section{The matrix under consideration}\label{sec:GalerkinMatrix}
 
-We now shall give some more detail about the matrices under consideration during the Elasto$\Phi$ project. 
-As previously mentionned, these matrices stemmed from a Galerkin discretization of a boundary integral 
+We now shall give some more details about the matrices under consideration during the Elasto$\Phi$ project. 
+As previously mentioned, these matrices stemmed from a Galerkin discretization of a boundary integral 
 equation. Assume that $\Gamma$ is a surface embedded in $\R^{3}$ that is the union of a collection 
 $\mathcal{T} = \{\tau_{j}\}_{j=1}^{N}$ of flat triangles and quadrangles
 $$
-\Gamma = \mathop{\cup}_{j=1}^{N}\tau_{j}\;,\quad\quad \tau_{j} = \textrm{triangle or quadrangle}.
+\Gamma = \mathop{\bigcup}_{j=1}^{N}\tau_{j}\;,\quad\quad \tau_{j} = \textrm{triangle or quadrangle}.
 $$
-The elements $\tau_{j}$ might very intersect each other, which makes $\Gamma$ a potentially very rough surface.
-Let us briefly describe the bilinear form associated to the variational formulation under consideration for 
-the Galerkinn discretisation. We need to introduce the Green kernel of the problem that is given by the explicit formula 
+The elements $\tau_{j}$ might intersect each other, which makes $\Gamma$ a potentially very rough surface.
+Let us briefly describe the bilinear form associated with the variational formulation under consideration for 
+the Galerkin discretization. We need to introduce the Green kernel of the problem, that is given by the explicit formula 
 $$
-\mathscr{G}(\bx) = \frac{1}{8\pi E}\frac{1+\rho}{1-\rho}\Big( \frac{3-4\rho}{\vert \bx\vert}\mrm{Id}  +\frac{\bx\cdot\bx^{T}}{\vert \bx\vert^{3}}\Big)
+\mathscr{G}(\bx) = \frac{1}{8\pi E}\frac{1+\rho}{1-\rho}\biggl( \frac{3-4\rho}{\vert \bx\vert}\mrm{Id}  +\frac{\bx\cdot\bx^{T}}{\vert \bx\vert^{3}}\biggr).
 $$
 It is fundamental to observe, and to keep in mind, that this function is singular at $\bx = 0$. In this expression, $\rho$ 
 refers to the Poisson ratio, and $E$ is the elasticity module. Next, for each element $\tau$, let  $\bn_{\tau}$ refer to a vector field 
-normal at $\tau$ , and for any vector field $\bu:\Gamma\to \R^{3}$, define the trace operator
+normal to $\tau$, and for any vector field $\bu\colon\Gamma\to \R^{3}$, define the trace operator
 $$
 \begin{array}{l}
-\dsp{ \mathscr{R}_{\tau}(\bu) = \lambda\bn_{\tau}\div(\bu)+2\mu\,(\bn_{\tau}\cdot\nabla)\bu + \mu\bn_{\tau}\times\curl(\bu) }\\[10pt]
-\dsp{ \textrm{with}\quad \lambda := \frac{E\rho}{(1+\mu)(1-2\rho)},\quad \mu := \frac{E}{2(1+\rho)}}
+\dsp{ \mathscr{R}_{\tau}(\bu) = \lambda\bn_{\tau}\div(\bu)+2\mu\,(\bn_{\tau}\cdot\nabla)\bu + \mu\bn_{\tau}\times\curl(\bu), }\\[10pt]
+\dsp{ \textrm{with}\quad \lambda := \frac{E\rho}{(1+\mu)(1-2\rho)},\quad \mu := \frac{E}{2(1+\rho)}}.
 \end{array}
 $$
-The variationnal formulation associated to the problem under consideration typically consists in finding $\bu\in \mH^{1/2}_{00}(\Gamma)^{3}$ 
+The variational formulation associated with the problem under consideration typically consists in finding $\bu\in \mH^{1/2}_{00}(\Gamma)^{3}$ 
 such that $a(\bu,\bv) = f(\bv)$ for all $\bv\in \mH^{1/2}_{00}(\Gamma)^{3}$, where $\mH^{1/2}_{00}(\Gamma):=\Pi_{\tau\in\mathcal{T}}\mH^{1/2}_{00}(\tau)^{3}$
 and the bilinear form is given by
 \begin{equation}\label{VariationnalFormulation}
@@ -223,10 +222,10 @@ and the bilinear form is given by
 \end{equation}
 In this formula the operator $\mathscr{R}_{\tau}^{\bx}$ is the operator $\mathscr{R}_{\tau}$ applied with respect the $\bx$ variable. The operator $\mathscr{R}_{\tau'}^{\by}$ 
 is defined accordingly. Formula  (\ref{VariationnalFormulation}) is rather abstract. Another, more explicit expression of this operator can be obtained, 
-see e.g. \cite{??}, but this is pointless for the present report. The only important thing here is that the integral kernel coming into play in this integral 
+see e.g.~\cite{??}, but this is pointless for the present report. The only important thing here is that the integral kernel coming into play in this integral 
 operator is singular at $\bx = \by$ (which is possible only if $\tau\cap \tau'\neq \emptyset$), and it is regular otherwise. In particular, if $\tau$ and $\tau'$
-are distant from each other, then the operator associated to $a(\;,\;)$ is regularising, and it will induce matrices with exponentially decreasing singular values.
-Now let us describe how the bilinear form (\ref{VariationnalFormulation}) is discretised. Each space $\mH^{1/2}_{00}(\tau)^{3}$ is approximated by a three dimensional 
+are distant from each other, then the operator associated with $a(\;,\;)$ is regularizing, and it will induce matrices with exponentially decreasing singular values.
+Now let us describe how the bilinear form (\ref{VariationnalFormulation}) is discretized. Each space $\mH^{1/2}_{00}(\tau)^{3}$ is approximated with a three dimensional 
 space 
 $$
 \mH_{h}(\tau)\simeq \mH^{1/2}_{00}(\tau)^{3}\quad \mrm{dim}(\mH_{h}(\tau)) = 3\quad \textrm{for each}\;\;\tau\in \mathcal{T}.
@@ -234,11 +233,11 @@ $$
 Next the global variational space is obtained by a simple cartesian product $\mH_{h}(\Gamma) = \Pi_{\tau\in \mathcal{T}}\mH_{h}(\tau)$.
 Finally the discrete variational formulation writes: find $\bu_{h}\in \mH_{h}(\Gamma)$ such that 
 \begin{equation}\label{discreteVF}
-a(\bu_{h},\bv_{h}) = f(\bv_{h})\quad \bv_{h}\in \mH_{h}(\Gamma)
+a(\bu_{h},\bv_{h}) = f(\bv_{h})\quad \bv_{h}\in \mH_{h}(\Gamma).
 \end{equation}
-Following the classical Galerkin discretisation procedure, a matrix is derived from (\ref{discreteVF}) simply by specifying a basis for 
+Following the classical Galerkin discretization procedure, a matrix is derived from (\ref{discreteVF}) simply by specifying a basis for 
 $\mH_{h}(\Gamma)$. In the present case, such a basis is specified as follows. Denote $\bpsi_{3j-2}(\bx), \bpsi_{3j-1}(\bx),\bpsi_{3j}(\bx)$ 
-three vector fields  generating $\mH_{h}(\tau_{j})$ (recall that $\mrm{dim}\mH_{h}(\tau_{j}) = 3$ by hypothesis). Then we have 
+three vector fields  generating $\mH_{h}(\tau_{j})$ (recall that $\mrm{dim}(\mH_{h}(\tau_{j}) )= 3$ by hypothesis). Then we have 
 $$
 \mH_{h}(\Gamma) = \mathop{\mrm{span}}_{j=1\dots 3N}\{\bpsi_{j}\}.
 $$
@@ -249,50 +248,48 @@ $\mA = (\mA_{j,k})_{j,k=1\dots 3N}$ where
 \mA_{j,k}:=a(\bpsi_{j},\bpsi_{k}),\quad j,k = 1\dots 3N.
 \end{equation}
 
+
 \section{Partition of the matrix in admissible blocks}
 
-In the sequel, for any subsets $t,s\subset \llbr1,3N\rrbr$, let $\mA_{t,s}$ refer to the subblock extracted from $\mA$ 
+In the sequel, for any subsets $t,s\subset \llbr1,3N\rrbr$, let $\mA_{t,s}$ refer to the sub-block extracted from $\mA$ 
 by restricting indices to the set $t\times s$. We define $\mA_{b}$ similarly for any $b\subset \llbr 1,3N\rrbr\times \llbr 1,3N\rrbr$.
 
-\quad\\
+\bigskip
 Two important conclusions should be drawn from the discussion of the previous paragraph. The first 
 conclusion is that, due to the singularity of the integral kernel, the singular values of the matrix given 
-by (\ref{GalerkinMatrix}) do \textit{not} decrease exponentially i.e. this matrix is not admissible. 
-As a consequence the ACA compression strategy of Section \ref{sec:LowRankApprox} is not directly applicable 
+by (\ref{GalerkinMatrix}) do \textit{not} decrease exponentially i.e.~this matrix is not admissible. 
+As a consequence, the ACA compression strategy of Section \ref{sec:LowRankApprox} is not directly applicable 
 to this matrix. 
 
-\quad\\
-However sub-blocks of the matrix $\mA$ given by (\ref{GalerkinMatrix}) may be admissible (i.e. have exponentially 
+\bigskip
+However sub-blocks of the matrix $\mA$ given by (\ref{GalerkinMatrix}) may be admissible (i.e.~have exponentially 
 decreasing singular values). To build an approximation of $\mA$ allowing a substantial reduction of the cost of 
 matrix-vector products, it would be sufficient to find a sparse matrix $\mA_{\mrm{sp}}\in \C^{3N\times 3N}$ such that 
 $$
 \mA = \mA_{\mrm{sp}} + \sum_{t\times s\in \mathscr{B}} \mA_{b}
 $$
-where $\mathscr{B}$ is a partition of $\llbr 1,3N\rrbr\times \llbr 1,3N\rrbr$ into $\mathcal{O}(N\log N)$, and each 
+where $\mathscr{B}$ is a partition of $\llbr 1,3N\rrbr\times \llbr 1,3N\rrbr$ \textcolor{red}{into $\mathcal{O}(N\log N)$}, and each 
 $\mA_{b}$ is admissible. Indeed with such a decomposition, one may consider $\mA' = \mA_{\mrm{sp}} + \sum_{t\times s\in \mathscr{B}} \mA_{b}'$
 as a good approximation for $\mA$, where each $\mA_{b}'$ is obtained from $\mA_{b}$ after application of the ACA compression 
-procedure described in Section \ref{sec:LowRankApprox}. In this manner, keeping $\mathcal{O}(1)$ terms (i.e. a few terms) from each 
+procedure described in Section \ref{sec:LowRankApprox}. In this manner, keeping $\mathcal{O}(1)$ terms (i.e.~a few terms) from each 
 ACA compression procedure the cost of a matrix-vector product is now $\mathcal{O}(N\log N)$.
 
 
-
-
-
-\quad\\
-The second conclusion that can be drawn from the discussion of Section \ref{sec:GalerkinMatrix}  the Galerkin discretisation establishes 
-a correspondance between the numbering of unknowns on the one end, and some spatial distribution of degrees of freedom. This gives insight 
+\bigskip
+The second conclusion that can be drawn from the discussion of Section \ref{sec:GalerkinMatrix} is that the Galerkin discretization establishes 
+a correspondence between the numbering of unknowns on the one end, and some spatial distribution of degrees of freedom. This gives insight 
 on how to find admissible (and thus compressible) sub-blocks inside the matrix $\mA$, as follows.
 
-For a ball $\mB_{s}\subset \R^{3}$, define $s = \{j = \llbr 1,3N\rrbr\;\vert \;\mrm{supp}(\bpsi_{j})\subset \mB_{s}\}$. 
-For another ball $\mB_{t}\subset \R^{3}$, define $t\subset \{ 1,\dots,3N\}$ accordingly.  
+For a ball $\mB_{s}\subset \R^{3}$, define $s = \{j \in\llbr 1,3N\rrbr\;\vert \;\mrm{supp}(\bpsi_{j})\subset \mB_{s}\}$. 
+For another ball $\mB_{t}\subset \R^{3}$, define $t\subset \llbr1,3N\rrbr$ accordingly.  
 The more $\mB_{s}$ and $\mB_{t}$ are far from each other, the faster the singular values of $\mA_{t,s}$ will decrease. 
 
 The distance between $\mB_{t}$ and $\mB_{s}$ that may considered as sufficient depends on the radius of these balls. 
-Such a criterion shall be refered later on as \textit{admissibility criterion}. Current literature provides various 
+Such a criterion shall be referred later on as \textit{admissibility criterion}. Current literature provides various 
 admissibility criterion. It should be considered as problem dependent. For the project Elasto$\Phi$, we considered the 
-following admissibility criterion
+following admissibility criterion (see \cite{...Rjasanow - Steinbach})
 \begin{equation}\label{AdmissibilityCondition}
-\mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big)< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s})
+\mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big)< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s}),
 \end{equation}
 where $\eta>0$ is a fitting parameter. For the present problem, the typical values of $\eta$ that we considered  
 range from $\eta = 0.1$ to $\eta = 10$.
