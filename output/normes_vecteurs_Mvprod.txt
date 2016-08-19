@@ -103,3 +103,23 @@ norm(ua) 1.61468e+15
 norm(uasp) 3.71686e+15
 norm(ua-uasp) 2.34095e+15
 Program ended with exit code: 0
+
+
+############# Inputs #############
+Output path : ../../../output
+Mesh path : ../../../data/maillage450Fracs.txt
+Matrix path : ../../../data/matrice450Fracs.txt
+##################################
+Frobenius norm of the dense matrix: 2.12227e+07
+norm(u) 10926.3
+norm(ua) 5.66872e+15
+
+
+############# Inputs #############
+Output path : ../../../output
+Mesh path : ../../../data/maillage1363Fracs.txt
+Matrix path : ../../../data/matrice1363Fracs.txt
+##################################
+Frobenius norm of the dense matrix: 7.65752e+07
+norm(u) 34317.6
+norm(ua) 5.2755e+16
