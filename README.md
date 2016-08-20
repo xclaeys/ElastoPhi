@@ -56,4 +56,4 @@ python graphes_output_compression.py ../output/output_compression_matrice....txt
 - unumbered centered displayed formulas : \f[ ... \f]
 - special env : \f{env}{ ... \f}
 
-
+![alt text](output/maillage450Fracs.gif)
