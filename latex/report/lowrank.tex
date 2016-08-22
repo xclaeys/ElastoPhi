@@ -111,5 +111,24 @@ that one wishes. The parameter controls the relative variation between two itera
 %Due to the requirements of IFPEN in terms of consistency, we typically chose values 
 %$\varepsilon = 1e-1$ or $1e-2$.
 
+\bigskip
+
+\begin{remark1}
+\label{remark:err_decrease}
+To show the accuracy of ACA compared to a usual SVD, we look at the interaction between two clusters of points $X=\{ \bx_i\}$ and $Y=\{ \by_i\}$ contained in two unit balls whose distance will vary. The interaction between two points $\bx$ and $\by$ is given by $1/ \Vert \bx -\by \Vert$ so that the coefficients of the interaction matrix $\mA$ are defined as 
+\begin{align*}
+\mA (i,j) = \dfrac{1}{\Vert \bx_i - \by_j \Vert}
+\end{align*}
+where $\bx_i \in X$ and $\by_j \in Y$. In Figure~\ref{fig:err_decrease}, we show the relative error in Frobenius norm of $\mA_k$ and $\widetilde{\mA}_k$ with respect to $\mA$, where $k$ is the rank. It can be observed that there is an exponential decrease in both cases, and this decrease is faster when the distance between the two clusters is greater, that is to say, when the interaction is more regular (see Section \ref{section:partition}). Besides, we see that SVD gives a better approximation, which is expected since it can be proven that it gives the best approximation for a given rank.
+\end{remark1}
+
+\begin{figure}
+\centering
+\includegraphics[width=.9\textwidth]{../images/graphe_output_err_decrease}
+\caption{Error on the interaction matrix between two clusters}
+\label{fig:err_decrease}
+\end{figure}
+
+
 
 
