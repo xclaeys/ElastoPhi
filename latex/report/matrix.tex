@@ -32,7 +32,7 @@ such that $a(\bu,\bv) = f(\bv)$ for all $\bv\in \mH^{1/2}_{00}(\Gamma)^{3}$, whe
 and the bilinear form is given by
 \begin{equation}\label{VariationnalFormulation}
 \begin{array}{l}
-\dsp{ a(\bu,\bv) = \sum_{\tau\in\mathcal{T}}\sum_{\tau'}\int_{\tau\times\tau'}\mathscr{R}_{\tau}^{\by}(\mathscr{R}_{\tau'}^{\bx}\mathscr{G}(\bx-\by)) \bu(\bx)\bv(\by) d\sigma(\bx) d\sigma(\by).  }
+\dsp{ a(\bu,\bv) = \sum_{\tau\in\mathcal{T}}\sum_{\tau'\in\mathcal{T}}\int_{\tau\times\tau'}\mathscr{R}_{\tau}^{\by}(\mathscr{R}_{\tau'}^{\bx}\mathscr{G}(\bx-\by)) \bu(\bx)\bv(\by) d\sigma(\bx) d\sigma(\by).  }
 \end{array}
 \end{equation}
 In this formula the operator $\mathscr{R}_{\tau}^{\bx}$ is the operator $\mathscr{R}_{\tau}$ applied with respect the $\bx$ variable. The operator $\mathscr{R}_{\tau'}^{\by}$ 
@@ -43,16 +43,16 @@ are distant from each other, then the operator associated with $a(\;,\;)$ is reg
 Now let us describe how the bilinear form (\ref{VariationnalFormulation}) is discretized. Each space $\mH^{1/2}_{00}(\tau)^{3}$ is approximated with a three dimensional 
 space 
 $$
-\mH_{h}(\tau)\simeq \mH^{1/2}_{00}(\tau)^{3}\quad \mrm{dim}(\mH_{h}(\tau)) = 3\quad \textrm{for each}\;\;\tau\in \mathcal{T}.
+\mH_{h}(\tau)\simeq \mH^{1/2}_{00}(\tau)^{3}\quad \mrm{dim}(\mH_{h}(\tau)) = 3\quad \textrm{for each}\;\;\tau\in \mathcal{T},
 $$ 
-Next the global variational space is obtained by a simple cartesian product $\mH_{h}(\Gamma) = \Pi_{\tau\in \mathcal{T}}\mH_{h}(\tau)$.
+that is to say a constant function for each direction. Next the global variational space is obtained by a simple cartesian product $\mH_{h}(\Gamma) = \Pi_{\tau\in \mathcal{T}}\mH_{h}(\tau)$.
 Finally the discrete variational formulation writes: find $\bu_{h}\in \mH_{h}(\Gamma)$ such that 
 \begin{equation}\label{discreteVF}
 a(\bu_{h},\bv_{h}) = f(\bv_{h})\quad \bv_{h}\in \mH_{h}(\Gamma).
 \end{equation}
 Following the classical Galerkin discretization procedure, a matrix is derived from (\ref{discreteVF}) simply by specifying a basis for 
-$\mH_{h}(\Gamma)$. In the present case, such a basis is specified as follows. Denote $\bpsi_{3j-2}(\bx), \bpsi_{3j-1}(\bx),\bpsi_{3j}(\bx)$ 
-three vector fields  generating $\mH_{h}(\tau_{j})$ (recall that $\mrm{dim}(\mH_{h}(\tau_{j}) )= 3$ by hypothesis). Then we have 
+$\mH_{h}(\Gamma)$. In the present case, such a basis is specified as follows. Denote by $\bpsi_{3j-2}(\bx), \bpsi_{3j-1}(\bx),\bpsi_{3j}(\bx)$
+three vector fields generating $\mH_{h}(\tau_{j})$ (recall that $\mrm{dim}(\mH_{h}(\tau_{j}) )= 3$ by hypothesis). Then we have 
 $$
 \mH_{h}(\Gamma) = \mathop{\mrm{span}}_{j=1\dots 3N}\{\bpsi_{j}\}.
 $$

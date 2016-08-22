@@ -5,15 +5,18 @@
 \section*{Introduction}
 
 This document aims at presenting the work achieved for project Elasto$\Phi$ during the CEMRACS summer school  
-that took place at the Centre International de Rencontres Math\'ematiques (CIRM) at Luminy from July 24th to 
+that took place at the Centre International de Rencontres Math\'ematiques (CIRM) at Luminy from July 25th to 
 August 25th, 2016. This project originated from mathematical challenges encountered by IFP Energies Nouvelles (IFPEN)
 for the numerical solution of an elastostatic problem in an infinite homogeneous background medium containing crack 
 networks with highly complex geometrical structure, see Figure~\ref{fig:structureExamples}. 
 
 \begin{figure}[hb]
-\centering\includegraphics[width=0.4\textwidth]{../images/visu_maillage5364FracsTriangles.png} \quad
+\centering
+\includegraphics[width=0.4\textwidth]{../images/visu_maillage5364FracsTriangles.png} \quad
 \includegraphics[width=0.3\textwidth]{../images/visu_maillage1994Fracs.png}
-\caption{Examples of crack networks.}\label{fig:structureExamples}\end{figure}
+\caption{Examples of crack networks.}
+\label{fig:structureExamples}
+\end{figure}
 
 \bigskip
 This problem was reformulated as boundary integral equation posed at the surface of cracks, and 
@@ -52,23 +55,25 @@ challenging  aspect of the project.
 
 \bigskip
 The Elasto$\Phi$ project mainly consisted in developing a numerical mockup code in C++ and testing it on the matrices sent 
-by IFPEN. We implemented one particular complexity reduction technique: Hierarchical Matrix \cite{?} format combined with the Adaptative Cross 
-Approximation (ACA) compression method \cite{?}. For the sake of brevity, we shall refer to this approach as HM-ACA. We could not test several 
-complexity reduction techniques, this would have required more time (CEMRACS is only 5 weeks long\dots). Among all complexity reduction techniques 
+by IFPEN. We implemented one particular complexity reduction technique: Hierarchical Matrix \cite{Hackbusch2016} format combined with the Adaptative Cross 
+Approximation (ACA) compression method \cite{Bebendorf2008}. For the sake of brevity, we shall refer to this approach as HM-ACA. 
+%We could not test several 
+%complexity reduction techniques, this would have required more time (CEMRACS is only 5 weeks long\dots). 
+Among all complexity reduction techniques 
 already available (multipoles, panel clustering, etc\dots), we chose HM-ACA because this was the only approach that treats generation 
 of the matrix of the problem in a black-box manner. All other methods are far more intrusive, and most of the time their development 
-is also more time consuming. On the other hand, due to confidentiality restrictions, we did not have access to the source code of IFPEN, and 
-in particular could not actually get the routine generating the coefficients of the matrix. These constraints led us to choose HM-ACA.
+is also more time consuming. Besides, due to confidentiality restrictions, we did not have access to the source code of IFPEN, and 
+in particular could not actually get the routine generating the matrix of the discretized problem. These constraints led us to choose HM-ACA.
 
 \bigskip
 There already exist freely accessible libraries written in C or C++ that implement HM-ACA, see e.g.~HLib (\url{http://hlib.org/}), H2Lib 
-(\url{http://www.h2lib.org/}) or Ahmed (\url{https://github.com/xantares/ahmed}),  but they are poorly documented. Besides IFPEN required 
+(\url{http://www.h2lib.org/}) or Ahmed (\url{https://github.com/xantares/ahmed}). But IFPEN required 
 that the code numerical mockup developed during the project can be reused by IFPEN after the CEMRACS summer school, 
-and the license of all existing libraries was incompatible with this condition. For these reasons, we decided to redevelop simply  
+and the license of all existing libraries was incompatible with this condition. For these reasons, we decided to redevelop 
 a "homemade" implementation of HM-ACA. The code that we developed was put under Lesser Gnu Public License (LGPL) and 
 put on a Github repository freely accessible at
 \begin{center}
-\url{https://github.com/xclaeys/ElastoPhi}
+\url{https://github.com/xclaeys/ElastoPhi}.
 \end{center}
 
 \medskip
