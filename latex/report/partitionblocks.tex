@@ -53,36 +53,37 @@ following admissibility criterion (see \cite{Rjasanow2007})
 where $\eta>0$ is a fitting parameter. For the present problem, the typical values of $\eta$ that we considered  
 range from $\eta = 0.1$ to $\eta = 10$. 
 
-The decomposition (\ref{eq:decomposition}) relies on the admissible blocks, so that we need to find them in an efficient way. To do so, we build cluster trees, that is to say, we organize the set of geometric elements as a binary tree such that each node of the tree is a cluster of geometric points. The two sons of a cluster/node are obtained by doing a balanced decomposition. In practice, we compute the center of the cluster and then we do a principal component analysis, so that we can cut in half the cluster with an hyperplane orthogonal to the first principal component and containing the center. Examples of the first four levels of such cluster trees are given in Figures 
+The decomposition (\ref{eq:decomposition}) relies on the admissible blocks, so that we need to find them in an efficient way. To do so, we build cluster trees, that is to say, we organize the set of geometric elements as a binary tree such that each node of the tree is a cluster of geometric points. The two sons of a cluster/node are obtained by doing a balanced decomposition. In practice, we compute the center of the cluster and then we do a principal component analysis, so that we can cut in half the cluster with an hyperplane orthogonal to the first principal component and containing the center. Examples of the first four levels of such cluster trees are given in Figures \ref{fig:cluster_tree_cracks} and \ref{fig:cluster_tree_faults}.
 
 \begin{figure}
 \centering
 \subfloat[][Initial mesh.]
    {\includegraphics[width=.4\textwidth]{../images/visu_maillage450Fracsbis.jpg}} \quad
-\subfloat[][Mz.]
+\subfloat[][Cluster at the first level.]
    {\includegraphics[width=.4\textwidth]{../images/VisuPartmaillage450Fracsdepth1.jpg}} \\
-\subfloat[][Mz.]
+\subfloat[][Cluster at the second level.]
    {\includegraphics[width=.4\textwidth]{../images/VisuPartmaillage450Fracsdepth2.jpg}}  \quad
-\subfloat[][Mz.]
+\subfloat[][Cluster at the third level.]
    {\includegraphics[width=.4\textwidth]{../images/VisuPartmaillage450Fracsdepth3.jpg}} \\
-\caption{Rz.}
-\label{fig:z}
+\caption{Cluster tree for a crack network of fractures.}
+\label{fig:cluster_tree_cracks}
 \end{figure}
 
 \begin{figure}
 \centering
 \subfloat[][Initial mesh.]
    {\includegraphics[width=.4\textwidth]{../images/visu_maillage5364FracsTriangles.png}} \quad
-\subfloat[][Mz.]
+\subfloat[][Cluster at the first level.]
    {\includegraphics[width=.4\textwidth]{../images/VisuPartmaillage5364FracsTrianglesdepth1.jpg}} \\
-\subfloat[][Mz.]
+\subfloat[][Cluster at the second level.]
    {\includegraphics[width=.4\textwidth]{../images/VisuPartmaillage5364FracsTrianglesdepth2.jpg}}  \quad
-\subfloat[][Mz.]
+\subfloat[][Cluster at the third level.]
    {\includegraphics[width=.4\textwidth]{../images/VisuPartmaillage5364FracsTrianglesdepth1.jpg}} \\
-\caption{Rz.}
-\label{fig:z}
+\caption{Cluster tree for a network of faults.}
+\label{fig:cluster_tree_faults}
 \end{figure}
 
+To build a subset $\mathscr{B} \in \llbr 1,3N \rrbr \times \llbr 1,3N\rrbr $ of admissible blocks, we can look at pairs of clusters at the same level in the cluster tree and check if they are admissible, starting from the root. If they are, we apply ACA to the corresponding sub-matrix, and if they are not, we look at the interactions between their sons. This recursive algorithm provides a block decomposition like (\ref{eq:decomposition}).Actually if the block is admissible, we also check if the compression is advantageous for the given $\varepsilon$. During the algorithm ACA, if $k(n+m)/(n\cdot m) \geq 1$ for a block $n\times m$ and $k$ the current rank of the approximation, we stop and we do like if the block was not admissible because it does not worth it to compress it.
 
 
 
