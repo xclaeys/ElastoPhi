@@ -38,12 +38,12 @@ $$
 \Vert \mA - \mA_{k}\Vert_{\mrm{F}}^{2} = \sum_{j=k+1}^{n}\sigma_{j}^{2}
 $$
 where $\Vert \;\Vert_{2}$ refers to the matrix norm induced by the vector norm $\vert \bfu\vert_{2} = (\sum_{j=1}^{n}\vert u_{j}\vert^{2})$ 
-for $\bfu = (u_{j})_{j=1}^{n}\in \C$ and $\Vert \;\Vert_{\mrm{F}}$ refers to the Fr\"obenius norm.
+for $\bfu = (u_{j})_{j=1}^{n}\in \C$ and $\Vert \;\Vert_{\mrm{F}}$ refers to the Frobenius norm.
 \end{proposition}
 
 Truncating the SVD is thus an efficient way to approximate a matrix, and thus to reduce the cost of the 
 matrix-vector product, provided that  the singular values decrease fast. Assume that singular values decrease 
-exponentially, say $\sigma_{k}\leq q^{k}$ for a fixed $q\in (0,1)$. Then for a relative error expressed in Fr\"obenius norm of order $\varepsilon>0$,  
+exponentially, say $\sigma_{k}\leq q^{k}$ for a fixed $q\in (0,1)$. Then for a relative error expressed in Frobenius norm of order $\varepsilon>0$,  
 it suffices to take $k \simeq \log_q \varepsilon$. 
 
 \bigskip
@@ -94,14 +94,15 @@ row.
 At the beginning of Algorithm \ref{AlgoACA}, there is an initialization step for the choice of the index of the first $j_{*}$. 
 For this initialization, one could take $j_{*} = 1$. Other choices may speed up the convergence of the algorithm (see \cite[Section 3.4.3]{Bebendorf2008}). Algorithm \ref{AlgoACA} also involves a stopping criterion based on an error estimator. During the Elasto$\Phi$ 
 project, we took the stopping criterion given in \cite{Rjasanow2007}
-$$
+\begin{equation}
+\label{eq:stopCrit}
 \begin{array}{l}
 \textbf{Stopping criterion:}\\ 
 \vert \bfu_{r}\vert_{2}\vert \bfv_{r}\vert_{2}\leq  \varepsilon\Vert \sum_{\ell = 1}^{r}\bfu_{\ell}\cdot\bfv_{\ell}^{T}\Vert_{\mrm{F}}\\[10pt]
 \textrm{where}\quad \Vert \widetilde{\mA}_{r} \Vert_{\mrm{F}}^2 =  \Vert \sum_{\ell = 1}^{r}\bfu_{\ell}\cdot\bfv_{\ell}^{T}\Vert_{\mrm{F}}^{2} = \sum_{j=1}^{r}\sum_{k=1}^{r}
 (\overline{\bfu}_{j}^{T}\bfu_{k})(\overline{\bfv}_{j}^{T}\bfv_{k}).
 \end{array}
-$$
+\end{equation}
 
 In this stopping criterion, the value $\varepsilon>0$ is a fitting parameter whose choice depends on the degree of consistency 
 that one wishes. The parameter controls the relative variation between two iterations since we have the following relation:
