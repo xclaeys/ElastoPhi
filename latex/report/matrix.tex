@@ -9,24 +9,24 @@ We now shall give some more details about the matrices under consideration durin
 As previously mentioned, these matrices stemmed from a Galerkin discretization of a boundary integral 
 equation. Assume that $\Gamma$ is a surface embedded in $\R^{3}$ that is the union of a collection 
 $\mathcal{T} = \{\tau_{j}\}_{j=1}^{N}$ of flat triangles and quadrangles
-$$
+\[
 \Gamma = \mathop{\bigcup}_{j=1}^{N}\tau_{j}\;,\quad\quad \tau_{j} = \textrm{triangle or quadrangle}.
-$$
+\]
 The elements $\tau_{j}$ might intersect each other, which makes $\Gamma$ a potentially very rough surface.
 Let us briefly describe the bilinear form associated with the variational formulation under consideration for 
 the Galerkin discretization. We need to introduce the Green kernel of the problem, that is given by the explicit formula 
-$$
+\[
 \mathscr{G}(\bx) = \frac{1}{8\pi E}\frac{1+\rho}{1-\rho}\biggl( \frac{3-4\rho}{\vert \bx\vert}\mrm{Id}  +\frac{\bx\cdot\bx^{T}}{\vert \bx\vert^{3}}\biggr).
-$$
+\]
 It is fundamental to observe, and to keep in mind, that this function is singular at $\bx = 0$. In this expression, $\rho$ 
 refers to the Poisson ratio, and $E$ is the elasticity module. Next, for each element $\tau$, let  $\bn_{\tau}$ refer to a vector field 
 normal to $\tau$, and for any vector field $\bu\colon\Gamma\to \R^{3}$, define the trace operator
-$$
+\[
 \begin{array}{l}
 \dsp{ \mathscr{R}_{\tau}(\bu) = \lambda\bn_{\tau}\div(\bu)+2\mu\,(\bn_{\tau}\cdot\nabla)\bu + \mu\bn_{\tau}\times\curl(\bu), }\\[10pt]
 \dsp{ \textrm{with}\quad \lambda := \frac{E\rho}{(1+\mu)(1-2\rho)},\quad \mu := \frac{E}{2(1+\rho)}}.
 \end{array}
-$$
+\]
 The variational formulation associated with the problem under consideration typically consists in finding $\bu\in \mH^{1/2}_{00}(\Gamma)^{3}$ 
 such that $a(\bu,\bv) = f(\bv)$ for all $\bv\in \mH^{1/2}_{00}(\Gamma)^{3}$, where $\mH^{1/2}_{00}(\Gamma):=\Pi_{\tau\in\mathcal{T}}\mH^{1/2}_{00}(\tau)^{3}$
 and the bilinear form is given by
@@ -42,9 +42,9 @@ operator is singular at $\bx = \by$ (which is possible only if $\tau\cap \tau'\n
 are distant from each other, then the operator associated with $a(\;,\;)$ is regularizing, and it will induce matrices with exponentially decreasing singular values.
 Now let us describe how the bilinear form (\ref{VariationnalFormulation}) is discretized. Each space $\mH^{1/2}_{00}(\tau)^{3}$ is approximated with a three dimensional 
 space 
-$$
+\[
 \mH_{h}(\tau)\simeq \mH^{1/2}_{00}(\tau)^{3}\quad \mrm{dim}(\mH_{h}(\tau)) = 3\quad \textrm{for each}\;\;\tau\in \mathcal{T},
-$$ 
+\] 
 that is to say a constant function for each direction. Next the global variational space is obtained by a simple cartesian product $\mH_{h}(\Gamma) = \Pi_{\tau\in \mathcal{T}}\mH_{h}(\tau)$.
 Finally the discrete variational formulation writes: find $\bu_{h}\in \mH_{h}(\Gamma)$ such that 
 \begin{equation}\label{discreteVF}
