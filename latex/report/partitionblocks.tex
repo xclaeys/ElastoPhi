@@ -39,10 +39,12 @@ The second conclusion that can be drawn from the discussion of Section \ref{sec:
 a correspondence between the numbering of unknowns on the one end, and some spatial distribution of degrees of freedom. This gives an insight 
 on how to find admissible (and thus compressible) sub-blocks inside the matrix $\mA$ as described in the following.
 
+\quad\\
 For a ball $\mB_{s}\subset \R^{3}$, define $s = \{j \in\llbr 1,3N\rrbr\;\vert \;\mrm{supp}(\bpsi_{j})\subset \mB_{s}\}$. 
 For another ball $\mB_{t}\subset \R^{3}$, define $t\subset \llbr1,3N\rrbr$ accordingly.  
 The more $\mB_{s}$ and $\mB_{t}$ are far from each other, the faster the singular values of $\mA_{t \times s}$ will decrease because the Green kernel, and so the interaction, will be more regular (see Remark \ref{remark:err_decrease} for an example).
 
+\quad\\
 The distance between $\mB_{t}$ and $\mB_{s}$ that may be considered as sufficient for the admissibility of $\mA_{t \times s}$ depends on the radius of these balls. 
 Such a criterion shall be referred later on as \textit{admissibility criterion}. Current literature provides various 
 admissibility criterion. It should be considered as problem dependent. For the project Elasto$\Phi$, we considered the 
@@ -51,8 +53,9 @@ following admissibility criterion (see \cite{Rjasanow2007})
 \mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big)< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s}),
 \end{equation}
 where $\eta>0$ is a fitting parameter. For the present problem, the typical values of $\eta$ that we considered  
-range from $\eta = 0.1$ to $\eta = 10$. 
+range from $\eta = 0.1$ to $\eta = 10$.
 
+\quad\\
 The decomposition (\ref{eq:decomposition}) relies on the admissible blocks, so that we need to find them in an efficient way. To do so, we build cluster trees, that is to say, we organize the set of geometric elements as a binary tree such that each node of the tree is a cluster of geometric points. The two sons of a cluster/node are obtained by doing a balanced decomposition. In practice, we compute the center of the cluster and then we do a principal component analysis (PCA), so that we can cut in half the cluster with an hyperplane orthogonal to the first principal component and containing the center. Examples of the first four levels of such cluster trees are given in Figures \ref{fig:cluster_tree_fractures} and \ref{fig:cluster_tree_faults}.
 
 \begin{figure}
@@ -83,6 +86,7 @@ The decomposition (\ref{eq:decomposition}) relies on the admissible blocks, so t
 \label{fig:cluster_tree_faults}
 \end{figure}
 
+\quad\\
 To build a subset $\mathscr{B} \in \llbr 1,3N \rrbr \times \llbr 1,3N\rrbr $ of admissible blocks, we can look at pairs of clusters at the same level in the cluster tree and check if they are admissible, starting from the root. If they are, we apply ACA to the corresponding sub-matrix, and if they are not, we look at the interactions between their sons. This recursive algorithm provides a block decomposition like (\ref{eq:decomposition}).
 Actually if the block is admissible, we also check if the compression is advantageous for the given $\varepsilon$. During the algorithm ACA, if $k(n+m)/(n\cdot m) \geq 1$ for a block $n\times m$ and $k$ the current rank of the approximation, we stop and we do like if the block was not admissible because it does not worth it to compress it.
 
