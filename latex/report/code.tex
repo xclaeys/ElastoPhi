@@ -3,5 +3,14 @@
 % !TEX root = elastophi-report.tex
 
 
-\section{Our C++ code}
+\section{C++ implementation}
 
+We will now describe our C++ implementation of the method described in the latter sections. We will focus on the fundamental parts of the code and refer to its documentation for the details. The only external library we use is Eigen\footnote{\url{http://eigen.tuxfamily.org}}, which is a Free Software and, as said previously, the source code is available on Github. 
+
+The first important part is in the file \texttt{cluster.hpp} where the class \texttt{Cluster} is implemented. The constructor calls the function \texttt{build} which recursively builds the cluster tree associated with a set of geometric points. More precisely, for a given cluster of points, it creates its two sons as described in the previous section (computing the center and the principal component using PCA) and calls the same function \texttt{build} on its two sons. Then the class \texttt{Block} contains a pair of clusters so that it is associated with their interaction. It has a function to check the admissibility of their interaction according to (\ref{AdmissibilityCondition}).
+
+Now that we can build cluster trees and check the admissibility of blocks, we have to look at the file \texttt{lrmat.hpp} where the class \texttt{LowRankMatrix} is implemented. Its constructor takes as input a submatrix and applies the ACA algorithm so that the class contains the collections of vectors defining its low rank approximation (\ref{eq:low_rank_decomposition}).
+
+Finally, we have all the tools to build the hierarchical matrix. The class \texttt{HMatrix} is implemented in \texttt{hmatrix.hpp} and it contains two vectors of matrices, one for the low rank sub-matrices and one for the dense sub-matrices. Its constructor needs a set of geometric points so that it can build the associated cluster tree with the class \texttt{Cluster}. Then it recursively looks at blocks as described in the previous section using the class \texttt{Block} to check the admissibility. If it is admissible, it constructs a \texttt{LowRankMatrix} instance and adds it to its vector of low rank sub-matrices, otherwise it looks at the sub-blocks according to the cluster tree until it reaches the leaves (for the problem under consideration, they correspond to $3 \times 3$ sub-matrices) and stores them as dense sub-matrices.
+
+%With the headers contained in the folder \emph{include}, one can 
