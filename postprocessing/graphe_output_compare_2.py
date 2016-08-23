@@ -72,9 +72,9 @@ for i in range(0,len(Eta)):
 	shape=np.ones([1,len(Eps[0])])
 	shape*=100
 	if (i<3):
-		Nuages.append(donnee.Nuage(nom=r"D3 : $\eta=$"+str(Eta[i]),abscisse=Com[i],ordonnee=Efr[i],marker=markers[i],shape=shape,color=colors[i]))
-	else:
 		Nuages.append(donnee.Nuage(nom=r"DN1 : $\eta=$"+str(Eta[i]),abscisse=Com[i],ordonnee=Efr[i],marker=markers[i],shape=shape,color=colors[i]))
+	else:
+		Nuages.append(donnee.Nuage(nom=r"D3 : $\eta=$"+str(Eta[i]),abscisse=Com[i],ordonnee=Efr[i],marker=markers[i],shape=shape,color=colors[i]))
 
 xlabel={"label":"Compression","fontsize":20}
 ylabel={"label":"Frobenius error","fontsize":20}
