@@ -5,12 +5,31 @@
 
 \section{C++ implementation}
 
-We will now describe our C++ implementation of the method described in the latter sections. We will focus on the fundamental parts of the code and refer to its documentation for the details. The only external library we use is Eigen\footnote{\url{http://eigen.tuxfamily.org}}, which is a Free Software and, as said previously, the source code is available on Github. 
+We will now describe our C++ implementation of the method described in the latter sections. We will focus on the fundamental parts of the code and refer to its documentation for the details. The only external library we use is Eigen\footnote{\url{http://eigen.tuxfamily.org}}, which is a Free Software and, as previously said, our source code is available on GitHub at
+\begin{center}
+\url{https://github.com/xclaeys/ElastoPhi}.
+\end{center}
 
-The first important part is in the file \texttt{cluster.hpp} where the class \texttt{Cluster} is implemented. The constructor calls the function \texttt{build} which recursively builds the cluster tree associated with a set of geometric points. More precisely, for a given cluster of points, it creates its two sons as described in the previous section (computing the center and the principal component using PCA) and calls the same function \texttt{build} on its two sons. Then the class \texttt{Block} contains a pair of clusters so that it is associated with their interaction. It has a function to check the admissibility of their interaction according to (\ref{AdmissibilityCondition}).
+The first important part is in the file \texttt{cluster.hpp} where the class \texttt{Cluster} is implemented. The constructor calls the function \texttt{build}, which recursively builds the cluster tree associated with a set of geometric points. More precisely, for a given cluster of points, it creates its two sons as described in the previous section (computing the center and the principal component) and calls the same function \texttt{build} on its two sons. Then the class \texttt{Block} contains a pair of clusters so that it is associated with their interaction. It has a function to check the admissibility of their interaction according to (\ref{AdmissibilityCondition}).
 
 Now that we can build cluster trees and check the admissibility of blocks, we have to look at the file \texttt{lrmat.hpp} where the class \texttt{LowRankMatrix} is implemented. Its constructor takes as input a submatrix and applies the ACA algorithm so that the class contains the collections of vectors defining its low rank approximation (\ref{eq:low_rank_decomposition}).
 
 Finally, we have all the tools to build the hierarchical matrix. The class \texttt{HMatrix} is implemented in \texttt{hmatrix.hpp} and it contains two vectors of matrices, one for the low rank sub-matrices and one for the dense sub-matrices. Its constructor needs a set of geometric points so that it can build the associated cluster tree with the class \texttt{Cluster}. Then it recursively looks at blocks as described in the previous section using the class \texttt{Block} to check the admissibility. If it is admissible, it constructs a \texttt{LowRankMatrix} instance and adds it to its vector of low rank sub-matrices, otherwise it looks at the sub-blocks according to the cluster tree until it reaches the leaves (for the problem under consideration, they correspond to $3 \times 3$ sub-matrices) and stores them as dense sub-matrices.
 
-With the headers contained in the folder \texttt{include}, we already built some useful executables in the folder \texttt{src}. For example, the executables \texttt{VisuMatrix}, \texttt{VisuCluster} and \texttt{VisuMesh} can create the data used with the Python scripts in \texttt{postprocessing} or Gmsh\footnote{\url{http://gmsh.info}} to create all the figures of this report. The executable \texttt{Compress} gives in command line the compression rate of the matrix given in input for a given $\eta$ and $\varepsilon$ while \texttt{MultiCompression} and \texttt{CompaSparse} create all the data we used in the next section.
+\bigskip
+With the headers contained in the folder \texttt{include}, we have already built some useful executables in the folder \texttt{src}. 
+One of the main executables is \texttt{Compress}, which builds the hierarchical matrix with compressed and dense blocks for given parameters $\eta$ (of the admissibility test) and $\varepsilon$ (of ACA compression), and then computes the compression rate, the relative error for a matrix-vector product and the relative error in Frobenius norm with respect to the dense matrix given in input. 
+The executable \texttt{MultiCompression} and \texttt{CompaSparse} do the same but for various values of $\eta$ and $\varepsilon$, and \texttt{CompaSparse} does it also for the IFPEN sparse matrix; they are the executables used to create the data postprocessed with the Python scripts of the folder \texttt{postprocessing} that generate the graphs of Section~\ref{sec:results}.
+Finally, there are some visualization executables.
+For example, the executable \texttt{VisuMesh} creates a file in Gmsh\footnote{\url{http://gmsh.info}} format to visualize the mesh of the network as in Figure~\ref{fig:structureExamples}, and the executable \texttt{VisuCluster} creates a file in Gmsh format to generate the images of Figures~\ref{fig:cluster_tree_fractures} and \ref{fig:cluster_tree_faults}.
+The executable \texttt{VisuMatrix} creates the data postprocessed with the Python scripts to generate the images as in Figure~\ref{subfig:loccomp450Fracs}.
+
+%For example, the executables \texttt{VisuMatrix}, \texttt{VisuCluster} and \texttt{VisuMesh} can create the data used with the Python scripts in \texttt{postprocessing} or Gmsh\footnote{\url{http://gmsh.info}} to create all the figures of this report. 
+%The executable \texttt{Compress} gives in command line the compression rate of the matrix given in input for a given $\eta$ and $\varepsilon$ while \texttt{MultiCompression} and \texttt{CompaSparse} create all the data we used in the next section.
+
+
+% input file
+
+
+
+

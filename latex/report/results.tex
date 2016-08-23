@@ -4,6 +4,7 @@
 
 
 \section{Results}
+\label{sec:results}
 
 In this section we report a series of test cases to illustrate the performance of our code on different geometrical structures.
 Figures~\ref{fig:450Fracs}--\ref{fig:3600FracsV3DN3} refer to discrete networks of \emph{fractures} (DFN), where each fracture is represented by a mesh element (a quadrangle);    
@@ -47,7 +48,7 @@ For instance, for $\eta=1$, $\varepsilon=0.9$, with $2700$ fractures in $V_1$ (r
 \subfloat[][Mesh.]
    {\includegraphics[width=.3\textwidth]{../images/visu_maillage450Fracs.png}} \quad
 \subfloat[][Matrix compression for $\eta=1, \varepsilon=0.9$.]
-   {\includegraphics[width=.4\textwidth]{../images/graphe_mapp_output_local_comp_1_0,9_matrice450Fracs.pdf}} \\
+   {\includegraphics[width=.4\textwidth]{../images/graphe_mapp_output_local_comp_1_0,9_matrice450Fracs.pdf}\label{subfig:loccomp450Fracs}} \\
 \subfloat[][Matrix compression for $\eta=10, \varepsilon=0.9$.]
    {\includegraphics[width=.4\textwidth]{../images/graphe_mapp_output_local_comp_10_0,9_matrice450Fracs.pdf}}
 \subfloat[][Matrix compression for $\eta=10, \varepsilon=1$.]
@@ -63,7 +64,7 @@ For instance, for $\eta=1$, $\varepsilon=0.9$, with $2700$ fractures in $V_1$ (r
 \subfloat[][Mesh.]
    {\includegraphics[width=.3\textwidth]{../images/visu_maillage1363Fracs.png}} \quad
 \subfloat[][Matrix compression for $\eta=1, \varepsilon=0.9$.]
-   {\includegraphics[width=.4\textwidth]{../images/graphe_mapp_output_local_comp_10_0,9_matrice1363Fracs.pdf}}\\
+   {\includegraphics[width=.6\textwidth]{../images/graphe_mapp_output_local_comp_10_0,9_matrice1363Fracs.pdf}}\\
 \subfloat[][Errors and compression rates for different values of $\eta$ and $\varepsilon$.]
    {\includegraphics[width=.6\textwidth]{../images/graphe_compare_output_compression_18_08_2016matrice1363Fracs.pdf}}
 \caption{Results for the structure with $1363$ fractures.}
@@ -156,7 +157,7 @@ For instance, for $\eta=1$, $\varepsilon=0.9$, with $2700$ fractures in $V_1$ (r
    {\includegraphics[width=.47\textwidth]{../images/graphe_tas_output_compression_18_08_2016matrice5364FracsTriangles.pdf}} \;
 \subfloat[][Times (s) for a matrix-vector product and compression rates for different values of $\eta$ and $\varepsilon$.]
    {\includegraphics[width=.47\textwidth]{../images/graphe_tmv_output_compression_18_08_2016matrice5364FracsTriangles.pdf}}
-\caption{Results for the structure of faults with $5364$ fractures.}
+\caption{Results for the structure of faults with $5364$ mesh triangles.}
 \label{fig:5364FracsTriangles}
 \end{figure}
 
