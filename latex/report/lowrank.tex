@@ -13,9 +13,9 @@ matrix-vector product is $\mathcal{O}(n^{2})$.
 \bigskip
 This cost is substantially reduced if we assume that $\mA$ is of low rank though. We say that a matrix has the low rank property, 
 with rank $k\leq n$, if there exist vectors $\bfu_{j},\bfv_{j}\in \C^{n}, j=1\dots k$, such that 
-$$
+\[
 \mA = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}\quad \textrm{with}\quad k\leq n/2.
-$$ 
+\]
 Indeed if this representation holds, then a matrix-vector product requires $2 k n$ flops, which is smaller than $n^{2}$ provided 
 that the condition on $k$ given above is satisfied. Matrices $\mA$ encountered in applications rarely have the low rank property. 
 A simple primary observation is that general matrices $\mA$ can be written as a sum of rank one matrices through its singular value
@@ -32,11 +32,11 @@ the next result.
 Let $\mA\in \C^{n\times n}$ admit the singular value decomposition (\ref{SVD}), and denote $\mA_{k}$ the 
 matrix obtained by truncating this decomposition at rank $k$ namely $\mA_{k}:=\sum_{j=1}^{k}\sigma_{j}\,\bfu_{j}
 \cdot\bfv_{j}^{T}$. Then we have the error estimates
-$$
+\[
 \Vert \mA - \mA_{k}\Vert_{2}^{2} = \sigma_{k+1}^{2}
 \quad\textrm{and}\quad 
-\Vert \mA - \mA_{k}\Vert_{\mrm{F}}^{2} = \sum_{j=k+1}^{n}\sigma_{j}^{2}
-$$
+\Vert \mA - \mA_{k}\Vert_{\mrm{F}}^{2} = \sum_{j=k+1}^{n}\sigma_{j}^{2},
+\]
 where $\Vert \;\Vert_{2}$ refers to the matrix norm induced by the vector norm $\vert \bfu\vert_{2} = (\sum_{j=1}^{n}\vert u_{j}\vert^{2})$ 
 for $\bfu = (u_{j})_{j=1}^{n}\in \C$ and $\Vert \;\Vert_{\mrm{F}}$ refers to the Frobenius norm.
 \end{proposition}
@@ -49,11 +49,16 @@ it suffices to take $k \simeq \log_q \varepsilon$.
 \bigskip
 Unfortunately, computing the singular value decomposition  of a matrix is expensive: it costs $\mathcal{O}(n^{3})$ flops. To circumvent this issue, starting from 
 an arbitrary matrix $\mA$ whose singular values are assumed to decrease exponentially, the Adaptative 
-Cross Approximation algorithm provides a collection of vectors $\bfu_{j},\bfv_{j}\in \C^{n}, j=1\dots n$ such that 
-the matrices $\widetilde{\mA}_{k} = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}$ satisfy 
-$$
+Cross Approximation (ACA) algorithm provides a collection of vectors $\bfu_{j},\bfv_{j}\in \C^{n}, j=1\dots n$ such that 
+the matrices 
+\begin{align}
+\label{eq:low_rank_decomposition}
+\widetilde{\mA}_{k} = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}
+\end{align} 
+satisfy 
+\begin{align*}
 \Vert \mA - \widetilde{\mA}_{k}\Vert_{\mrm{F}}\leq C \Vert \mA - \mA_{k}\Vert_{\mrm{F}}
-$$
+\end{align*}
 for some constant $C>0$ independent of $k$. Moreover, which is probably the most interesting feature of this method, 
 the cost of computing $\widetilde{\mA}_{k}$ is $\mathcal{O}(kn)$. This cost is thus quasi-linear provided that the singular 
 values  decrease exponentially. Besides, the algorithm does not require to generate all the coefficients of the matrix, so that the cost of the storage is also in $\mathcal{O}(kn)$. The detailed analysis of the ACA algorithm is out of the scope of this report. We only 
@@ -107,10 +112,10 @@ project, we took the stopping criterion given in \cite{Rjasanow2007}
 In this stopping criterion, the value $\varepsilon>0$ is a fitting parameter whose choice depends on the degree of consistency 
 that one wishes. The parameter controls the relative variation between two iterations since we have the following relation:
 \[
-	\vert \bfu_{r}\vert_{2}\vert \bfv_{r}\vert_{2} = \Vert \bfu_r \cdot \bfv_r^T \Vert_{\mrm{F}} =  \Vert \widetilde{\mA}_{r} - \widetilde{\mA}_{r-1}\Vert_{\mrm{F}}
+	\vert \bfu_{r}\vert_{2}\vert \bfv_{r}\vert_{2} = \Vert \bfu_r \cdot \bfv_r^T \Vert_{\mrm{F}} =  \Vert \widetilde{\mA}_{r} - \widetilde{\mA}_{r-1}\Vert_{\mrm{F}}.
 \]
 %Due to the requirements of IFPEN in terms of consistency, we typically chose values 
-%$\varepsilon = 1e-1$ or $1e-2$.
+%$\varepsilon = 1$ or $0.1$.
 
 \bigskip
 
@@ -126,7 +131,7 @@ where $\bx_i \in X$ and $\by_j \in Y$. In Figure~\ref{fig:err_decrease}, we show
 \begin{figure}
 \centering
 \includegraphics[width=.9\textwidth]{../images/graphe_output_err_decrease}
-\caption{Error on the interaction matrix between two clusters}
+\caption{Relative error on the interaction matrix between two clusters of points with ACA (solid lines) and SVD (dashed lines) varying the distance between the two clusters.}
 \label{fig:err_decrease}
 \end{figure}
 
