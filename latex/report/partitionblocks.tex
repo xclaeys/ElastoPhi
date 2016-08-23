@@ -39,6 +39,7 @@ The second conclusion that can be drawn from the discussion of Section \ref{sec:
 a correspondence between the numbering of unknowns on the one end, and some spatial distribution of degrees of freedom. This gives an insight 
 on how to find admissible (and thus compressible) sub-blocks inside the matrix $\mA$ as described in the following.
 
+\quad\\
 For a ball $\mB_{s}\subset \R^{3}$, define $s = \{j \in\llbr 1,3N\rrbr\;\vert \;\mrm{supp}(\bpsi_{j})\subset \mB_{s}\}$. 
 For another ball $\mB_{t}\subset \R^{3}$, define $t\subset \llbr1,3N\rrbr$ accordingly.  
 The more $\mB_{s}$ and $\mB_{t}$ are far from each other, the faster the singular values of $\mA_{t,s}$ will decrease because the Green kernel, and so the interaction, will be more regular (see Remark \ref{remark:err_decrease} for an example).
@@ -83,6 +84,7 @@ The decomposition (\ref{eq:decomposition}) relies on the admissible blocks, so t
 \label{fig:cluster_tree_faults}
 \end{figure}
 
+\quad\\
 To build a subset $\mathscr{B} \in \llbr 1,3N \rrbr \times \llbr 1,3N\rrbr $ of admissible blocks, we can look at pairs of clusters at the same level in the cluster tree and check if they are admissible, starting from the root. If they are, we apply ACA to the corresponding sub-matrix, and if they are not, we look at the interactions between their sons. This recursive algorithm provides a block decomposition like (\ref{eq:decomposition}).
 Actually if the block is admissible, we also check if the compression for the given $\varepsilon$ is advantageous in terms of complexity. More precisely, during the algorithm ACA, if $k(n+m)/(n\cdot m) \geq 1$ for a block $n\times m$ and $k$ the current rank of the approximation, we stop and we do like if the block was not admissible because it is not worth compressing it.
 

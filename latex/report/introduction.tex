@@ -43,8 +43,9 @@ error: measured in Frobenius norm, the perturbation on the matrix is typically b
 On the other hand, current literature on boundary integral equation nowadays offers a panel of refined complexity reduction 
 techniques: fast multipole methods, hierarchical matrix strategies, and the like. These techniques, that have been developed 
 during the last two decades, have been introduced to accelerate computations in a wide variety of problems ranging from molecular 
-dynamics \cite{?}, to astrophysics \cite{?}. Acceleration of boundary integral equations on smooth surfaces has also been 
-historically a key challenge for stimulating the development of such methods \cite{?}.
+dynamics \cite{BOARD199289}, to astrophysics \cite{BarnesHut}. For a general overview see e.g. \cite{Greengard}. Acceleration of 
+boundary integral equations on smooth surfaces has also been historically a key challenge for stimulating the development of 
+such methods \cite{MR805870}.
 
 \bigskip
 The main goal of the CEMRACS project Elasto$\Phi$ was to test the performance of one of these reduction techniques on the 
@@ -86,5 +87,4 @@ each of which is either small or admissible. To be efficient, such a decompositi
 admit a hierarchical structure. Such a technique, that we shall then describe, is referred to as a "hierarchical matrix format". 
 Then we shall give a detailed overview of the code developed during the project, and conclude the report by a series of test 
 cases where we report the performances of our code.
-
 
