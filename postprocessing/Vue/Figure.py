@@ -273,11 +273,11 @@ class ScatterPlot(Figure):
 
 	def TraceScatterPlot(self):
 		plt.figure(self.id)
-
 		legends=[]
 		for elt in self.donnee:
 			plt.scatter(elt.abscisse,elt.ordonnee,marker=elt.marker,s=elt.shape,c=elt.color)
 			legends.append(elt.nom)
+
 
 		if self.legende!=None:
 			plt.legend(legends,loc=self.legende["loc"],bbox_to_anchor=self.legende["bbox_to_anchor"],ncol=self.legende["ncol"],

@@ -76,7 +76,7 @@ ylabel={"label":"Time for matrix vector product","fontsize":20}
 
 legende={"loc":"lower right","bbox_to_anchor":None,"ncol":1,"fontsize":12}
 
-Figure0 = figure.ScatterPlot(id=0,xlabel=xlabel,ylabel=ylabel,legende=legende,yscale='log',xlim=xlim,ylim=ylim)
+Figure0 = figure.ScatterPlot(id=0,xlabel=xlabel,ylabel=ylabel,legende=legende,yscale='log',xlim=xlim,ylim=ylim,format="pdf")
 for elt in Nuages:
 	Figure0.AjoutNuage(elt)
 Figure0.TraceScatterPlot()

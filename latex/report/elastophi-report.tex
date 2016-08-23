@@ -1,17 +1,36 @@
+% !TEX spellcheck = en_US
 \documentclass[a4paper,11pt]{article}
 
 \usepackage{a4wide,amsmath,amssymb,amsthm,color,graphicx,mathrsfs}
 \usepackage{algorithm,algorithmic}
 \usepackage[utf8]{inputenc} 
 \usepackage[T1]{fontenc} 
+\definecolor{bleu_sombre}{rgb}{0,0,0.4}
+\definecolor{vert_sombre}{rgb}{0,0.3,0}
+\definecolor{rouge_sombre}{rgb}{0.3,0,0}
+\usepackage[colorlinks,linkcolor=bleu_sombre,citecolor=rouge_sombre,urlcolor=vert_sombre,breaklinks]{hyperref}
+\usepackage{subfig}
+
+\theoremstyle{remark}
+\newtheorem{remark1}{Remark}[section]
 
 \include{macros}
 
+\setlength{\parindent}{0pt} % no indent in the entire file
 
 \begin{document}
 
-%\include{frontpage}
-\include{introduction}
-%\include{lowrankapprox}
+\input{frontpage}
+\input{introduction}
+\input{lowrank}
+\input{matrix}
+\input{partitionblocks}
+\input{code}
+\input{results}
+\input{conclusion}
+
+\bibliographystyle{plain} 
+\bibliography{elastophi-report} 
+
 
 \end{document}
