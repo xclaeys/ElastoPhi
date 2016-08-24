@@ -204,16 +204,16 @@ The matrix comes from the discretization of a boundary integral equation
 
 %%%
 
-\begin{frame}
-\frametitle{Hierarchical matrices}
-\framesubtitle{An example of cluster tree en 1D}
-We build a cluster tree representing the unknowns, example:
-\begin{figure}
-	\centering
-	\includegraphics[scale=0.3]{../images/clustering}
-\end{figure}
-
-\end{frame}
+%\begin{frame}
+%\frametitle{Hierarchical matrices}
+%\framesubtitle{An example of cluster tree en 1D}
+%We build a cluster tree representing the unknowns, example:
+%\begin{figure}
+%	\centering
+%	\includegraphics[scale=0.3]{../images/clustering}
+%\end{figure}
+%We check the admissibility of the blocks corresponding to 
+%\end{frame}
 
 %%%
 
@@ -237,6 +237,18 @@ We build a tree of clusters of points representing the unknowns, example:
 	\includegraphics<4>[width=\textwidth]{../images/VisuPartmaillage5364FracsTrianglesdepth3}
 	\end{minipage}
 \end{figure}
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Hierarchical matrices}
+\framesubtitle{Admissible blocks }
+
+Interactions between nodes of the cluster tree correspond to sub-blocks of $\mA$. We check recursively the admissibility of the blocks with the following \emph{admissibility condition}:
+\begin{equation*}
+\mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big)< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s}),
+\end{equation*}
 \end{frame}
 
 %%%
