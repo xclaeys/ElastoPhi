@@ -135,11 +135,10 @@ But it costs $\mathcal{O}(n^{3})$ ...
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
+\frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{An approximation of the Singular Value Decomposition} 
 \begin{algorithm}[H]
   \caption{Partially Pivoted ACA}  
-  \label{AlgoACA}
   Initialize $j_{*}$\\
   $r=0$\\
   \textbf{while}(stopping criterion not satisfied)\{\\
@@ -167,7 +166,7 @@ But it costs $\mathcal{O}(n^{3})$ ...
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
+\frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{Comparaison between SVD and ACA} 
 Compression of the interaction matrix between \emph{two clusters of points}
 \begin{figure}
@@ -181,22 +180,23 @@ Compression of the interaction matrix between \emph{two clusters of points}
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
-\framesubtitle{In practice} 
+\frametitle{Adaptative Cross Approximation (ACA)}
+\framesubtitle{In practice in our application} 
 The matrix comes from the discretization of a boundary integral equation 
 \begin{equation*}\label{GalerkinMatrix}
-\mA_{j,k}:= \int_{\tau\times\tau'}\mathscr{G}(\bx-\by) \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
+\mA_{j,k}:= \int_{\tau\times\tau'} \alert{\mathscr{G}(\bx-\by)} \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
 \end{equation*}
-$\mathscr{G}$ is an integral kernel such that 
+\alert{$\mathscr{G}$} is an \emph{integral kernel} with these properties:
 \begin{itemize}
-\item it is singular for $\bx = \by$, i.e~ if $\tau \cap \tau' \ne \emptyset$
-\item it is regularizing if $\tau$ and $\tau'$ are distant from each other 
+\item it is \emph{singular} for $\bx = \by$, i.e.~if $\tau \cap \tau' \ne \emptyset$,
+\item it is \emph{regularizing} if $\tau$ and $\tau'$ are \alert{distant} from each other. 
 \end{itemize}
-\bigskip
 
- $\Rightarrow$ ACA is applicable to sub-blocks of $\mA$ 
+\bigskip
+ $\Rightarrow$ ACA is applicable to \emph{sub-blocks} of $\mA$ (\alert{admissible blocks})
  
- $\Rightarrow$ Hierarchical matrices
+ \medskip
+ $\Rightarrow$ Hierarchical Matrices (HM)
 \end{frame}
 
 %%%
