@@ -245,10 +245,24 @@ We build a tree of clusters of points representing the unknowns, example:
 \frametitle{Hierarchical matrices}
 \framesubtitle{Admissible blocks }
 
-Interactions between nodes of the cluster tree correspond to sub-blocks of $\mA$. We check recursively the admissibility of the blocks with the following \emph{admissibility condition}:
-\begin{equation*}
-\mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big)< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s}),
-\end{equation*}
+Interactions between nodes of the cluster tree $\Leftrightarrow$ sub-blocks of $\mA$
+\bigskip
+
+
+We check recursively the admissibility of the blocks with the following \emph{admissibility condition}:
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{align*}
+\mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big) \\
+< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s})
+\end{align*}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[width=0.9\columnwidth]{../images/cercles.png}
+\end{figure}
+\end{column}
+\end{columns}
 \end{frame}
 
 %%%
