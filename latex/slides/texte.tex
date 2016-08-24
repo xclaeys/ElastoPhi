@@ -163,12 +163,15 @@ But it costs $\mathcal{O}(n^{3})$ ...
 \begin{frame}
 \frametitle{Adaptative Cross approximation (ACA)}
 \framesubtitle{Comparaison between SVD and ACA} 
-Compression of the interaction between two clusters of points
+Compression of the interaction between \emph{two clusters} $\{ \bx_i\}$ and $\{ \by_j\}$
 \begin{figure}
 	\centering 
 	\includegraphics[width=0.9\textwidth]{../images/graphe_output_err_decrease}
 \end{figure}
 
+\begin{textblock*}{50mm}(93mm,70mm)
+$\mA_{i,j}=\dfrac{1}{4 \pi \Vert\bx_i - \by_j \Vert }$
+\end{textblock*}
 
 \end{frame}
 
@@ -197,17 +200,26 @@ $\mathscr{G}$ is an integral kernel such that
 
 \begin{frame}
 \frametitle{Hierarchical matrices}
+\framesubtitle{An example of cluster tree en 1D}
 We build a cluster tree representing the unknowns, example:
 \begin{figure}
 	\centering
-	\includegraphics{../images/clustering}
-	
+	\includegraphics[scale=0.3]{../images/clustering}
 \end{figure}
-
-
 \end{frame}
 
+%%%
 
+\begin{frame}
+\frametitle{Hierarchical matrices}
+\framesubtitle{An example of cluster tree }
+We build a cluster tree representing the unknowns, example:
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{../images/clustering}
+	\includegraphics[scale=0.3]{../images/clustering}
+\end{figure}
+\end{frame}
 
 
 
