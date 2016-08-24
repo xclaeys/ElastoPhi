@@ -98,6 +98,9 @@ Challenge: \emph{strongly irregular geometry!}
 
 \smallskip
 [W.~Hackbusch. Hierarchical Matrices: Algorithms and Analysis, {\em Springer Series in Computational Mathematics}, 2016.]
+
+\smallskip
+[S.~A.~Sauter, C.~Schwab. Boundary element methods, {\em Springer Series in Computational Mathematics}, 2011.]
 \par} %\par per interlinea giusti
 
 \end{frame}
@@ -180,20 +183,36 @@ Compression of the interaction matrix between \emph{two clusters of points}
 \begin{frame}
 \frametitle{Adaptative Cross approximation (ACA)}
 \framesubtitle{In practice} 
-The matrix comes from boundary integral equation 
+The matrix comes from the discretization of a boundary integral equation 
 \begin{equation*}\label{GalerkinMatrix}
 \mA_{j,k}:= \int_{\tau\times\tau'}\mathscr{G}(\bx-\by) \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
 \end{equation*}
-integral kernel $\mathscr{G}$ 
+$\mathscr{G}$ is an integral kernel such that 
 \begin{itemize}
-\item test
+\item it is singular for $\bx = \by$, i.e~ if $\tau \cap \tau' \ne \emptyset$
+\item it is regularizing if $\tau$ and $\tau'$ are distant from each other 
 \end{itemize}
+\bigskip
 
-
-  $\Rightarrow$ singular values do NOT decrease exponentially 
-% \sum_{\tau\in\mathcal{T}}\sum_{\tau'\in\mathcal{T}}\int_{\tau\times\tau'}\mathscr{R}_{\tau}^{\by}(\mathscr{R}_{\tau'}^{\bx}\mathscr{G}(\bx-\by)) \bu(\bx)\bv(\by) d\sigma(\bx) d\sigma(\by).
+ $\Rightarrow$ ACA is applicable to sub-blocks of $\mA$ 
  
+ $\Rightarrow$ Hierarchical matrices
 \end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Hierarchical matrices}
+We build a cluster tree representing the unknowns, example:
+\begin{figure}
+	\centering
+	\includegraphics{../images/clustering}
+	
+\end{figure}
+
+
+\end{frame}
+
 
 
 
