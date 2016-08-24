@@ -94,13 +94,13 @@ Challenge: \emph{strongly irregular geometry!}
 [M.~Bebendorf. Hierarchical matrices: A Means to Efficiently Solve Elliptic Boundary Value Problems, {\em Lecture Notes in Computational Science and Engineering}, 2008]
 
 \smallskip
-[S.~Rjasanow, O.~Steinbach. The fast solution of boundary integral equations. {\em Mathematical and Analytical Techniques with Applications to Engineering}, 2007.]
+[S.~Rjasanow, O.~Steinbach. The fast solution of boundary integral equations. {\em Mathematical and Analytical Techniques with Applications to Engineering}, 2007]
 
 \smallskip
-[W.~Hackbusch. Hierarchical Matrices: Algorithms and Analysis, {\em Springer Series in Computational Mathematics}, 2016.]
+[W.~Hackbusch. Hierarchical Matrices: Algorithms and Analysis, {\em Springer Series in Computational Mathematics}, 2016]
 
 \smallskip
-[S.~A.~Sauter, C.~Schwab. Boundary element methods, {\em Springer Series in Computational Mathematics}, 2011.]
+[S.~A.~Sauter, C.~Schwab. Boundary element methods, {\em Springer Series in Computational Mathematics}, 2011]
 \par} %\par per interlinea giusti
 
 \end{frame}
@@ -196,7 +196,7 @@ The matrix comes from the discretization of a boundary integral equation
 \end{itemize}
 
 \bigskip
- $\Rightarrow$ ACA is applicable to \emph{sub-blocks} of $\mA$ (\alert{admissible blocks})
+ $\Rightarrow$ ACA is applicable to \alert{admissible blocks} of $\mA$
  
  \medskip
  $\Rightarrow$ Hierarchical Matrices (HM)
@@ -238,12 +238,41 @@ C++ implementation, our source code available on GitHub at:
 \url{https://github.com/xclaeys/ElastoPhi}
 \end{center}
 
+Varying the parameters of the algorithm:
+\vspace{-5pt}
 \begin{figure}
 \centering
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_1_0,9_matrice450Fracs.pdf}
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_0,9_matrice450Fracs.pdf}
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_1_matrice450Fracs.pdf}
 \end{figure}
+
+(A block is not necessarily a connected part of the matrix)
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Results}
+
+\small
+
+Network of $N=1994$ fractures ($3N\times 3N$ matrix $\mA$):
+\vspace{-5pt}
+\begin{figure}
+\centering
+\includegraphics[width=.3\textwidth]{../images/visu_maillage1994Fracs.png}
+\includegraphics[width=.6\textwidth]{../images/graphe_compasparse_output_compression_18_08_2016matrice1994Fracs.pdf}
+\end{figure}
+
+\vspace{-5pt}
+{\footnotesize
+IFPEN sparse matrix: compression rate $=0.99$, error $=45\%$
+
+H matrix, zero blocks and $\eta=1$: compression rate $=0.86$, error $=2\%$
+
+HM-ACA matrix, $\varepsilon=1$ and $\eta=1$: compression rate $=0.68$, error $=1\%$}
+
 \end{frame}
 
 %%%
