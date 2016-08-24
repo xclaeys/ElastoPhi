@@ -222,9 +222,15 @@ The matrix comes from the discretization of a boundary integral equation
 %%%
 
 \begin{frame}
-\frametitle{Hierarchical matrices}
-\framesubtitle{An example of cluster tree }
-We build a tree of clusters of points representing the unknowns, example:
+\frametitle{Hierarchical matrices (HM)}
+\framesubtitle{An example of cluster tree}
+
+First step to build the blocks of the \alert{hierarchical matrix}:
+
+\smallskip
+we build a \emph{tree} of \alert{clusters of points} 
+
+(the unknowns correspond to geometrical points)
 \begin{figure}
 \centering
 	\begin{minipage}[c]{.4\linewidth}
@@ -246,19 +252,18 @@ We build a tree of clusters of points representing the unknowns, example:
 %%%
 
 \begin{frame}
-\frametitle{Hierarchical matrices}
+\frametitle{Hierarchical matrices (HM)}
 \framesubtitle{Admissible blocks }
 
-Interactions between nodes of the cluster tree $\Leftrightarrow$ sub-blocks of $\mA$
-\bigskip
+\alert{Interactions between nodes} of the cluster tree $\Leftrightarrow$ \alert{sub-blocks} of $\mA$
 
-
-We check recursively the admissibility of the blocks with the following \emph{admissibility condition}:
+\medskip
+We check \emph{recursively} the admissibility of the blocks with the following \alert{admissibility condition} on the associated clusters:
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{align*}
 \mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big) \\
-< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s})
+< \alert{\eta}\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s})
 \end{align*}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -267,6 +272,9 @@ We check recursively the admissibility of the blocks with the following \emph{ad
 \end{figure}
 \end{column}
 \end{columns}
+
+$\Rightarrow$ apply ACA to the admissible blocks.
+
 \end{frame}
 
 %%%
