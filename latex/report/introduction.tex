@@ -30,13 +30,13 @@ requires at least $\mathcal{O}(N^{2})$ operations.
 As in most industrial applications, for the problems considered by IFPEN this situation is not acceptable. 
 Indeed, computational complexity of $N^{2}$ makes it impossible to perform a matrix-vector product for $N$ larger than
 say $10^{6}$: this would be too costly in terms of time and memory storage. At the same time, the  applications 
-considered by IFPEN typically require $N$ to be of this order.
+considered by IFPEN typically require~$N$ to be of this order.
 
 \bigskip
 To deal with this difficulty, IFPEN developed a heuristic method consisting in forcing coefficients of the 
 BEM matrix to zero whenever this coefficient corresponds to the interaction between sufficiently distant points 
 of the crack network. With this procedure, the matrix of the problem is approximated by a sparsified matrix that 
-allows matrix-vector products with $\mathcal{O}(N)$ complexity. But this strategy also induces substantial consistency 
+allows matrix-vector products with~$\mathcal{O}(N)$ complexity. But this strategy also induces substantial consistency 
 error: measured in Frobenius norm, the perturbation on the matrix is typically between $16$\% and $40$\% large.
 
 \bigskip
