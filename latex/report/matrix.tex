@@ -37,7 +37,7 @@ and the bilinear form is given by
 \end{equation}
 In this formula the operator $\mathscr{R}_{\tau}^{\bx}$ is the operator $\mathscr{R}_{\tau}$ applied with respect the $\bx$ variable. The operator $\mathscr{R}_{\tau'}^{\by}$ 
 is defined accordingly. Formula  (\ref{VariationnalFormulation}) is rather abstract. Another, more explicit expression of this operator can be obtained, 
-see e.g.~\cite{??}, but this is pointless for the present report. The only important thing here is that the integral kernel coming into play in this integral 
+see e.g.~\cite[\S.3.4.5.3]{Bebendorf2008}, but this is pointless for the present report. The only important thing here is that the integral kernel coming into play in this integral 
 operator is singular at $\bx = \by$ (which is possible only if $\tau\cap \tau'\neq \emptyset$), and it is regular otherwise. In particular, if $\tau$ and $\tau'$
 are distant from each other, then the operator associated with $a(\;,\;)$ is regularizing, and it will induce matrices with exponentially decreasing singular values.
 Now let us describe how the bilinear form (\ref{VariationnalFormulation}) is discretized. Each space $\mH^{1/2}_{00}(\tau)^{3}$ is approximated with a three dimensional 
@@ -53,9 +53,9 @@ a(\bu_{h},\bv_{h}) = f(\bv_{h})\quad \bv_{h}\in \mH_{h}(\Gamma).
 Following the classical Galerkin discretization procedure, a matrix is derived from (\ref{discreteVF}) simply by specifying a basis for 
 $\mH_{h}(\Gamma)$. In the present case, such a basis is specified as follows. Denote by $\bpsi_{3j-2}(\bx), \bpsi_{3j-1}(\bx),\bpsi_{3j}(\bx)$
 three vector fields generating $\mH_{h}(\tau_{j})$ (recall that $\mrm{dim}(\mH_{h}(\tau_{j}) )= 3$ by hypothesis). Then we have 
-$$
+\[
 \mH_{h}(\Gamma) = \mathop{\mrm{span}}_{j=1\dots 3N}\{\bpsi_{j}\}.
-$$
+\]
 Of course, here, each $\bpsi_{3j-q}$ with $q=0,1,2$ is regarded as a function defined on $\Gamma$ that is supported 
 only on $\tau_{j}$. Then the matrices that we had to deal with during Project Elatso$\Phi$ are defined as 
 $\mA = (\mA_{j,k})_{j,k=1\dots 3N}$ where 

@@ -51,14 +51,14 @@ Unfortunately, computing the singular value decomposition  of a matrix is expens
 an arbitrary matrix $\mA$ whose singular values are assumed to decrease exponentially, the Adaptative 
 Cross Approximation (ACA) algorithm provides a collection of vectors $\bfu_{j},\bfv_{j}\in \C^{n}, j=1\dots n$ such that 
 the matrices 
-\begin{align}
+\begin{equation}
 \label{eq:low_rank_decomposition}
 \widetilde{\mA}_{k} = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}
-\end{align} 
+\end{equation} 
 satisfy 
-\begin{align*}
+\[
 \Vert \mA - \widetilde{\mA}_{k}\Vert_{\mrm{F}}\leq C \Vert \mA - \mA_{k}\Vert_{\mrm{F}}
-\end{align*}
+\]
 for some constant $C>0$ independent of $k$. Moreover, which is probably the most interesting feature of this method, 
 the cost of computing $\widetilde{\mA}_{k}$ is $\mathcal{O}(kn)$. This cost is thus quasi-linear provided that the singular 
 values  decrease exponentially. Besides, the algorithm does not require to generate all the coefficients of the matrix, so that the cost of the storage is also in $\mathcal{O}(kn)$. The detailed analysis of the ACA algorithm is out of the scope of this report. We only 
