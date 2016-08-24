@@ -168,7 +168,7 @@ But it costs $\mathcal{O}(n^{3})$ ...
 \begin{frame}
 \frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{Comparaison between SVD and ACA} 
-Compression of the interaction between \emph{two clusters} $\{ \bx_i\}$ and $\{ \by_j\}$
+Compression of the interaction matrix between \emph{two clusters} $\{ \bx_i\}$ and $\{ \by_j\}$
 \begin{figure}
 	\centering 
 	\includegraphics[width=0.9\textwidth]{../images/graphe_output_err_decrease}
@@ -218,6 +218,19 @@ We build a cluster tree representing the unknowns, example:
 %%%
 
 \begin{frame}
+\frametitle{Hierarchical matrices}
+\framesubtitle{An example of cluster tree }
+We build a cluster tree representing the unknowns, example:
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{../images/clustering}
+	\includegraphics[scale=0.3]{../images/clustering}
+\end{figure}
+\end{frame}
+
+%%%
+
+\begin{frame}
 \frametitle{Results}
 
 C++ implementation, our source code available on GitHub at:
@@ -230,18 +243,6 @@ C++ implementation, our source code available on GitHub at:
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_1_0,9_matrice450Fracs.pdf}
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_0,9_matrice450Fracs.pdf}
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_1_matrice450Fracs.pdf}
-\end{figure}
-
-%%%
-
-\begin{frame}
-\frametitle{Hierarchical matrices}
-\framesubtitle{An example of cluster tree }
-We build a cluster tree representing the unknowns, example:
-\begin{figure}
-	\centering
-	\includegraphics[scale=0.3]{../images/clustering}
-	\includegraphics[scale=0.3]{../images/clustering}
 \end{figure}
 \end{frame}
 
