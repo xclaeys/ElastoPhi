@@ -94,10 +94,10 @@ Challenge: \emph{strongly irregular geometry!}
 [M.~Bebendorf. Hierarchical matrices: A Means to Efficiently Solve Elliptic Boundary Value Problems, {\em Lecture Notes in Computational Science and Engineering}, 2008]
 
 \smallskip
-[S.~Rjasanow, O.~Steinbach. The fast solution of boundary integral equations. {\em Mathematical and Analytical Techniques with Applications to Engineering}, 2007.]
+[S.~Rjasanow, O.~Steinbach. The fast solution of boundary integral equations. {\em Mathematical and Analytical Techniques with Applications to Engineering}, 2007]
 
 \smallskip
-[W.~Hackbusch. Hierarchical Matrices: Algorithms and Analysis, {\em Springer Series in Computational Mathematics}, 2016.]
+[W.~Hackbusch. Hierarchical Matrices: Algorithms and Analysis, {\em Springer Series in Computational Mathematics}, 2016]
 \par} %\par per interlinea giusti
 
 \end{frame}
@@ -105,20 +105,26 @@ Challenge: \emph{strongly irregular geometry!}
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
+\frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{The idea of the Singular Value Decomposition (SVD)} 
-Suppose that $\mathrm{A} \in \R^{n\times n}$ is such that 
+
+\begin{block}{}
+Suppose that $\mathrm{A} \in \R^{n\times n}$ is of \alert{low rank}, i.e. 
 \[
-\mA = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{with}\quad k\leq n/2.
+\mA = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{with}\quad \alert{k}\leq n/2.
 \]
-$\Rightarrow$ $2kn$ operations
+$\Rightarrow$ \alert{$2kn$} operations for matrix-vector product.
+\end{block}
 
-\bigskip
-SVD actually gives the following decomposition:
-\begin{equation*}\label{SVD}
-\mA = \sum_{j=1}^{n}\sigma_{j}\,\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{ where }\{\sigma_{j}^{2}\}_{j=1\dots n} \text{ are the eigenvalues of } \mA^{T}\mA,
-\end{equation*}
 
+\alert{SVD} actually gives the following decomposition:
+\[
+\mA = \sum_{j=1}^{n}\sigma_{j}\,\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{ where }\{\sigma_{j}^{2}\}_{j=1\dots n} \text{ are the eigenvalues of } \mA^{T}\mA.
+\]
+
+\emph{If} the $\sigma_{j}$ decrease fast, \emph{truncated SVD} is a good approximation of $\mA$!
+
+\medskip
 But it costs $\mathcal{O}(n^{3})$ ...
 
 \end{frame}
@@ -126,17 +132,15 @@ But it costs $\mathcal{O}(n^{3})$ ...
 %%%
 
 \begin{frame}
+
 \frametitle{Adaptative Cross approximation (ACA)}
 \framesubtitle{An approximation of the Singular Value Decomposition (SVD)} 
-%\fboxsep=0pt
-%\noindent\fbox{%
-
 \begin{minipage}[t]{.6\linewidth}
 \vspace{-0.9cm}
 \begin{algorithm}[H]
   \caption{Partially Pivoted ACA}  
-%  \label{AlgoACA}
-  Initialize $j_{*}$\\ $r=0$\\
+  Initialize $j_{*}$
+  $r=0$\\
   \textbf{while}(stopping criterion not satisfied)\{\\
   \indent\hspace{0.49cm} \parbox{\linewidth}{
     $\bfw = \mA(j_{*},:)^{T} - \sum_{\ell=1}^{r}\bfu_{\ell}(j_{*})\,\bfv_{\ell}$\\
@@ -156,7 +160,6 @@ But it costs $\mathcal{O}(n^{3})$ ...
 \end{algorithm}
 \end{minipage}
 \hfill%
-%\fbox{
 \begin{minipage}[t]{.3\linewidth}
 Remarque 1\\
 Remarque 1
@@ -167,36 +170,209 @@ Remarque 1
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
+\frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{Comparaison between SVD and ACA} 
-Compression of the interaction between two clusters of points
+Compression of the interaction matrix between \emph{two clusters} $\{ \bx_i\}$ and $\{ \by_j\}$
 \begin{figure}
 	\centering 
 	\includegraphics[width=0.9\textwidth]{../images/graphe_output_err_decrease}
 \end{figure}
 
+\begin{textblock*}{50mm}(93mm,70mm)
+$\mA_{i,j}=\dfrac{1}{4 \pi \Vert\bx_i - \by_j \Vert }$
+\end{textblock*}
 
 \end{frame}
 
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
-\framesubtitle{In practice} 
-The matrix comes from boundary integral equation 
+\frametitle{Adaptative Cross Approximation (ACA)}
+\framesubtitle{In practice in our application} 
+The matrix comes from the discretization of a boundary integral equation 
 \begin{equation*}\label{GalerkinMatrix}
-\mA_{j,k}:= \int_{\tau\times\tau'}\mathscr{G}(\bx-\by) \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
+\mA_{j,k}:= \int_{\tau\times\tau'} \alert{\mathscr{G}(\bx-\by)} \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
 \end{equation*}
-integral kernel $\mathscr{G}$ 
+\alert{$\mathscr{G}$} is an \emph{integral kernel} with these properties:
 \begin{itemize}
-\item test
+\item it is \emph{singular} for $\bx = \by$, i.e.~if $\tau \cap \tau' \ne \emptyset$,
+\item it is \emph{regularizing} if $\tau$ and $\tau'$ are \alert{distant} from each other. 
 \end{itemize}
 
-
-  $\Rightarrow$ singular values do NOT decrease exponentially 
-% \sum_{\tau\in\mathcal{T}}\sum_{\tau'\in\mathcal{T}}\int_{\tau\times\tau'}\mathscr{R}_{\tau}^{\by}(\mathscr{R}_{\tau'}^{\bx}\mathscr{G}(\bx-\by)) \bu(\bx)\bv(\by) d\sigma(\bx) d\sigma(\by).
+\bigskip
+ $\Rightarrow$ ACA is applicable to \alert{admissible blocks} of $\mA$
  
+ \medskip
+ $\Rightarrow$ Hierarchical Matrices (HM)
 \end{frame}
+
+%%%
+
+%\begin{frame}
+%\frametitle{Hierarchical matrices}
+%\framesubtitle{An example of cluster tree en 1D}
+%We build a cluster tree representing the unknowns, example:
+%\begin{figure}
+%	\centering
+%	\includegraphics[scale=0.3]{../images/clustering}
+%\end{figure}
+%We check the admissibility of the blocks corresponding to 
+%\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Hierarchical matrices}
+\framesubtitle{An example of cluster tree }
+We build a tree of clusters of points representing the unknowns, example:
+\begin{figure}
+\centering
+	\begin{minipage}[c]{.4\linewidth}
+	\includegraphics<1>[width=\textwidth]{../images/visu_maillage450Fracsbis}
+	\includegraphics<2>[width=\textwidth]{../images/VisuPartmaillage450Fracsdepth1}
+	\includegraphics<3>[width=\textwidth]{../images/VisuPartmaillage450Fracsdepth2}
+	\includegraphics<4>[width=\textwidth]{../images/VisuPartmaillage450Fracsdepth3}
+	\end{minipage}
+\qquad
+	\begin{minipage}[c]{.4\linewidth}
+	\includegraphics<1>[width=\textwidth]{../images/visu_maillage5364FracsTriangles}
+	\includegraphics<2>[width=\textwidth]{../images/VisuPartmaillage5364FracsTrianglesdepth1}
+	\includegraphics<3>[width=\textwidth]{../images/VisuPartmaillage5364FracsTrianglesdepth2}
+	\includegraphics<4>[width=\textwidth]{../images/VisuPartmaillage5364FracsTrianglesdepth3}
+	\end{minipage}
+\end{figure}
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Hierarchical matrices}
+\framesubtitle{Admissible blocks }
+
+Interactions between nodes of the cluster tree $\Leftrightarrow$ sub-blocks of $\mA$
+\bigskip
+
+
+We check recursively the admissibility of the blocks with the following \emph{admissibility condition}:
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{align*}
+\mrm{min}\big( \mrm{diam}(\mB_{t}),\mrm{diam}(\mB_{s})\big) \\
+< \eta\;\mrm{dist}(\mrm{B}_{t},\mrm{B}_{s})
+\end{align*}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[width=0.9\columnwidth]{../images/cercles.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Results}
+
+C++ implementation, our source code available on GitHub at:
+\begin{center}
+\url{https://github.com/xclaeys/ElastoPhi}
+\end{center}
+
+Varying the parameters of the algorithm:
+\vspace{-5pt}
+\begin{figure}
+\centering
+\includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_1_0,9_matrice450Fracs.pdf}
+\includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_0,9_matrice450Fracs.pdf}
+\includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_1_matrice450Fracs.pdf}
+\end{figure}
+
+(A block is not necessarily a connected part of the matrix)
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Results}
+
+\small
+
+Network of $N=1994$ \alert{fractures} ($3N\times 3N$ matrix $\mA$):
+\vspace{-5pt}
+\begin{figure}
+\centering
+\includegraphics[width=.3\textwidth]{../images/visu_maillage1994Fracs.png}
+\includegraphics[width=.6\textwidth]{../images/graphe_compasparse_output_compression_18_08_2016matrice1994Fracs.pdf}
+\end{figure}
+
+\vspace{-5pt}
+{\footnotesize
+IFPEN sparse matrix: compression rate $=0.99$, error \alert{$=45\%$}
+
+H matrix, zero blocks and $\eta=1$: compression rate $=0.86$, error $=2\%$
+
+HM-ACA matrix, $\varepsilon=1$ and $\eta=1$: compression rate $=0.68$, error \alert{$=1\%$}
+}
+
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Results}
+
+\small
+
+Network of \alert{faults} with $N=5364$ mesh triangles ($3N\times 3N$ matrix $\mA$):
+\vspace{-5pt}
+\begin{figure}
+\centering
+\includegraphics[width=.35\textwidth]{../images/visu_maillage5364FracsTriangles.png}
+\includegraphics[width=.6\textwidth]{../images/graphe_compasparse_output_compression_18_08_2016matrice5364FracsTriangles.pdf}
+\end{figure}
+
+\vspace{-5pt}
+{\footnotesize
+IFPEN sparse matrix: compression rate $=0.999$, error \alert{$=41\%$}
+
+H matrix, zero blocks and $\eta=1$: compression rate $=0.98$, error $=0.55\%$
+
+HM-ACA matrix, $\varepsilon=1$ and $\eta=1$: compression rate $=0.92$, error \alert{$=0.38\%$}
+}
+
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Conclusion and outlook}
+
+\begin{itemize}
+\item
+We obtained approximation errors suited to IFPEN applications with high compression rates,
+\item
+to treat large industrial cases, we have to compute \emph{only the needed coefficients} of the matrix \emph{on the fly}, in order to really exploit the low complexity of ACA 
+
+(not possible during CEMRACS for confidentiality reasons),
+\item
+design a \emph{new admissibility condition} to take in account the \emph{direction} of the fractures,
+\item
+\emph{parallelization} of the code.
+\end{itemize}
+
+\pause
+\bigskip
+\begin{center}
+Thank you for your attention!
+\end{center}
+
+\end{frame}
+
+
+
+
+
 
 
 
