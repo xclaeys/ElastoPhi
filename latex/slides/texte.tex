@@ -128,30 +128,39 @@ But it costs $\mathcal{O}(n^{3})$ ...
 \begin{frame}
 \frametitle{Adaptative Cross approximation (ACA)}
 \framesubtitle{An approximation of the Singular Value Decomposition (SVD)} 
+%\fboxsep=0pt
+%\noindent\fbox{%
+
+\begin{minipage}[t]{.6\linewidth}
+\vspace{-0.9cm}
 \begin{algorithm}[H]
   \caption{Partially Pivoted ACA}  
-  \label{AlgoACA}
-  Initialize $j_{*}$\\
-  $r=0$\\
+%  \label{AlgoACA}
+  Initialize $j_{*}$\\ $r=0$\\
   \textbf{while}(stopping criterion not satisfied)\{\\
-  \indent\hspace{0.5cm} \parbox{\linewidth}{
+  \indent\hspace{0.49cm} \parbox{\linewidth}{
     $\bfw = \mA(j_{*},:)^{T} - \sum_{\ell=1}^{r}\bfu_{\ell}(j_{*})\,\bfv_{\ell}$\\
     $k_{*} = \mathop{\mrm{argmax}}_{k = 1\dots n}\vert \bfw(k)\vert$\\
     $w_{*} = \bfw(k_{*})$\\
-    \textbf{if}($w_{*}\neq 0$)\{\\\quad\\
+    \textbf{if}($w_{*}\neq 0$)\{\\
     \indent\hspace{0.5cm} \parbox{\linewidth}{
       $\bfv_{r+1} = \bfw$\\
       $\bfw = \mA(:,k_{*})-\sum_{\ell = 1}^{r}\bfv_{\ell}(k_{*})\,\bfu_{\ell} $\\
       $\bfu_{r+1} = w_{*}^{-1}\bfw$\\      
       $j_{*} = \mathop{\mrm{argmax}}_{j = 1\dots n} \vert \bfw(j)\vert$\\
-      $r=r+1$
-    }
-   \}\\
+      $r=r+1$} 
+      \}\\
     \textbf{else}\{terminate algorithm\}
     }\\
   \}
-
 \end{algorithm}
+\end{minipage}
+\hfill%
+%\fbox{
+\begin{minipage}[t]{.3\linewidth}
+Remarque 1\\
+Remarque 1
+\end{minipage}%}
 
 \end{frame}
 
