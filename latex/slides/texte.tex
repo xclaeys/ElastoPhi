@@ -104,6 +104,71 @@ Challenge: \emph{strongly irregular geometry!}
 
 %%%
 
+\begin{frame}
+\frametitle{Adaptative Cross approximation (ACA)}
+\framesubtitle{The idea of the Singular Value Decomposition (SVD)} 
+Suppose that $\mathrm{A} \in \R^{n\times n}$ is such that 
+\[
+\mA = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{with}\quad k\leq n/2.
+\]
+$\Rightarrow$ $2kn$ operations
+
+\bigskip
+SVD actually gives the following decomposition:
+\begin{equation*}\label{SVD}
+\mA = \sum_{j=1}^{n}\sigma_{j}\,\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{ where }\{\sigma_{j}^{2}\}_{j=1\dots n} \text{ are the eigenvalues of } \mA^{T}\mA,
+\end{equation*}
+
+But it costs $\mathcal{O}(n^{3})$ ...
+
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Adaptative Cross approximation (ACA)}
+\framesubtitle{An approximation of the Singular Value Decomposition (SVD)} 
+\begin{algorithm}[H]
+  \caption{Partially Pivoted ACA}  
+  \label{AlgoACA}
+  Initialize $j_{*}$\\
+  $r=0$\\
+  \textbf{while}(stopping criterion not satisfied)\{\\
+  \indent\hspace{0.5cm} \parbox{\linewidth}{
+    $\bfw = \mA(j_{*},:)^{T} - \sum_{\ell=1}^{r}\bfu_{\ell}(j_{*})\,\bfv_{\ell}$\\
+    $k_{*} = \mathop{\mrm{argmax}}_{k = 1\dots n}\vert \bfw(k)\vert$\\
+    $w_{*} = \bfw(k_{*})$\\
+    \textbf{if}($w_{*}\neq 0$)\{\\\quad\\
+    \indent\hspace{0.5cm} \parbox{\linewidth}{
+      $\bfv_{r+1} = \bfw$\\
+      $\bfw = \mA(:,k_{*})-\sum_{\ell = 1}^{r}\bfv_{\ell}(k_{*})\,\bfu_{\ell} $\\
+      $\bfu_{r+1} = w_{*}^{-1}\bfw$\\      
+      $j_{*} = \mathop{\mrm{argmax}}_{j = 1\dots n} \vert \bfw(j)\vert$\\
+      $r=r+1$
+    }
+   \}\\
+    \textbf{else}\{terminate algorithm\}
+    }\\
+  \}
+
+\end{algorithm}
+
+\end{frame}
+
+%%%
+
+\begin{frame}
+\frametitle{Adaptative Cross approximation (ACA)}
+\framesubtitle{Comparaison between SVD and ACA} 
+Compression of the interaction between two clusters of points
+\begin{figure}
+	\centering 
+	\includegraphics[width=0.9\textwidth]{../images/graphe_output_err_decrease}
+\end{figure}
+
+
+\end{frame}
+
 
 
 
