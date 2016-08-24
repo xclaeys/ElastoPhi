@@ -224,13 +224,12 @@ The matrix comes from the discretization of a boundary integral equation
 \begin{frame}
 \frametitle{Hierarchical matrices (HM)}
 \framesubtitle{An example of cluster tree}
-
+\begin{itemize}
+\item[1.] 
 First step to build the blocks of the \alert{hierarchical matrix}:
-
-\smallskip
-we build a \emph{tree} of \alert{clusters of points} 
-
-(the unknowns correspond to mesh element barycenters)
+building a \emph{tree} of \alert{clusters of points}.
+\end{itemize}
+The unknowns correspond to mesh element barycenters.
 \begin{figure}
 \centering
 	\begin{minipage}[c]{.4\linewidth}
@@ -255,10 +254,13 @@ we build a \emph{tree} of \alert{clusters of points}
 \frametitle{Hierarchical matrices (HM)}
 \framesubtitle{Admissible blocks }
 
-\alert{Interactions between nodes} of the cluster tree $\Leftrightarrow$ \alert{sub-blocks} of $\mA$
+\alert{Interactions between nodes} of the cluster tree $\Leftrightarrow$ \alert{sub-blocks} of $\mA$.
 
 \medskip
-We check \emph{recursively} the admissibility of the blocks with the following \alert{admissibility condition} on the associated clusters:
+\begin{itemize}
+\item[2.] Second step: checking \emph{recursively} the admissibility of the blocks with the following \alert{admissibility condition} on the associated clusters:
+\end{itemize}
+
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{align*}
@@ -282,7 +284,7 @@ $\Rightarrow$ apply ACA to the admissible blocks.
 \begin{frame}
 \frametitle{Results}
 
-C++ implementation, our source code available on GitHub at:
+C++ implementation, our source code is available on GitHub at:
 \begin{center}
 \url{https://github.com/xclaeys/ElastoPhi}
 \end{center}
@@ -295,8 +297,9 @@ Varying the parameters of the algorithm:
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_0,9_matrice450Fracs.pdf}
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_1_matrice450Fracs.pdf}
 \end{figure}
-
-(A block is not necessarily a connected part of the matrix)
+\begin{itemize}
+\item Remark : a block is not necessarily a connected part of the matrix.
+\end{itemize}
 \end{frame}
 
 %%%
