@@ -237,6 +237,7 @@ The matrix comes from the discretization of a boundary integral equation
 \begin{itemize}
 \item[1.] 
 First step to build the blocks of the \alert{hierarchical matrix}:
+
 building a \emph{tree} of \alert{clusters of points}.
 \end{itemize}
 The unknowns correspond to mesh element barycenters.
@@ -308,7 +309,7 @@ Varying the parameters of the algorithm:
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_1_matrice450Fracs.pdf}
 \end{figure}
 \begin{itemize}
-\item Remark : a block is not necessarily a connected part of the matrix.
+\item Remark: a block is not necessarily a connected part of the matrix.
 \end{itemize}
 \end{frame}
 
@@ -405,14 +406,14 @@ HM-ACA matrix, $\varepsilon=1$ and $\eta=1$: compression rate $=0.92$, error \al
 
 \small
 
-Network of \alert{faults} with $N=2700$ mesh triangles ($3N\times 3N$ matrix $\mA$):
+Network of $N=2700$ fractures, size $\mA=3N\times 3N$:
 \vspace{-5pt}
 \begin{figure}
 \centering
-\begin{minipage}[c]{.49\linewidth}
+\begin{minipage}[c]{.39\linewidth}
 \includegraphics[width=\textwidth]{../images/visu_maillage2700FracsV2D2.png}
 \end{minipage}
-\begin{minipage}[c]{.49\linewidth}
+\begin{minipage}[c]{.6\linewidth}
 \includegraphics[width=\textwidth]{../images/graphe_compare_output_compression_18_08_2016matrice2700FracsV2D2.pdf}
 \end{minipage}
 \end{figure}
@@ -426,22 +427,18 @@ Network of \alert{faults} with $N=2700$ mesh triangles ($3N\times 3N$ matrix $\m
 
 \small
 
-Network of \alert{faults} with $N=5364$ mesh triangles ($3N\times 3N$ matrix $\mA$):
+Network of $N=1363$ fractures, size $\mA=3N\times 3N$:
 \vspace{-5pt}
 \begin{figure}
 \centering
-\includegraphics[width=.35\textwidth]{../images/visu_maillage5364FracsTriangles.png}
-\includegraphics[width=.6\textwidth]{../images/graphe_compasparse_output_compression_18_08_2016matrice5364FracsTriangles.pdf}
+\begin{minipage}[c]{.3\linewidth}
+\includegraphics[width=\textwidth]{../images/visu_maillage1363Fracs.png}
+\end{minipage}
+\begin{minipage}[c]{.6\linewidth}
+\includegraphics[width=\textwidth]{../images/graphe_compare_output_compression_18_08_2016matrice1363Fracs.pdf}
+\end{minipage}
 \end{figure}
 
-\vspace{-5pt}
-{\footnotesize
-IFPEN sparse matrix: compression rate $=0.999$, error \alert{$=41\%$}
-
-H matrix, zero blocks and $\eta=1$: compression rate $=0.98$, error $=0.55\%$
-
-HM-ACA matrix, $\varepsilon=1$ and $\eta=1$: compression rate $=0.92$, error \alert{$=0.38\%$}
-}
 
 \end{frame}
 
