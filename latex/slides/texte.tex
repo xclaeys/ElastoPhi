@@ -108,20 +108,26 @@ Challenge: \emph{strongly irregular geometry!}
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
+\frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{The idea of the Singular Value Decomposition (SVD)} 
-Suppose that $\mathrm{A} \in \R^{n\times n}$ is such that 
+
+\begin{block}{}
+Suppose that $\mathrm{A} \in \R^{n\times n}$ is of \alert{low rank}, i.e. 
 \[
-\mA = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{with}\quad k\leq n/2.
+\mA = \sum_{j=1}^{k}\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{with}\quad \alert{k}\leq n/2.
 \]
-$\Rightarrow$ $2kn$ operations
+$\Rightarrow$ \alert{$2kn$} operations for matrix-vector product.
+\end{block}
 
-\bigskip
-SVD actually gives the following decomposition:
-\begin{equation*}\label{SVD}
-\mA = \sum_{j=1}^{n}\sigma_{j}\,\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{ where }\{\sigma_{j}^{2}\}_{j=1\dots n} \text{ are the eigenvalues of } \mA^{T}\mA,
-\end{equation*}
 
+\alert{SVD} actually gives the following decomposition:
+\[
+\mA = \sum_{j=1}^{n}\sigma_{j}\,\bfu_{j}\cdot\bfv_{j}^{T}\quad \text{ where }\{\sigma_{j}^{2}\}_{j=1\dots n} \text{ are the eigenvalues of } \mA^{T}\mA.
+\]
+
+\emph{If} the $\sigma_{j}$ decrease fast, \emph{truncated SVD} is a good approximation of $\mA$!
+
+\medskip
 But it costs $\mathcal{O}(n^{3})$ ...
 
 \end{frame}
@@ -129,11 +135,10 @@ But it costs $\mathcal{O}(n^{3})$ ...
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
-\framesubtitle{An approximation of the Singular Value Decomposition (SVD)} 
+\frametitle{Adaptative Cross Approximation (ACA)}
+\framesubtitle{An approximation of the Singular Value Decomposition} 
 \begin{algorithm}[H]
   \caption{Partially Pivoted ACA}  
-  \label{AlgoACA}
   Initialize $j_{*}$\\
   $r=0$\\
   \textbf{while}(stopping criterion not satisfied)\{\\
@@ -161,7 +166,7 @@ But it costs $\mathcal{O}(n^{3})$ ...
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
+\frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{Comparaison between SVD and ACA} 
 Compression of the interaction between \emph{two clusters} $\{ \bx_i\}$ and $\{ \by_j\}$
 \begin{figure}
@@ -178,22 +183,23 @@ $\mA_{i,j}=\dfrac{1}{4 \pi \Vert\bx_i - \by_j \Vert }$
 %%%
 
 \begin{frame}
-\frametitle{Adaptative Cross approximation (ACA)}
-\framesubtitle{In practice} 
+\frametitle{Adaptative Cross Approximation (ACA)}
+\framesubtitle{In practice in our application} 
 The matrix comes from the discretization of a boundary integral equation 
 \begin{equation*}\label{GalerkinMatrix}
-\mA_{j,k}:= \int_{\tau\times\tau'}\mathscr{G}(\bx-\by) \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
+\mA_{j,k}:= \int_{\tau\times\tau'} \alert{\mathscr{G}(\bx-\by)} \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
 \end{equation*}
-$\mathscr{G}$ is an integral kernel such that 
+\alert{$\mathscr{G}$} is an \emph{integral kernel} with these properties:
 \begin{itemize}
-\item it is singular for $\bx = \by$, i.e~ if $\tau \cap \tau' \ne \emptyset$
-\item it is regularizing if $\tau$ and $\tau'$ are distant from each other 
+\item it is \emph{singular} for $\bx = \by$, i.e.~if $\tau \cap \tau' \ne \emptyset$,
+\item it is \emph{regularizing} if $\tau$ and $\tau'$ are \alert{distant} from each other. 
 \end{itemize}
-\bigskip
 
- $\Rightarrow$ ACA is applicable to sub-blocks of $\mA$ 
+\bigskip
+ $\Rightarrow$ ACA is applicable to \emph{sub-blocks} of $\mA$ (\alert{admissible blocks})
  
- $\Rightarrow$ Hierarchical matrices
+ \medskip
+ $\Rightarrow$ Hierarchical Matrices (HM)
 \end{frame}
 
 %%%
@@ -220,6 +226,8 @@ We build a cluster tree representing the unknowns, example:
 	\includegraphics[scale=0.3]{../images/clustering}
 \end{figure}
 \end{frame}
+
+
 
 
 
