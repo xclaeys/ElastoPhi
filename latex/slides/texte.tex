@@ -125,6 +125,26 @@ Compression of the interaction between two clusters of points
 
 \end{frame}
 
+%%%
+
+\begin{frame}
+\frametitle{Adaptative Cross approximation (ACA)}
+\framesubtitle{In practice} 
+The matrix comes from boundary integral equation 
+\begin{equation*}\label{GalerkinMatrix}
+\mA_{j,k}:= \int_{\tau\times\tau'}\mathscr{G}(\bx-\by) \bpsi_{j}(\bx)\bpsi_{k}(\by) d\sigma(\bx) d\sigma(\by),\quad j,k = 1\dots n.
+\end{equation*}
+integral kernel $\mathscr{G}$ 
+\begin{itemize}
+\item test
+\end{itemize}
+
+
+  $\Rightarrow$ singular values do NOT decrease exponentially 
+% \sum_{\tau\in\mathcal{T}}\sum_{\tau'\in\mathcal{T}}\int_{\tau\times\tau'}\mathscr{R}_{\tau}^{\by}(\mathscr{R}_{\tau'}^{\bx}\mathscr{G}(\bx-\by)) \bu(\bx)\bv(\by) d\sigma(\bx) d\sigma(\by).
+ 
+\end{frame}
+
 
 
 
