@@ -168,12 +168,15 @@ But it costs $\mathcal{O}(n^{3})$ ...
 \begin{frame}
 \frametitle{Adaptative Cross Approximation (ACA)}
 \framesubtitle{Comparaison between SVD and ACA} 
-Compression of the interaction matrix between \emph{two clusters of points}
+Compression of the interaction between \emph{two clusters} $\{ \bx_i\}$ and $\{ \by_j\}$
 \begin{figure}
 	\centering 
 	\includegraphics[width=0.9\textwidth]{../images/graphe_output_err_decrease}
 \end{figure}
 
+\begin{textblock*}{50mm}(93mm,70mm)
+$\mA_{i,j}=\dfrac{1}{4 \pi \Vert\bx_i - \by_j \Vert }$
+\end{textblock*}
 
 \end{frame}
 
@@ -203,11 +206,11 @@ The matrix comes from the discretization of a boundary integral equation
 
 \begin{frame}
 \frametitle{Hierarchical matrices}
+\framesubtitle{An example of cluster tree en 1D}
 We build a cluster tree representing the unknowns, example:
 \begin{figure}
 	\centering
-	\includegraphics{../images/clustering}
-	
+	\includegraphics[scale=0.3]{../images/clustering}
 \end{figure}
 
 \end{frame}
@@ -229,7 +232,17 @@ C++ implementation, our source code available on GitHub at:
 \includegraphics[width=.33\textwidth]{../images/graphe_mapp_output_local_comp_10_1_matrice450Fracs.pdf}
 \end{figure}
 
+%%%
 
+\begin{frame}
+\frametitle{Hierarchical matrices}
+\framesubtitle{An example of cluster tree }
+We build a cluster tree representing the unknowns, example:
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{../images/clustering}
+	\includegraphics[scale=0.3]{../images/clustering}
+\end{figure}
 \end{frame}
 
 %%%
