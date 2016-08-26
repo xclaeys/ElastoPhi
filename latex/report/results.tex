@@ -15,7 +15,7 @@ For each geometrical structure we show first the corresponding mesh.
 Then, for the test cases of smaller dimension (Figures~\ref{fig:450Fracs} and \ref{fig:1363Fracs}), we visualize, for some couples of $\eta$ and $\varepsilon$, the local compression rate of each block of the HM-ACA matrix by coloring its entries using a color scale from $0$ to $1$. The local compression rate of an admissible block of dimension $n\times m$ with rank $k$ in ACA approximation is $1-k(n+m)/(n\cdot m)$ (the larger the compression rate, the more the matrix is compressed); the local compression rate of the non compressed blocks is set to $0$. Note that a block is not necessarily a connected part of the matrix.
 
 \quad\\
-For all the cases, an error-compression graph summarizes the relevant results: for certain couples of values of the parameters $\eta$ and $\varepsilon$, on the vertical axis we report the relative error in Frobenius norm of the corresponding HM-ACA matrix with respect to the dense matrix, and on the horizontal axis the achieved global compression rate. Next to each marker we indicate the value of $\varepsilon$ ($\varepsilon=1, 0.9, 0.5, 0.1, 0.01$) and the legend gives the value of $\eta$ ($\eta=10,1,0.1$). The expression ``0 blocks'' means that the admissible blocks are approximated with zero matrices instead of computing their ACA approximation.
+For all the cases, an error-compression graph summarizes the relevant results: for certain couples of values of the parameters $\eta$ and $\varepsilon$, on the vertical axis we report the relative error in Frobenius norm of the corresponding HM-ACA matrix with respect to the dense matrix, and on the horizontal axis the achieved global compression rate. Next to each marker we indicate the value of $\varepsilon$ ($\varepsilon=1, 0.9, 0.5, 0.1, 0.01$) and the legend gives the value of $\eta$ ($\eta=10,1,0.1$). The expression ``0 blocks'' means that the admissible blocks are approximated with zero rank matrices (i.e.~zero matrices, but we just need to store $k=0$) instead of computing their ACA approximation.
 The global compression rate of a $3N\times 3N$ matrix $A$ is defined as:
 \[
 1- \Biggl(\sum_{t \times s \in \mathscr{B}}{\frac{k(\lvert t \rvert + \lvert s \rvert)}{3N\cdot3N} } + 
@@ -99,6 +99,7 @@ Note that the test cases in Figures~\ref{fig:2700FracsV1D1}--\ref{fig:3600FracsV
 \label{fig:1994Fracs}
 \end{figure}
 
+
 %\begin{figure}[p]
 %\centering
 %\subfloat[][Mesh.]
@@ -123,7 +124,6 @@ Note that the test cases in Figures~\ref{fig:2700FracsV1D1}--\ref{fig:3600FracsV
 \label{fig:2700FracsV1D1}
 \end{figure}
 
-
 %\begin{figure}[p]
 %\centering
 %\subfloat[][Mesh.]
@@ -133,7 +133,6 @@ Note that the test cases in Figures~\ref{fig:2700FracsV1D1}--\ref{fig:3600FracsV
 %\caption{Results for the structure with $2700$ fractures inside a volume $V_2=600\times300\times20$.}
 %\label{fig:2700FracsV2D2}
 %\end{figure}
-
 
 \begin{figure}[p]
 \begin{minipage}[c]{.5\linewidth}
@@ -149,7 +148,6 @@ Note that the test cases in Figures~\ref{fig:2700FracsV1D1}--\ref{fig:3600FracsV
 \label{fig:2700FracsV2D2}
 \end{figure}
 
-
 \begin{figure}[p]
  \begin{minipage}[c]{.5\linewidth}
 \centering
@@ -163,7 +161,6 @@ Note that the test cases in Figures~\ref{fig:2700FracsV1D1}--\ref{fig:3600FracsV
 \caption{Results for the structure with $2700$ fractures inside a volume $V_3=900\times300\times20$.}
 \label{fig:2700FracsV3D3}
 \end{figure}
-
 
 
 \begin{figure}[p]
