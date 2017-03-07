@@ -6,36 +6,7 @@
 \begin{frame}
 
 \maketitle
-%\vspace{1cm}
-%
-%\centerline{\huge \textbf{CEMRACS Project Elasto$\Phi$}}\quad\\[-5pt]
-%
-%\quad\\\quad\\
-%
-%\centerline{{\large M.~Bonazzoli$^{\dagger}$, P.~Marchand$^{*}$, X.~Claeys$^{*}$,}}
-%\centerline{{\large P.-H.~Tournier$^{*}$, I.~Ben-Gharbia$^{\S}$, F.~Nataf$^{*}$}}
-%
-%
-%\quad\\
-%\hspace{2.5cm}\begin{tabular}{l}
-%{\small $^{\dagger}$ Labo.~J.A.~Dieudonn\'e, Univ.~Nice Sophia Antipolis, }\\
-%{\small $^{*}$  INRIA Alpines / Labo.~J.-L.~Lions UPMC,}\\
-%{\small $^{\S}$ IFP Energies Nouvelles.}
-%\end{tabular}
-%
-%
-%\vspace{1cm}
 
-
-%\begin{picture}(-20,10)(-10,-25)
-%  \put(40,25){      
-%    \put(10,-75) {\includegraphics[height=2cm]{../logo/logo_ljll.pdf}}
-%    \put(70,-75){\includegraphics[height=1.75cm]{../logo/logo_alpines.pdf}}
-%    \put(200,-75)  {\includegraphics[height=2cm]{../logo/logo_anr.png}}
-%    \put(10,-135)  {\includegraphics[height=2cm]{../logo/logo_ifpen.pdf}}
-%    \put(150,-135)  {\includegraphics[height=2cm]{../logo/logo_unice.png}}
-%  }
-%\end{picture}
 
 \end{frame}
 
@@ -435,6 +406,38 @@ Network of $N=1363$ fractures: size $\mA=3N\times 3N$
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Preliminary parallel results}
+
+\begin{figure}
+\vspace{-0.5cm}
+\hspace{-0.8cm}
+\includegraphics[height = 5.3cm]{../images/scaling_3600_blocks.pdf}
+\includegraphics[height = 5.3cm]{../images/scaling_3600_mvprod.pdf}
+\vspace{-0.5cm}
+\end{figure}
+
+\begin{itemize}
+\item $\eta = 0.9 \quad \epsilon = 0.9$  \quad Compression rate = $72\%$
+\item Relative error in Frobenius norm $0.58\%$
+\item Relative error for Matrix-vector $2.7\%$
+\item Sequential timings: Cluster tree $0.01$s \quad Block tree $0.27$s
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Htool GUI}
+
+\begin{figure}
+\vspace{-0.5cm}
+\hspace{-0.8cm}
+\includegraphics[height = 9.3cm]{../images/gui.png}
+\vspace{-0.5cm}
+\end{figure}
+
+\end{frame}
+
+
 %%%
 
 
@@ -451,7 +454,7 @@ to treat large industrial cases, we have to compute \emph{only the needed coeffi
 \item
 design a \emph{new admissibility condition} to take in account the \emph{direction} of the fractures,
 \item
-\emph{parallelization} of the code.
+test our \emph{parallelized} code on larger problems.
 \end{itemize}
 
 \pause
