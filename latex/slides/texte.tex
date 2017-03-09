@@ -422,6 +422,7 @@ Network of $N=1363$ fractures: size $\mA=3N\times 3N$
 \item Relative error in Frobenius norm $0.58\%$
 \item Relative error for Matrix-vector $2.7\%$
 \item Sequential timings: Cluster tree $0.01$s \quad Block tree $0.27$s
+\item  \alert{But : synchronizing output vector $\Rightarrow$ MPI\_Gather $\sim$ 1 sec}
 \end{itemize}
 \end{frame}
 
